@@ -31,7 +31,7 @@ namespace DriftSkate
             new[] { new Vector2Int(0, 3), new Vector2Int(5, 3), new Vector2Int(5, 2), new Vector2Int(0, 2) },
         };
         /// <summary>Autos pro Runde (in derselben Reihenfolge).</summary>
-        static readonly int[] CarsPerRoute = { 2, 2, 2, 1, 1 };
+        static readonly int[] CarsPerRoute = { 3, 3, 2, 2, 1 };
 
         public readonly List<Route> routes = new List<Route>();
         public readonly List<TrafficCar> cars = new List<TrafficCar>();
@@ -56,7 +56,7 @@ namespace DriftSkate
                 int n = CarsPerRoute[r];
                 for (int k = 0; k < n; k++)
                 {
-                    var prefab = carPrefabs[(id * 3 + r) % carPrefabs.Length];
+                    var prefab = carPrefabs[(id * 7) % carPrefabs.Length]; // jedes Modell einmal, gut gemischt
                     var go = Instantiate(prefab, transform);
                     go.name = "TrafficCar_" + id;
                     var car = go.GetComponent<TrafficCar>();

@@ -11,129 +11,192 @@ using Object = UnityEngine.Object;
 namespace DriftSkate.EditorTools
 {
     /// <summary>
-    /// NPC-Auto aus Fynns toon-city-car.glb (glTFast-Import): alle Teile zu wenigen Meshes zusammengefasst, Farben
-    /// ueber eine kleine Paletten-Textur (ein Material fuer das ganze Auto), Raeder als drehbare Pivots, Lichter
-    /// getrennt (Bremslicht, Blinker). Sechs Lackfarben als eigene Prefabs. Dazu der Verkehr in der Stadt.
+    /// NPC-Autos aus GLB-Modellen (glTFast-Import): alle Teile zu wenigen Meshes zusammengefasst, Farben ueber eine
+    /// kleine Paletten-Textur (ein Material pro Auto), Raeder als drehbare Pivots (im Modell eingelenkte Vorderraeder
+    /// werden gerade gestellt), Lichter getrennt (Bremslicht, Blinker). Fahrtrichtung und links/rechts kommen aus den
+    /// Radpositionen, die Farben direkt aus den GLB-Materialien. Dazu der Verkehr in der Stadt.
     /// </summary>
     public static class TrafficAssets
     {
         const string Root = "Assets/_Game/Traffic";
-        const string Glb = Root + "/Source/toon-city-car.glb";
 
-        // Farben aus der GLB (baseColorFactor, linear) fuer die Paletten-Textur
-        static readonly (string mat, Color linear)[] Source =
+        /// <summary>Ein Auto-Modell, optional in mehreren Lackfarben (Material-Name -> neue Farbe).</summary>
+        class CarSpec
         {
-            ("teal_paint", new Color(0.0844f, 0.2664f, 0.2918f)),
-            ("dark_glass", new Color(0.0232f, 0.0176f, 0.0513f)),
-            ("faded_roof", new Color(0.2705f, 0.4233f, 0.4342f)),
-            ("glass_reflection", new Color(0.1529f, 0.1070f, 0.3185f)),
-            ("dark_trim", new Color(0.0437f, 0.0423f, 0.0545f)),
-            ("tire_rubber", new Color(0.0252f, 0.0242f, 0.0296f)),
-            ("hubcap_silver", new Color(0.5841f, 0.5647f, 0.5271f)),
-            ("headlight_glow", new Color(1f, 0.7605f, 0.4342f)),
-            ("indicator_amber", new Color(0.6654f, 0.3231f, 0.0908f)),
-            ("taillight_glow", new Color(0.5520f, 0.0953f, 0.0762f)),
-            ("sticker", new Color(0.7454f, 0.4793f, 0.1170f)),
-            ("sticker_ink", new Color(0.0467f, 0.0356f, 0.0844f)),
-            ("dent_shade", new Color(0.0578f, 0.1812f, 0.2016f)),
-            ("scuff_bare", new Color(0.4851f, 0.5520f, 0.5029f)),
-        };
+            public string glb, name;
+            public Dictionary<string, Color> overrides;
+        }
 
-        /// <summary>Lackfarben (sRGB): das Original-Petrol und fuenf passend zur Stadt.</summary>
-        static readonly (string name, string hex)[] Paints =
+        static Color Hex(string h) { ColorUtility.TryParseHtmlString("#" + h, out Color c); return c; }
+
+        /// <summary>Toon-Kleinwagen in sechs Farben (Lack, ausgebleichtes Dach, Dellen) plus die Serienautos aus Art/Cars.</summary>
+        static List<CarSpec> Specs()
         {
-            ("Teal", null), ("Coral", "E8706A"), ("Mustard", "E9B949"), ("Lilac", "A98BD6"), ("Cream", "EADCC0"), ("Sky", "6EA8D8"),
-        };
+            var list = new List<CarSpec>();
+            foreach (var (name, hex) in new[] { ("Teal", (string)null), ("Coral", "E8706A"), ("Mustard", "E9B949"), ("Lilac", "A98BD6"), ("Cream", "EADCC0"), ("Sky", "6EA8D8") })
+            {
+                var o = new Dictionary<string, Color>();
+                if (hex != null)
+                {
+                    Color paint = Hex(hex);
+                    o["teal_paint"] = paint;
+                    o["faded_roof"] = Color.Lerp(paint, Color.white, 0.32f);
+                    o["dent_shade"] = Color.Lerp(paint, Color.black, 0.3f);
+                }
+                list.Add(new CarSpec { glb = "toon-city-car", name = name, overrides = o });
+            }
+            // Serienautos (die getunten Varianten in Art/Cars kommen spaeter als Spielerautos)
+            list.Add(new CarSpec { glb = "kaze_fc_sunny", name = "KazeFC" });
+            list.Add(new CarSpec { glb = "raijin_34r_night", name = "Raijin34R" });
+            list.Add(new CarSpec { glb = "roku_ae_panda", name = "RokuAE" });
+            list.Add(new CarSpec { glb = "sylph_s15_pool", name = "SylphS15" });
+            list.Add(new CarSpec { glb = "toro_2j_blaze", name = "Toro2J" });
+            return list;
+        }
+
+        static string PrefabPath(CarSpec s) => Root + "/TrafficCar_" + s.name + ".prefab";
 
         // Teile mit Outline (Silhouette); alles andere ohne, das spart Draw Calls und sieht ruhiger aus
-        static readonly string[] Outlined = { "body", "cabin_glass", "roof", "bumper_front", "bumper_rear" };
+        static readonly string[] OutlinedPrefixes = { "body", "cabin", "roof", "bumper", "flare" };
 
         [MenuItem("DriftSkate/Verkehr/NPC-Autos bauen")]
         public static void Build()
         {
             AssetDatabase.Refresh();
-            var src = AssetDatabase.LoadAssetAtPath<GameObject>(Glb);
-            if (src == null) throw new Exception("NPC-Auto fehlt: " + Glb);
             Directory.CreateDirectory(Root + "/Materials");
             Directory.CreateDirectory(Root + "/Meshes");
             Directory.CreateDirectory(Root + "/Textures");
+            var lights = new Dictionary<string, Material>
+            {
+                ["HeadLights"] = Mat("Traffic_HeadLights", new Color(1f, 0.9f, 0.7f), 1.4f, 0f),
+                ["TailOff"] = Mat("Traffic_TailOff", new Color(0.77f, 0.34f, 0.31f), 0.5f, 0f),
+                ["TailOn"] = Mat("Traffic_TailOn", new Color(1f, 0.15f, 0.12f), 2.6f, 0f),
+                ["IndOff"] = Mat("Traffic_IndicatorOff", new Color(0.85f, 0.6f, 0.33f), 0.15f, 0f),
+                ["IndOn"] = Mat("Traffic_IndicatorOn", new Color(1f, 0.62f, 0.15f), 3f, 0f),
+            };
+            foreach (var group in Specs().GroupBy(s => s.glb))
+                BuildModel(group.Key, group.ToList(), lights);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[Traffic] NPC-Autos gebaut: " + string.Join(", ", Specs().Select(s => s.name)));
+        }
+
+        // ------------------------------------------------------------------ GLB-Farben
+
+        [Serializable] class GltfJson { public GltfMat[] materials; }
+        [Serializable] class GltfMat { public string name; public GltfPbr pbrMetallicRoughness; }
+        [Serializable] class GltfPbr { public float[] baseColorFactor; }
+
+        /// <summary>Materialfarben (sRGB) direkt aus dem JSON-Teil der GLB.</summary>
+        static Dictionary<string, Color> ReadGlbColors(string path)
+        {
+            var bytes = File.ReadAllBytes(path);
+            int len = BitConverter.ToInt32(bytes, 12);
+            var json = JsonUtility.FromJson<GltfJson>(System.Text.Encoding.UTF8.GetString(bytes, 20, len));
+            var result = new Dictionary<string, Color>();
+            foreach (var m in json.materials ?? new GltfMat[0])
+            {
+                var f = m.pbrMetallicRoughness?.baseColorFactor;
+                var linear = f != null && f.Length >= 3 ? new Color(f[0], f[1], f[2]) : Color.white;
+                result[m.name] = linear.gamma;
+            }
+            return result;
+        }
+
+        // ------------------------------------------------------------------ Modell -> Prefabs
+
+        static bool IsWheelRoot(Transform t) =>
+            t.name.StartsWith("wheel_") && (t.parent == null || !t.parent.name.StartsWith("wheel_"));
+
+        static bool IsFrontWheel(Transform t) => t.name.Contains("front") || t.name.StartsWith("wheel_F");
+
+        static void BuildModel(string glbName, List<CarSpec> specs, Dictionary<string, Material> lights)
+        {
+            string glbPath = Root + "/Source/" + glbName + ".glb";
+            var src = AssetDatabase.LoadAssetAtPath<GameObject>(glbPath);
+            if (src == null) throw new Exception("NPC-Auto fehlt: " + glbPath);
+            var colors = ReadGlbColors(glbPath);
+            var names = colors.Keys.ToList();
+            if (names.Count > PalSize * PalSize) throw new Exception(glbName + ": zu viele Materialien fuer die Palette");
 
             var inst = Object.Instantiate(src);
-            var carRoot = inst.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "toon_city_car") ?? inst.transform;
+            var all = inst.GetComponentsInChildren<Transform>(true);
+            var wheelRoots = all.Where(IsWheelRoot).ToList();
+            if (wheelRoots.Count != 4) throw new Exception(glbName + ": 4 Raeder erwartet, gefunden " + wheelRoots.Count);
+            // Auto-Wurzel = gemeinsamer Elternknoten der Raeder
+            Transform carRoot = wheelRoots[0].parent;
+            var frame = new GameObject("Frame").transform;
             try
             {
-                // Ausrichtung pruefen: Scheinwerfer muessen vorn (+Z) sein
-                var head = carRoot.GetComponentsInChildren<Transform>(true).First(t => t.name.StartsWith("headlight_L") || t.name.StartsWith("headlight_R"));
-                float headZ = carRoot.InverseTransformPoint(head.position).z;
-                var frame = new GameObject("Frame").transform; // Bezugssystem des fertigen Autos
-                frame.SetPositionAndRotation(carRoot.position, carRoot.rotation * (headZ < 0f ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.identity));
+                // Fahrtrichtung aus den Radpositionen (vorn minus hinten), Boden = Wurzel des Modells
+                Vector3 front = Vector3.zero, rear = Vector3.zero;
+                foreach (var w in wheelRoots) { if (IsFrontWheel(w)) front += w.position; else rear += w.position; }
+                Vector3 fwd = Vector3.ProjectOnPlane(front - rear, carRoot.up).normalized;
+                frame.SetPositionAndRotation(carRoot.position, Quaternion.LookRotation(fwd, carRoot.up));
+                // Ungelenkte Radachsen: die der Auto-Wurzel, im fertigen Auto ausgedrueckt
+                Matrix4x4 unsteer = Matrix4x4.Rotate(Quaternion.Inverse(frame.rotation) * carRoot.rotation);
 
-                var names = Source.Select(x => x.mat).ToList();
                 var groups = new Dictionary<string, MeshBuilder>();
-                MeshBuilder G(string key, Transform space)
-                {
-                    if (!groups.TryGetValue(key, out var g)) groups[key] = g = new MeshBuilder(space);
-                    return g;
-                }
+                MeshBuilder G(string key) { if (!groups.TryGetValue(key, out var g)) groups[key] = g = new MeshBuilder(); return g; }
+                float tireRadius = 0f;
 
-                // Rad-Pivots: Mitte jedes Rads, Achsen wie das Auto
-                var wheelPivots = new Dictionary<string, Transform>();
-                foreach (var w in carRoot.GetComponentsInChildren<Transform>(true).Where(t => t.name.StartsWith("wheel_")))
-                {
-                    var pivot = new GameObject(w.name).transform;
-                    pivot.SetPositionAndRotation(w.position, frame.rotation);
-                    wheelPivots[w.name] = pivot;
-                }
-
-                foreach (var mf in carRoot.GetComponentsInChildren<MeshFilter>(true))
+                foreach (var mf in inst.GetComponentsInChildren<MeshFilter>(true))
                 {
                     var mr = mf.GetComponent<MeshRenderer>();
                     if (mr == null || mf.sharedMesh == null) continue;
-                    string node = mf.name;
+                    var wheel = mf.transform.GetComponentsInParent<Transform>(true).FirstOrDefault(IsWheelRoot);
                     for (int sub = 0; sub < mf.sharedMesh.subMeshCount; sub++)
                     {
                         string mat = CleanName(mr.sharedMaterials[Mathf.Min(sub, mr.sharedMaterials.Length - 1)].name);
-                        if (mat == "headlight_halo") continue; // durchsichtiger Schein: weglassen
-                        if (mat == "indicator_amber_0") mat = "indicator_amber";
-                        int idx = names.IndexOf(mat);
-                        if (idx < 0) throw new Exception("Unbekanntes Material im NPC-Auto: " + mat);
-
-                        var wheel = mf.transform.GetComponentsInParent<Transform>(true).FirstOrDefault(t => t.name.StartsWith("wheel_"));
+                        if (!colors.ContainsKey(mat)) throw new Exception(glbName + ": unbekanntes Material " + mat);
+                        if (mat.Contains("halo")) continue; // durchsichtiger Schein: weglassen
+                        Vector2 uv = PaletteUv(names.IndexOf(mat));
+                        if (wheel != null)
+                        {
+                            Matrix4x4 m = unsteer * (wheel.worldToLocalMatrix * mf.transform.localToWorldMatrix);
+                            G("W:" + wheel.name).Add(mf.sharedMesh, sub, uv, m);
+                            if (mat.Contains("tire")) tireRadius = Mathf.Max(tireRadius, mf.sharedMesh.bounds.extents.y * mf.transform.lossyScale.y);
+                            continue;
+                        }
                         string key;
-                        Transform space = frame;
-                        if (wheel != null) { key = "W:" + wheel.name; space = wheelPivots[wheel.name]; }
-                        else if (mat == "headlight_glow") key = "HeadLights";
-                        else if (mat == "taillight_glow") key = "TailLights";
-                        else if (mat == "indicator_amber")
+                        if (mat.Contains("headlight") || mat.Contains("headlamp")) key = "HeadLights";
+                        else if (mat.Contains("taillight") || mat.Contains("taillamp")) key = "TailLights";
+                        else if (mat.Contains("indicator"))
                             key = frame.InverseTransformPoint(mf.transform.position).x < 0f ? "IndicatorLeft" : "IndicatorRight";
-                        else key = Outlined.Contains(StripIndex(node)) ? "Body" : "Details";
-                        G(key, space).Add(mf, sub, PaletteUv(idx));
+                        else
+                        {
+                            string node = StripIndex(mf.name);
+                            key = OutlinedPrefixes.Any(p => node.StartsWith(p)) ? "Body" : "Details";
+                        }
+                        G(key).Add(mf.sharedMesh, sub, uv, frame.worldToLocalMatrix * mf.transform.localToWorldMatrix);
                     }
                 }
 
-                var palettes = Paints.Select(p => MakePalette(p.name, p.hex)).ToArray();
-                var shared = new Dictionary<string, Material>
-                {
-                    ["HeadLights"] = Mat("Traffic_HeadLights", Source[7].linear.gamma, 1.4f, 0f),
-                    ["TailOff"] = Mat("Traffic_TailOff", Source[9].linear.gamma, 0.5f, 0f),
-                    ["TailOn"] = Mat("Traffic_TailOn", new Color(1f, 0.15f, 0.12f), 2.6f, 0f),
-                    ["IndOff"] = Mat("Traffic_IndicatorOff", Source[8].linear.gamma, 0.15f, 0f),
-                    ["IndOn"] = Mat("Traffic_IndicatorOn", new Color(1f, 0.62f, 0.15f), 3f, 0f),
-                };
-
-                // Meshes speichern (einmal, fuer alle Farben gleich)
+                // Meshes einmal speichern (fuer alle Farben gleich)
                 var meshes = new Dictionary<string, Mesh>();
                 foreach (var kv in groups)
                 {
-                    string file = kv.Key.Replace("W:", "Wheel_");
-                    meshes[kv.Key] = SaveMesh(kv.Value.ToMesh("TrafficCar_" + file), Root + "/Meshes/TrafficCar_" + file + ".asset");
+                    string file = glbName + "_" + kv.Key.Replace("W:", "Wheel_");
+                    meshes[kv.Key] = SaveMesh(kv.Value.ToMesh(file), Root + "/Meshes/" + file + ".asset");
                 }
 
-                for (int v = 0; v < Paints.Length; v++)
+                // Collider aus Karosserie und Anbauteilen (ohne Raeder)
+                var b = meshes["Body"].bounds;
+                if (meshes.TryGetValue("Details", out var det)) b.Encapsulate(det.bounds);
+                float bottom = Mathf.Max(b.min.y, 0.25f);
+                var boxCenter = new Vector3(b.center.x, (bottom + b.max.y) * 0.5f, b.center.z);
+                var boxSize = new Vector3(b.size.x, b.max.y - bottom, b.size.z);
+
+                var wheelInfo = wheelRoots
+                    .Select(w => (w, local: frame.InverseTransformPoint(w.position)))
+                    .OrderBy(x => x.local.z > 0f ? 0 : 1).ThenBy(x => x.local.x).ToList();
+
+                foreach (var spec in specs)
                 {
-                    var bodyMat = Mat("Traffic_" + Paints[v].name, Color.white, 0f, 0.3f, palettes[v]);
-                    var detailMat = Mat("Traffic_" + Paints[v].name + "_Detail", Color.white, 0f, 0f, palettes[v]);
-                    var car = new GameObject("TrafficCar_" + Paints[v].name);
+                    var palColors = names.Select(n => spec.overrides != null && spec.overrides.TryGetValue(n, out var c) ? c : colors[n]).ToArray();
+                    var palette = MakePalette(spec.name, palColors);
+                    var bodyMat = Mat("Traffic_" + spec.name, Color.white, 0f, 0.3f, palette);
+                    var detailMat = Mat("Traffic_" + spec.name + "_Detail", Color.white, 0f, 0f, palette);
+                    var car = new GameObject("TrafficCar_" + spec.name);
                     try
                     {
                         car.layer = LayerMask.NameToLayer("Car");
@@ -141,18 +204,17 @@ namespace DriftSkate.EditorTools
                         rb.isKinematic = true;
                         rb.interpolation = RigidbodyInterpolation.Interpolate;
                         var box = car.AddComponent<BoxCollider>();
-                        box.center = new Vector3(0f, 0.9f, 0f);
-                        box.size = new Vector3(1.64f, 1.3f, 3.62f);
+                        box.center = boxCenter;
+                        box.size = boxSize;
                         var tc = car.AddComponent<TrafficCar>();
                         car.AddComponent<Hitchable>();
 
-                        Renderer Part(string key, Material m, Transform parent, Vector3 localPos, bool shadows)
+                        Renderer Part(string key, Material m, Transform parent, bool shadows)
                         {
                             if (!meshes.TryGetValue(key, out var mesh)) return null;
                             var go = new GameObject(key.Replace("W:", ""));
                             go.layer = car.layer;
                             go.transform.SetParent(parent, false);
-                            go.transform.localPosition = localPos;
                             go.AddComponent<MeshFilter>().sharedMesh = mesh;
                             var r = go.AddComponent<MeshRenderer>();
                             r.sharedMaterial = m;
@@ -162,39 +224,36 @@ namespace DriftSkate.EditorTools
                             return r;
                         }
 
-                        Part("Body", bodyMat, car.transform, Vector3.zero, true);
-                        Part("Details", detailMat, car.transform, Vector3.zero, false);
-                        Part("HeadLights", shared["HeadLights"], car.transform, Vector3.zero, false);
-                        tc.tailLights = Part("TailLights", shared["TailOff"], car.transform, Vector3.zero, false);
-                        tc.indicatorLeft = Part("IndicatorLeft", shared["IndOff"], car.transform, Vector3.zero, false);
-                        tc.indicatorRight = Part("IndicatorRight", shared["IndOff"], car.transform, Vector3.zero, false);
-                        tc.tailOff = shared["TailOff"]; tc.tailOn = shared["TailOn"];
-                        tc.indicatorOff = shared["IndOff"]; tc.indicatorOn = shared["IndOn"];
+                        Part("Body", bodyMat, car.transform, true);
+                        Part("Details", detailMat, car.transform, false);
+                        Part("HeadLights", lights["HeadLights"], car.transform, false);
+                        tc.tailLights = Part("TailLights", lights["TailOff"], car.transform, false);
+                        tc.indicatorLeft = Part("IndicatorLeft", lights["IndOff"], car.transform, false);
+                        tc.indicatorRight = Part("IndicatorRight", lights["IndOff"], car.transform, false);
+                        tc.tailOff = lights["TailOff"]; tc.tailOn = lights["TailOn"];
+                        tc.indicatorOff = lights["IndOff"]; tc.indicatorOn = lights["IndOn"];
 
-                        // Raeder: vorn links, vorn rechts, hinten links, hinten rechts (links = -X im fertigen Auto)
-                        var order = wheelPivots.Values
-                            .Select(p => (p, local: frame.InverseTransformPoint(p.position)))
-                            .OrderBy(x => x.local.z > 0f ? 0 : 1).ThenBy(x => x.local.x).ToList();
-                        for (int i = 0; i < order.Count && i < 4; i++)
+                        // Raeder: vorn links, vorn rechts, hinten links, hinten rechts (links = -X)
+                        for (int i = 0; i < 4; i++)
                         {
                             var pivot = new GameObject("Wheel" + i).transform;
                             pivot.SetParent(car.transform, false);
-                            pivot.localPosition = order[i].local;
-                            Part("W:" + order[i].p.name, bodyMat, pivot, Vector3.zero, false);
+                            pivot.localPosition = wheelInfo[i].local;
+                            Part("W:" + wheelInfo[i].w.name, bodyMat, pivot, false);
                             tc.wheels[i] = pivot;
                         }
-                        tc.wheelBase = order.Count == 4 ? Mathf.Abs(order[0].local.z - order[2].local.z) : 2.2f;
-                        tc.wheelRadius = 0.34f;
-                        PrefabUtility.SaveAsPrefabAsset(car, Root + "/TrafficCar_" + Paints[v].name + ".prefab");
+                        tc.wheelBase = Mathf.Abs(wheelInfo[0].local.z - wheelInfo[2].local.z);
+                        tc.wheelRadius = tireRadius > 0.1f ? tireRadius : 0.33f;
+                        PrefabUtility.SaveAsPrefabAsset(car, PrefabPath(spec));
                     }
                     finally { Object.DestroyImmediate(car); }
                 }
-                foreach (var p in wheelPivots.Values) Object.DestroyImmediate(p.gameObject);
-                Object.DestroyImmediate(frame.gameObject);
             }
-            finally { Object.DestroyImmediate(inst); }
-            AssetDatabase.SaveAssets();
-            Debug.Log("[Traffic] NPC-Autos gebaut: " + string.Join(", ", Paints.Select(p => p.name)));
+            finally
+            {
+                Object.DestroyImmediate(frame.gameObject);
+                Object.DestroyImmediate(inst);
+            }
         }
 
         static string CleanName(string n)
@@ -221,16 +280,8 @@ namespace DriftSkate.EditorTools
             return new Vector2((x + 0.5f) / PalSize, (y + 0.5f) / PalSize);
         }
 
-        static Texture2D MakePalette(string name, string paintHex)
+        static Texture2D MakePalette(string name, Color[] cols)
         {
-            var cols = Source.Select(s => s.linear.gamma).ToArray();
-            if (paintHex != null)
-            {
-                ColorUtility.TryParseHtmlString("#" + paintHex, out Color paint);
-                cols[0] = paint;                                         // Lack
-                cols[2] = Color.Lerp(paint, Color.white, 0.32f);         // ausgebleichtes Dach
-                cols[12] = Color.Lerp(paint, Color.black, 0.3f);         // Dellen
-            }
             int size = PalSize * Cell;
             var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
             for (int y = 0; y < size; y++)
@@ -287,17 +338,13 @@ namespace DriftSkate.EditorTools
         /// <summary>Sammelt Dreiecke vieler Teile in einem Raum (Auto oder Rad), mit Paletten-UV statt Material.</summary>
         class MeshBuilder
         {
-            readonly Transform _space;
             readonly List<Vector3> _pos = new List<Vector3>(), _nrm = new List<Vector3>();
             readonly List<Vector2> _uv = new List<Vector2>();
             readonly List<int> _tri = new List<int>();
 
-            public MeshBuilder(Transform space) { _space = space; }
-
-            public void Add(MeshFilter mf, int sub, Vector2 uv)
+            /// <summary>Teilmesh mit Matrix m (Mesh-Raum -> Zielraum) und Paletten-UV anhaengen.</summary>
+            public void Add(Mesh mesh, int sub, Vector2 uv, Matrix4x4 m)
             {
-                var mesh = mf.sharedMesh;
-                Matrix4x4 m = _space.worldToLocalMatrix * mf.transform.localToWorldMatrix;
                 Matrix4x4 n = m.inverse.transpose;
                 bool flip = m.determinant < 0f;
                 var verts = mesh.vertices;
@@ -343,8 +390,8 @@ namespace DriftSkate.EditorTools
         [MenuItem("DriftSkate/Verkehr/In die Stadt setzen")]
         public static void PlaceInCity()
         {
-            var prefabs = Paints.Select(p => AssetDatabase.LoadAssetAtPath<GameObject>(Root + "/TrafficCar_" + p.name + ".prefab")).ToArray();
-            if (prefabs.Any(p => p == null)) { Build(); prefabs = Paints.Select(p => AssetDatabase.LoadAssetAtPath<GameObject>(Root + "/TrafficCar_" + p.name + ".prefab")).ToArray(); }
+            var prefabs = Specs().Select(s => AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(s))).ToArray();
+            if (prefabs.Any(p => p == null)) { Build(); prefabs = Specs().Select(s => AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(s))).ToArray(); }
             var scene = EditorSceneManager.OpenScene(ProjectBuilder.CityPath);
             var traffic = Object.FindAnyObjectByType<Traffic>(FindObjectsInactive.Include);
             if (traffic == null) traffic = new GameObject("Traffic").AddComponent<Traffic>();
@@ -374,21 +421,30 @@ namespace DriftSkate.EditorTools
             var traffic = Object.FindAnyObjectByType<Traffic>();
             traffic.BuildRoutes();
 
-            // Alle Farben nebeneinander auf einer Strasse
+            // Jedes Auto einzeln schraeg von vorn und von hinten, dazu eine Reihe der neuen Modelle
             float z = CityBuilder.RoadCenter(1) - traffic.laneOffset, x0 = CityBuilder.BlockCenter(1) - 14f;
             var shown = new List<GameObject>();
-            for (int i = 0; i < traffic.carPrefabs.Length; i++)
+            foreach (var prefab in traffic.carPrefabs)
             {
-                var car = (GameObject)PrefabUtility.InstantiatePrefab(traffic.carPrefabs[i]);
-                car.transform.SetPositionAndRotation(new Vector3(x0 + i * 5.5f, 0f, z), Quaternion.Euler(0f, 90f + (i % 2) * 20f, 0f));
+                var car = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                car.transform.SetPositionAndRotation(new Vector3(x0, 0f, z), Quaternion.Euler(0f, 90f, 0f));
+                var c0 = car.transform;
+                string n = prefab.name.Replace("TrafficCar_", "").ToLowerInvariant();
+                Shot(cam, c0.TransformPoint(new Vector3(-3.6f, 1.7f, 5f)), c0.TransformPoint(new Vector3(0, 0.7f, 0)), 45f, "car_" + n);
+                Shot(cam, c0.TransformPoint(new Vector3(3.6f, 1.5f, -5.2f)), c0.TransformPoint(new Vector3(0, 0.7f, 0)), 45f, "car_" + n + "_rear");
+                Object.DestroyImmediate(car);
+            }
+            var models = traffic.carPrefabs.Where(p => !new[] { "Teal", "Coral", "Mustard", "Lilac", "Cream", "Sky" }.Any(c => p.name.EndsWith(c))).Prepend(traffic.carPrefabs[0]).ToArray();
+            for (int i = 0; i < models.Length; i++)
+            {
+                var car = (GameObject)PrefabUtility.InstantiatePrefab(models[i]);
+                car.transform.SetPositionAndRotation(new Vector3(x0 + i * 6f, 0f, z), Quaternion.Euler(0f, 90f, 0f));
                 shown.Add(car);
             }
-            var c0 = shown[0].transform;
-            Shot(cam, new Vector3(x0 + 13f, 3.2f, z - 12f), new Vector3(x0 + 13f, 0.7f, z), 50f, "lineup");
-            Shot(cam, c0.TransformPoint(new Vector3(-3.2f, 1.6f, 4.2f)), c0.TransformPoint(new Vector3(0, 0.7f, 0)), 45f, "front");
-            Shot(cam, c0.TransformPoint(new Vector3(3.4f, 1.4f, -4.4f)), c0.TransformPoint(new Vector3(0, 0.7f, 0)), 45f, "rear");
-            Shot(cam, c0.TransformPoint(new Vector3(4.6f, 0.9f, 0.2f)), c0.TransformPoint(new Vector3(0, 0.7f, 0)), 45f, "side");
+            float mid = x0 + (models.Length - 1) * 3f;
+            Shot(cam, new Vector3(mid, 4f, z - 17f), new Vector3(mid, 0.7f, z), 55f, "lineup");
             foreach (var s in shown) Object.DestroyImmediate(s);
+            shown.Clear();
 
             // Routen von oben: auf jeder Route ein Auto, Blick ueber die Stadt
             for (int r = 0; r < traffic.routes.Count; r++)
