@@ -185,7 +185,12 @@ namespace DriftSkate
 
         // Sturz / Bail-Out
         float _bailTimer;
-        bool _bailOutLanding, _landPromptHit, _ollieLock, _manualLock, _steerLock;
+        bool _bailOutLanding, _landPromptHit, _ollieLock, _manualLock, _steerLock, _revertLock;
+        /// <summary>
+        /// Grab (K / RB) ist in der Luft Grab, am Boden Revert. Ein Grab-Druck kurz vor der Landung kommt oft erst nach
+        /// dem Aufsetzen an und drehte dann das Board ungewollt aus Fakie zurueck: Revert erst so lange nach der Landung.
+        /// </summary>
+        const float RevertDelay = 0.3f;
         int _earlyPresses;
         float _lastEarlyPress = -1f, _bailOutGrace, _landTime;
 
@@ -278,6 +283,7 @@ namespace DriftSkate
             Fakie = false;
             _bailOutGrace = 0f;
             _steerLock = false;
+            _revertLock = false;
             _lastSlopeVy = _fallVy = 0f;
             _plantChain = 0;
             _plantCharging = false;
@@ -468,7 +474,8 @@ namespace DriftSkate
             }
 
             // Revert: aus Fakie am Boden zurueckdrehen (Grab-Taste)
-            if (_grabPressed && Fakie && !Manualing)
+            if (_revertLock && !_grabHeld) _revertLock = false;
+            if (_grabPressed && Fakie && !Manualing && !_revertLock && Time.time - _landTime > RevertDelay)
             {
                 Fakie = false;
                 if (combo != null && combo.Active) combo.AddAction("REVERT", 120f);
@@ -787,6 +794,7 @@ namespace DriftSkate
             _spinVel = 0f;
             _landTime = Time.time;
             _steerLock = Mathf.Abs(_move.x) > 0.2f;
+            _revertLock = _grabHeld; // ein in der Luft gehaltener Grab wird beim Loslassen nicht zum Revert
 
             bool fromBailOut = _bailOutLanding;
             if (_bailOutLanding)

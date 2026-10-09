@@ -433,6 +433,13 @@ namespace DriftSkate
             yield return WaitFor(() => a.skater.State != SkaterState.Air, 3f);
             Log($"180: Drehung {a.skater.AirSpin:0} Grad, Zustand {a.skater.State}, Fakie {a.skater.Fakie}");
             Check(a.skater.State == SkaterState.Riding && a.skater.Fakie, "180 gelandet, faehrt Fakie weiter");
+            // Wie ein Mensch: Grab-Taste (K) kommt erst kurz nach dem Aufsetzen an -> darf KEIN Revert sein
+            yield return new WaitForSeconds(0.1f);
+            a.skater.InjectInput(Vector2.zero, false, grab: true);
+            yield return new WaitForSeconds(0.12f);
+            a.skater.InjectInput(Vector2.zero, false);
+            yield return Frames(5);
+            Check(a.skater.Fakie, "Spaeter Grab-Druck nach der 180-Landung dreht das Board nicht zurueck");
             t0 = Time.time;
             {
                 SkaterState lastSt = a.skater.State;
