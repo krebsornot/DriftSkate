@@ -40,6 +40,7 @@ namespace DriftSkate.EditorTools
             public float probeForward = 0.4f;   // Platzpruefung: zusaetzlich zur Tuer-/Bedienseite
             public float probeSide = 0.5f;
             public float colliderHeight;        // > 0: Collider nur aus Teilen unter dieser Hoehe (m, fertig skaliert)
+            public int perPark;                 // zusaetzlich so viele pro Park (P-Block), am Rand mit Blick zur Mitte
 
             public string Root => "Assets/_Game/" + folder;
             public string GlbPath => Root + "/Source/" + glbFile;
@@ -62,7 +63,7 @@ namespace DriftSkate.EditorTools
             name = "HotdogCart", folder = "HotdogCart", glbFile = "hotdogcart_orange.glb", group = "HotdogCarts", logFolder = "hotdogcart",
             scale = 1.15f, colliderHeight = 1.25f, frontFrom = "Cart_Body", frontTo = "Sign_Hotdog",
             count = 7, spacing = 62f, seed = 2020, alongStreet = true, inset = 3.2f, offsets = new[] { -26f, -8f, 8f, 26f },
-            probeForward = 0.2f, probeSide = 0.6f,
+            probeForward = 0.2f, probeSide = 0.6f, perPark = 1,
         };
 
         // ------------------------------------------------------------------ Menue
@@ -291,9 +292,62 @@ namespace DriftSkate.EditorTools
                 placed.Add(hit.point);
             }
 
+            int parks = c.perPark > 0 ? PlaceInParks(c, prefab, group, scene, solid, ground) : 0;
+
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log($"[{c.name}] {placed.Count} in der Stadt: " + string.Join(", ", placed.Select(p => $"({p.x:0}, {p.z:0})")));
+            Debug.Log($"[{c.name}] {placed.Count} am Gehweg, {parks} in Parks: " + string.Join(", ", placed.Select(p => $"({p.x:0}, {p.z:0})")));
+        }
+
+        /// <summary>
+        /// In jeden Park (P-Block) perPark Stueck: am Rand des Platzes, Bedienseite zur Mitte. Mit Abstand zu Rails,
+        /// Ledges, Treppen und Baenken, damit keine Skate-Linie und kein Sitzplatz zugestellt wird.
+        /// </summary>
+        static int PlaceInParks(Config c, GameObject prefab, Transform group, UnityEngine.SceneManagement.Scene scene, int solid, int ground)
+        {
+            var box = prefab.GetComponent<BoxCollider>();
+            var half = box.size * 0.5f;
+            var rng = new System.Random(c.seed + 7);
+            int count = 0;
+            Vector3[] sides = { Vector3.forward, Vector3.right, Vector3.back, Vector3.left };
+            for (int row = 0; row < CityBuilder.Grid; row++)
+                for (int col = 0; col < CityBuilder.Grid; col++)
+                {
+                    if (CityBuilder.BlockType(row, col) != 'P') continue;
+                    var center = new Vector3(CityBuilder.BlockCenter(col), 0f, CityBuilder.BlockCenter(row));
+                    var cands = new List<(Vector3 pos, Quaternion rot)>();
+                    foreach (var side in sides)
+                    {
+                        Vector3 along = Vector3.Cross(Vector3.up, side);
+                        for (float o = -18f; o <= 18f; o += 4.5f)
+                            for (float d = 25f; d >= 19f; d -= 3f)
+                            {
+                                Vector3 pos = center + side * d + along * o;
+                                // Seitlich zur Mitte: Laengsseite (Bedienseite) schaut zum Platz
+                                cands.Add((pos, Quaternion.LookRotation(c.alongStreet ? along : -side)));
+                            }
+                    }
+                    int placedHere = 0;
+                    foreach (var cd in cands.OrderBy(_ => rng.Next()))
+                    {
+                        if (placedHere >= c.perPark) break;
+                        if (!Physics.Raycast(cd.pos + Vector3.up * 3f, Vector3.down, out RaycastHit hit, 4f, ground, QueryTriggerInteraction.Ignore)) continue;
+                        if (hit.normal.y < 0.98f || hit.point.y > 0.4f) continue; // flacher Platzboden, nicht auf Treppe/Ledge
+                        // grosszuegig frei: 2,5 m Luft rundum (Skate-Linien), Rails extra
+                        var probeCenter = hit.point + cd.rot * (box.center + Vector3.up * 0.15f);
+                        if (Physics.CheckBox(probeCenter, half + new Vector3(2.5f, -0.2f, 2.5f), cd.rot, solid, QueryTriggerInteraction.Ignore)) continue;
+                        if (Physics.CheckSphere(hit.point, 6f, LayerMask.GetMask("Rail"), QueryTriggerInteraction.Ignore)) continue;
+
+                        var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, scene);
+                        go.name = c.name + "_Park" + count;
+                        go.transform.SetParent(group, false);
+                        go.transform.SetPositionAndRotation(hit.point, cd.rot);
+                        Debug.Log($"[{c.name}] Park {row}{col}: ({hit.point.x:0}, {hit.point.z:0})");
+                        placedHere++;
+                        count++;
+                    }
+                }
+            return count;
         }
 
         // ------------------------------------------------------------------ Kontrolle
@@ -322,9 +376,15 @@ namespace DriftSkate.EditorTools
             Shot(first, new Vector3(-5f, 1.6f, 0f), new Vector3(0f, 1.3f, 0f), 50f, "side_left");
             Shot(first, new Vector3(0f, 1.8f, 22f), new Vector3(0f, 1.5f, 0f), 50f, "far");
 
-            // Ein paar weitere in ihrer Umgebung
+            // Ein paar weitere in ihrer Umgebung, dazu alle in Parks
             for (int i = 1; i < Mathf.Min(group.transform.childCount, 5); i++)
                 Shot(group.transform.GetChild(i), new Vector3(-4f, 2.4f, 9f), new Vector3(0f, 1.4f, 0f), 60f, "city_" + i);
+            foreach (Transform t in group.transform)
+                if (t.name.Contains("_Park"))
+                {
+                    Shot(t, new Vector3(-2.5f, 2f, 6f), new Vector3(0f, 1.2f, 0f), 55f, "park_" + t.name.Substring(t.name.Length - 1));
+                    Shot(t, new Vector3(-3f, 5f, 15f), new Vector3(0f, 0.8f, 0f), 60f, "park_wide_" + t.name.Substring(t.name.Length - 1));
+                }
         }
     }
 }
