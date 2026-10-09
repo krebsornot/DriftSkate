@@ -1,0 +1,1 @@
+PASS: Humanoid avatar, looping Idle, skin bones, collider, prefab, one NPC behind counter in saved City scene.

@@ -1,0 +1,6 @@
+Triangles: 20396
+Floor normal: (0.00, 1.00, 0.00)
+Minimum riding normal Y: 0,509379
+Mesh colliders: 2
+Closed grind path: 161 points
+No degenerate triangles.

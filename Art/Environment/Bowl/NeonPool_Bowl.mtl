@@ -1,0 +1,30 @@
+newmtl PoolBlue
+Kd 0.701961 0.858824 0.866667
+Ks 0 0 0
+Ns 0
+
+newmtl PoolDeck
+Kd 0.788235 0.764706 0.839216
+Ks 0 0 0
+Ns 0
+
+newmtl PoolPink
+Kd 1 0.239216 0.545098
+Ks 0 0 0
+Ns 0
+
+newmtl PoolTeal
+Kd 0.196078 0.486275 0.568627
+Ks 0 0 0
+Ns 0
+
+newmtl PoolInk
+Kd 0.137255 0.14902 0.227451
+Ks 0 0 0
+Ns 0
+
+newmtl PoolCoping
+Kd 0.968627 0.956863 0.933333
+Ks 0 0 0
+Ns 0
+

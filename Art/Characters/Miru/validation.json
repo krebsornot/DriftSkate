@@ -1,0 +1,16 @@
+{
+  "character": "Miru",
+  "revision": 2,
+  "adult": true,
+  "vertices": 50473,
+  "triangles": 100416,
+  "bones": 58,
+  "unweighted_vertices": 0,
+  "animations": [
+    "Idle",
+    "Sitting"
+  ],
+  "seat_height_m": 0.45,
+  "source": "C:\\Users\\Fynn\\Desktop\\Driftskate\\Art\\Characters\\Miru\\Miru.blend",
+  "fbx": "C:\\Users\\Fynn\\Desktop\\Driftskate\\Assets\\_Game\\Resources\\Characters\\NPC_Miru.fbx"
+}

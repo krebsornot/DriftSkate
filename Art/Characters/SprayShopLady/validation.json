@@ -1,0 +1,9 @@
+{
+  "vertices": 54282,
+  "triangles": 107810,
+  "bones": 57,
+  "unweighted_vertices": 0,
+  "animations": [
+    "Idle"
+  ]
+}

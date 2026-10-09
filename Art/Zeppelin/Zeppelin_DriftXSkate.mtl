@@ -1,0 +1,109 @@
+# Exported by three-d-stage
+newmtl Hull_Sand
+Kd 0.7157 0.5972 0.4072
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Rib_VioletGrey
+Kd 0.0704 0.0561 0.0999
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Neon_Cyan
+Kd 0.0284 0.7913 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Neon_Pink
+Kd 1.0000 0.0782 0.3663
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Neon_Violet
+Kd 0.3231 0.1070 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Decal_Graffiti
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Decal_Badge
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Decal_NoBrakes
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Decal_Star
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Decal_Checker
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Decal_Grind
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Brass_Patina
+Kd 0.5333 0.3231 0.1046
+Ks 0.2000 0.2000 0.2000
+Ns 60
+d 1.0000
+
+newmtl Window_Emissive
+Kd 1.0000 0.4179 0.0685
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Copper_Patina
+Kd 0.4342 0.1441 0.0595
+Ks 0.2000 0.2000 0.2000
+Ns 60
+d 1.0000
+
+newmtl Pennant_Pink
+Kd 0.7605 0.0908 0.2122
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Light_Red
+Kd 1.0000 0.0296 0.0296
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Light_Green
+Kd 0.0262 1.0000 0.1441
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+
+newmtl Light_White
+Kd 1.0000 0.9047 0.7157
+Ks 0.2000 0.2000 0.2000
+Ns 0
+d 1.0000
+

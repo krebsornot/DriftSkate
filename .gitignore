@@ -1,0 +1,41 @@
+# Unity
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# IDE
+.vs/
+.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+
+# Build-Nebenprodukte
+*_BurstDebugInformation_DoNotShip/
+crashlytics-build.properties
+
+# Archive und Testbilder (zu gross / nur lokal)
+*.rar
+*.zip
+/scratch_*.png
+/sedgwick_num_test.png
+__pycache__/
+*.pyc

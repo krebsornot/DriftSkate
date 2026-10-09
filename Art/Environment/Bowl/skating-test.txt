@@ -1,0 +1,4 @@
+Heading 0: max root height 0,02, min -2,60, riding 700/700, bailed 0
+Heading 90: max root height -0,88, min -2,60, riding 700/700, bailed 0
+Heading 180: max root height 0,01, min -2,60, riding 700/700, bailed 0
+Heading 270: max root height -0,02, min -2,60, riding 700/700, bailed 0
