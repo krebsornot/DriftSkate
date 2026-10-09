@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace DriftSkate
@@ -70,15 +69,7 @@ namespace DriftSkate
         }
 
         /// <summary>Gemeinsame Uhr: online die Server-Zeit, solo die Spielzeit.</summary>
-        public static double Clock
-        {
-            get
-            {
-                var nm = NetworkManager.Singleton;
-                if (nm != null && nm.IsListening) return nm.ServerTime.Time;
-                return Time.timeAsDouble;
-            }
-        }
+        public static double Clock => SharedClock.Time;
 
         public void BuildRoutes()
         {

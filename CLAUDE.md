@@ -28,6 +28,7 @@ Unity-Pfad: `C:\Program Files\Unity\Hub\Editor\6000.3.2f1\Editor\Unity.exe`. Bat
 - Spieltest (Exe): `DriftSkate.exe -autotest -testlog Logs/autotest.txt`. Er klickt durch Garage und Stadt und schreibt Prüfungen (`OK` / `FEHLT`) plus Screenshots nach `Logs/`. **Bekannte alte Fehler**, nicht von neuen Änderungen: „Bail-Out gestartet“, „kein Manual-Sturz …“, „Paket abgeliefert“.
 - Online-Test: Host `-nettest-host -netport 7797`, nach ca. 12 s Client `-nettest-client 127.0.0.1 -netport 7797`, jeweils mit eigenem `-testlog`. Port 7797 nehmen, weil auf 7777 oft jemand selbst hostet.
 - Sturz-Pose (Play-Mode im Batch, ohne `-quit`): `DriftSkate.EditorTools.BailPlayTest.Run` prueft, dass beim Hinfallen nichts im Boden steckt (`Logs/bail/*.png`)
+- Weitere Play-Mode-Tests (ohne `-quit`): `SpinPlayTest` (180 landen), `CitySpinPlayTest` (Landung mit Spielkamera), `CarModelPlayTest -car <id>` (Garagen-Modell fahren), `FlyerPlayTest` (Zeppelin, Flugzeug, Verkehr bewegen sich)
 - Performance: `DriftSkate.exe -perftest -perfweather klar|regen -perflog Logs/perf/x.txt`. **Nie nur den FPS-Zahlen trauen**, immer auch die Screenshots (`perf_*.png`) ansehen.
 
 Vor Tests mit der Exe:
@@ -39,6 +40,8 @@ Eingabe-Timing (Bail-Out, Landungen, Ollie) wie ein Mensch testen: mit Reaktions
 
 ## Stolperfallen
 - **GPU Resident Drawer bleibt aus.** Mit dem Toon-Shader wird die Stadt sonst unsichtbar (vermeintlich 600 FPS bei leerem Bild).
+- **GLB-Modelle immer ueber `Editor/GlbBake.cs` backen** (Meshes zusammenfassen, Paletten-Textur, Toon-Materialien, Assets speichern), nichts davon neu kopieren. Beispiele: `TrafficAssets` (Autos), `PropAssets` (Telefonzelle, Imbisswagen), `TowPlaneAssets` (Schleppflugzeug). Skalierung genau einmal anwenden (im Prefab ueber `Visual.localScale`, nicht zusaetzlich im Bake-Frame).
+- Flugobjekte auf festen Runden (Zeppelin, Schleppflugzeug) nutzen `World/LoopRoute.cs`, die gemeinsame Uhr ist `SharedClock`.
 - Das Spiel ist **CPU-gebunden** (Draw Calls). Kleine Teile ohne Schatten und Outline, Details auf Layer „Detail“ (ab 85 m ausgeblendet), Meshes zusammenfassen (siehe Paletten-Textur bei `TrafficAssets`).
 - **Null-Normalen → NaN im Toon-Shader → Bloom färbt den ganzen Bildschirm weiß.** Doppelseitige Meshes nie durch doppelte Dreiecke mit `RecalculateNormals` bauen. Prüfung: `CarNormalCheck.Run`.
 - Synchronisierte Enums (z. B. `SkaterState`, als Byte übertragen) nur **hinten** erweitern. Dasselbe gilt für Kodierungen wie `CarDesign.Encode`, damit alte Daten lesbar bleiben.

@@ -1,4 +1,3 @@
-using Unity.Netcode;
 using UnityEngine;
 
 namespace DriftSkate
@@ -26,9 +25,7 @@ namespace DriftSkate
         public Transform propLeft, propRight, rudder, elevator, pennant;
         public Renderer neon, navLights, tailLight, windows;
 
-        const int Samples = 512;
-        float[] _arc;        // Bogenlaenge pro Stuetzstelle
-        float _total;
+        LoopRoute _route;
         float _s;            // aktuelle Position auf der Route (m)
         float _rudder, _elevator, _bank;
         Vector3 _lastForward;
@@ -37,66 +34,21 @@ namespace DriftSkate
         Material[] _navMats;
         AudioSource _audio;
 
-        public float RouteLength { get { Build(); return _total; } }
+        public float RouteLength => Route.Length;
 
-        void Build()
-        {
-            if (_arc != null) return;
-            _arc = new float[Samples + 1];
-            Vector3 prev = Shape(0f);
-            for (int i = 1; i <= Samples; i++)
-            {
-                Vector3 p = Shape(i / (float)Samples * Mathf.PI * 2f);
-                _arc[i] = _arc[i - 1] + Vector3.Distance(prev, p);
-                prev = p;
-            }
-            _total = _arc[Samples];
-        }
+        LoopRoute Route => _route ?? (_route = new LoopRoute(Shape));
 
         /// <summary>Flache Acht (Lemniskate von Gerono) ohne Hoehe, im lokalen Routen-Raum.</summary>
         Vector3 Shape(float theta) =>
             Quaternion.Euler(0f, yaw, 0f) * new Vector3(Mathf.Sin(theta) * length, 0f, Mathf.Sin(theta) * Mathf.Cos(theta) * width * 2f);
 
-        float ThetaAt(float s)
-        {
-            s = Mathf.Repeat(s, _total);
-            int lo = 0, hi = Samples;
-            while (hi - lo > 1)
-            {
-                int mid = (lo + hi) / 2;
-                if (_arc[mid] <= s) lo = mid; else hi = mid;
-            }
-            float f = Mathf.InverseLerp(_arc[lo], _arc[hi], s);
-            return (lo + f) / Samples * Mathf.PI * 2f;
-        }
-
         /// <summary>Weltposition auf der Route nach s Metern (inkl. sanftem Auf und Ab).</summary>
-        public Vector3 PointAt(float s)
-        {
-            Build();
-            float theta = ThetaAt(s);
-            float lift = Mathf.Sin(s / _total * Mathf.PI * 4f + 0.7f) * altitudeSwing;
-            return center + Shape(theta) + Vector3.up * (altitude + lift);
-        }
+        public Vector3 PointAt(float s) => center + Route.FlatPoint(s) + Vector3.up * Height(s);
 
-        static bool Networked
-        {
-            get
-            {
-                var nm = NetworkManager.Singleton;
-                return nm != null && nm.IsListening;
-            }
-        }
-
-        float TargetS()
-        {
-            if (Networked) return (float)(NetworkManager.Singleton.ServerTime.Time * speed) + startOffset;
-            return _s;
-        }
+        float Height(float s) => altitude + Mathf.Sin(s / Route.Length * Mathf.PI * 4f + 0.7f) * altitudeSwing;
 
         void Awake()
         {
-            Build();
             _s = startOffset;
             if (neon != null) _neonMats = neon.materials;
             if (navLights != null) _navMats = navLights.materials;
@@ -130,7 +82,6 @@ namespace DriftSkate
         /// <summary>Fuer Screenshots und Tests: Zeppelin an eine Stelle der Route setzen.</summary>
         public void SetRoutePosition(float s)
         {
-            Build();
             _s = s;
             Place(0f, true);
         }
@@ -138,14 +89,7 @@ namespace DriftSkate
         void Update()
         {
             float dt = Time.deltaTime;
-            _s += speed * dt;
-            if (Networked)
-            {
-                // Sanft auf die Server-Zeit einschwenken; bei grossem Sprung (Beitritt) direkt hin
-                float diff = Mathf.DeltaAngle(_s / _total * 360f, TargetS() / _total * 360f) / 360f * _total;
-                if (Mathf.Abs(diff) > 40f) _s += diff; else _s += diff * Mathf.Min(1f, dt * 0.5f);
-            }
-            _s = Mathf.Repeat(_s, _total);
+            _s = Route.Advance(_s, speed, startOffset, dt, 40f);
             Place(dt, false);
             Animate(dt);
         }
@@ -232,16 +176,8 @@ namespace DriftSkate
 
         void OnDrawGizmosSelected()
         {
-            _arc = null;
-            Build();
-            Gizmos.color = Color.cyan;
-            Vector3 prev = PointAt(0f);
-            for (int i = 1; i <= 128; i++)
-            {
-                Vector3 p = PointAt(i / 128f * _total);
-                Gizmos.DrawLine(prev, p);
-                prev = p;
-            }
+            _route = null; // Werte im Inspector koennten sich geaendert haben
+            Route.DrawGizmo(center, Height, Color.cyan);
         }
     }
 }

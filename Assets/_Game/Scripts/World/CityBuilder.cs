@@ -63,6 +63,9 @@ namespace DriftSkate
         int RI(int min, int maxExclusive) => _rng.Next(min, maxExclusive);
         T Pick<T>(T[] arr) => arr[_rng.Next(arr.Length)];
 
+        /// <summary>Art des Blocks in Zeile row, Spalte col (siehe Map: B, P, X, S, D, H).</summary>
+        public static char BlockType(int row, int col) => Map[row][col];
+
         public static float BlockCenter(int i) => -Half + Road + i * (Block + Road) + Block * 0.5f;
         public static float RoadCenter(int k) => -Half + Road * 0.5f + k * (Block + Road);
 
