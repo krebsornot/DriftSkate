@@ -27,6 +27,7 @@ Unity-Pfad: `C:\Program Files\Unity\Hub\Editor\6000.3.2f1\Editor\Unity.exe`. Bat
 - Asset-Pipelines mit Kontrollbildern: `ZeppelinAssets.BatchAll`, `TrafficAssets.BatchAll`; Stadt-Bilder: `SimTests.RenderCityDetails` (`Logs/detail_*.png`)
 - Spieltest (Exe): `DriftSkate.exe -autotest -testlog Logs/autotest.txt`. Er klickt durch Garage und Stadt und schreibt Prüfungen (`OK` / `FEHLT`) plus Screenshots nach `Logs/`. **Bekannte alte Fehler**, nicht von neuen Änderungen: „Bail-Out gestartet“, „kein Manual-Sturz …“, „Paket abgeliefert“.
 - Online-Test: Host `-nettest-host -netport 7797`, nach ca. 12 s Client `-nettest-client 127.0.0.1 -netport 7797`, jeweils mit eigenem `-testlog`. Port 7797 nehmen, weil auf 7777 oft jemand selbst hostet.
+- Sturz-Pose (Play-Mode im Batch, ohne `-quit`): `DriftSkate.EditorTools.BailPlayTest.Run` prueft, dass beim Hinfallen nichts im Boden steckt (`Logs/bail/*.png`)
 - Performance: `DriftSkate.exe -perftest -perfweather klar|regen -perflog Logs/perf/x.txt`. **Nie nur den FPS-Zahlen trauen**, immer auch die Screenshots (`perf_*.png`) ansehen.
 
 Vor Tests mit der Exe:
@@ -41,6 +42,7 @@ Eingabe-Timing (Bail-Out, Landungen, Ollie) wie ein Mensch testen: mit Reaktions
 - Das Spiel ist **CPU-gebunden** (Draw Calls). Kleine Teile ohne Schatten und Outline, Details auf Layer „Detail“ (ab 85 m ausgeblendet), Meshes zusammenfassen (siehe Paletten-Textur bei `TrafficAssets`).
 - **Null-Normalen → NaN im Toon-Shader → Bloom färbt den ganzen Bildschirm weiß.** Doppelseitige Meshes nie durch doppelte Dreiecke mit `RecalculateNormals` bauen. Prüfung: `CarNormalCheck.Run`.
 - Synchronisierte Enums (z. B. `SkaterState`, als Byte übertragen) nur **hinten** erweitern. Dasselbe gilt für Kodierungen wie `CarDesign.Encode`, damit alte Daten lesbar bleiben.
+- NPC-Autos (`TrafficCar`) sind echte Rigidbodies (1050 kg, Hoehe und Kippen gesperrt), die ihrer Spur mit begrenzter Kraft folgen. Nie wieder kinematisch machen: dann wirken sie beim Rammen wie eine Wand.
 - Online simuliert jeder Besitzer sein Auto und seinen Skater selbst. Zeppelin und NPC-Verkehr folgen der Server-Zeit (`NetworkManager.ServerTime`), es wird nichts übertragen.
 - Skater-Bodenführung (`StepRiding`): das Hochdrücken bei Eindringen gehört nicht in `_lastSlopeVy`, sonst hüpft der Skater.
 - Blender (bei Fynn über Steam, nicht im PATH): Unity-Humanoid braucht eine dreiteilige Wirbelsäule (Spine/Spine1/Spine2). FBX in der Ruhepose exportieren. Hand-Posen in Unity prüfen (`DriftSkate → Tests → NPCs pruefen und rendern`).

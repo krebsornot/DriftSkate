@@ -166,6 +166,8 @@ namespace DriftSkate
 
             Vector3 up = Vector3.Slerp(board.up, stance.up, _feetFree).normalized;
             up = Vector3.Slerp(up, Vector3.up, walk).normalized;
+            // Sturz: das Board liegt umgedreht da, die Figur richtet sich trotzdem nach oben (sonst steckt sie im Boden)
+            up = Vector3.Slerp(up, Vector3.up, bail).normalized;
             Vector3 noseDir = Vector3.Slerp(board.forward, stance.forward, _feetFree).normalized;
             Vector3 travelDir = Vector3.ProjectOnPlane(root.forward, up).normalized;
             Vector3 bodyFwd = Vector3.ProjectOnPlane(frame.forward, up).normalized; // Zehenseite
@@ -261,7 +263,7 @@ namespace DriftSkate
             hipH = Mathf.Lerp(hipH, TuckHip, Mathf.Max(_grabWeight, airborne * 0.35f));
             hipH -= _pushWeight * 0.1f;
             hipH += rideLife * (breath * 0.006f - Mathf.Abs(balanceWave) * 0.012f);
-            hipH = Mathf.Lerp(hipH, 0.45f, bail);
+            hipH = Mathf.Lerp(hipH, 0.24f, bail); // liegt flach: Becken knapp ueber dem Boden
             float leanDeg = -lean * 16f;
             Vector3 mid = (deckFront + deckBack) * 0.5f;
             Vector3 travelRight = Vector3.Cross(up, travelDir);
@@ -347,7 +349,7 @@ namespace DriftSkate
             else
             {
                 for (int i = 0; i < 2; i++)
-                    _lowerLeg[i].rotation = Quaternion.AngleAxis(-70f, bodyRight) * _lowerLeg[i].rotation;
+                    _lowerLeg[i].rotation = Quaternion.AngleAxis(65f, bodyRight) * _lowerLeg[i].rotation; // liegt auf dem Bauch: Unterschenkel nach oben
             }
 
             // ---------------------------------------------------- Arme

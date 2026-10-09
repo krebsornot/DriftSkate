@@ -1153,6 +1153,44 @@ namespace DriftSkate
                 yield return Frames(10);
             }
 
+            // 7m. NPC-Auto rammen: es wird weggeschoben (keine Wand), man selbst behaelt Tempo, danach faehrt es zurueck in die Spur
+            if (traffic != null && traffic.cars.Count > 1)
+            {
+                var npc = traffic.cars[1];
+                yield return WaitFor(() => npc.Speed > 6f && npc.State == TrafficCar.Mode.Drive, 10f);
+                Transform nt = npc.transform;
+                if (a.Mode != PlayerMode.Driving) a.TestInteract();
+                a.PlaceForChallenge(true, nt.position - nt.forward * 22f, nt.eulerAngles.y);
+                yield return Frames(3);
+                a.car.Body.linearVelocity = nt.forward * (npc.Speed + 14f);
+                Vector3 npcBefore = nt.position;
+                float hitSpeed = 0f, after = 0f, ramStart = Time.time;
+                bool knocked = false;
+                while (Time.time - ramStart < 4f)
+                {
+                    a.car.input = new VehicleInput { throttle = 1f };
+                    if (!knocked && npc.State == TrafficCar.Mode.Knocked)
+                    {
+                        knocked = true;
+                        hitSpeed = a.car.Speed;
+                        yield return new WaitForSeconds(0.25f);
+                        after = a.car.Speed;
+                        Capture("Logs/play_npc_ram.png");
+                    }
+                    yield return null;
+                }
+                a.car.input = new VehicleInput { brake = 1f };
+                float pushed = Vector3.Distance(npcBefore, nt.position);
+                Check(knocked && after > hitSpeed * 0.35f,
+                      $"NPC-Auto gerammt: weggeschoben statt Wand (eigenes Tempo {hitSpeed * 3.6f:0} -> {after * 3.6f:0} km/h, NPC {pushed:0} m)");
+                yield return WaitFor(() => npc.State == TrafficCar.Mode.Drive, 20f);
+                Check(npc.State == TrafficCar.Mode.Drive, "NPC-Auto faehrt nach dem Crash wieder in seiner Spur (" + npc.State + ")");
+                // Wieder wie vorher: auf dem Board am Startpunkt der Skate-Tests, das Auto bleibt auf der Strasse
+                yield return Drive(a, 2.5f, t => new VehicleInput { brake = 1f, handbrake = true });
+                a.PlaceForChallenge(false, SkateTestStart, 0f);
+                yield return Frames(10);
+            }
+
             // 8. Auto rufen und einsteigen
             yield return new WaitForSeconds(2.5f);
             Log($"Abstand zum Auto: {a.DistanceToCar:0.0} m");
