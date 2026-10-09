@@ -284,6 +284,8 @@ namespace DriftSkate
             _bailOutGrace = 0f;
             _steerLock = false;
             _revertLock = false;
+            _alignWorld = Quaternion.Euler(0, heading, 0); // nach dem Absetzen sofort richtig ausgerichtet
+            _alignInit = true;
             _lastSlopeVy = _fallVy = 0f;
             _plantChain = 0;
             _plantCharging = false;
@@ -1518,6 +1520,8 @@ namespace DriftSkate
         // ---------------------------------------------------------------- Optik (lokal und entfernt)
 
         float _crouch, _bailAnim, _walkAnim;
+        Quaternion _alignWorld;
+        bool _alignInit;
 
         /// <summary>Entfernter Spieler im Wallride: naechste Wand links oder rechts suchen (fuer die Neigung).</summary>
         Vector3 RemoteWallNormal()
@@ -1554,7 +1558,12 @@ namespace DriftSkate
                     ? Quaternion.Euler(0f, Heading + (Fakie ? 180f : 0f), 0f)
                     : transform.rotation * Quaternion.Euler(0f, RemoteFakie ? 180f : 0f, 0f);
                 Quaternion target = tilt * facing;
-                align.rotation = Quaternion.Slerp(align.rotation, target, 1f - Mathf.Exp(-12f * dt));
+                // Von der eigenen, gemerkten Welt-Ausrichtung aus nachfuehren: Align haengt an der Skater-Wurzel, und die
+                // springt bei einer Fakie-Landung um 180 Grad (Heading + 180, Fakie). Ginge man von align.rotation aus,
+                // wuerde das Board erst mitgerissen und dann zurueckgedreht = eine ungewollte 360-Drehung.
+                if (!_alignInit) { _alignWorld = align.rotation; _alignInit = true; }
+                _alignWorld = Quaternion.Slerp(_alignWorld, target, 1f - Mathf.Exp(-12f * dt));
+                align.rotation = _alignWorld;
             }
 
             _landAbsorb = Mathf.MoveTowards(_landAbsorb, 0f, dt * 2.2f);
