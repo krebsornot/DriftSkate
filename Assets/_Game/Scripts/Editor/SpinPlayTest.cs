@@ -17,10 +17,15 @@ namespace DriftSkate.EditorTools
         static float _t0;
         static bool _oldEnabled;
         static EnterPlayModeOptions _oldOptions;
+        /// <summary>Gewuenschte Drehung in der Luft (Grad), per -spin 20 aenderbar.</summary>
+        static float _spinTarget = 175f;
         static float _lastAlign, _lastBoard, _lastRoot, _turnAlign, _turnBoard, _turnRoot;
 
         public static void Run()
         {
+            var args = Environment.GetCommandLineArgs();
+            int ai = Array.IndexOf(args, "-spin");
+            if (ai >= 0 && ai + 1 < args.Length) float.TryParse(args[ai + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out _spinTarget);
             EditorSceneManager.OpenScene(AnimationLabAssets.ScenePath);
             _oldEnabled = EditorSettings.enterPlayModeOptionsEnabled;
             _oldOptions = EditorSettings.enterPlayModeOptions;
@@ -60,7 +65,7 @@ namespace DriftSkate.EditorTools
                         if (t - _t0 > 0.3f) { sc.InjectInput(Vector2.zero, false); _stage = 2; }
                         break;
                     case 2: // D halten bis ~180, dann loslassen (wie ein Mensch)
-                        bool spinning = sc.State == SkaterState.Air && Mathf.Abs(sc.AirSpin) < 175f;
+                        bool spinning = sc.State == SkaterState.Air && Mathf.Abs(sc.AirSpin) < _spinTarget;
                         sc.InjectInput(spinning ? new Vector2(1f, 0f) : Vector2.zero, false);
                         if (sc.State != SkaterState.Air && t - _t0 > 0.6f)
                         {
@@ -71,6 +76,11 @@ namespace DriftSkate.EditorTools
                         break;
                     case 3: // ohne Eingabe weiterrollen und Drehung messen
                         sc.InjectInput(Vector2.zero, false);
+                        if (Mathf.Repeat(t - _t0, 0.1f) < Time.deltaTime)
+                        {
+                            var v = sc.GetComponent<Rigidbody>().linearVelocity;
+                            Debug.Log($"[Spin] t {t - _t0:0.00} Heading {Mathf.Repeat(sc.Heading, 360f):0} Fahrtrichtung {Mathf.Repeat(Mathf.Atan2(v.x, v.z) * Mathf.Rad2Deg, 360f):0} Align {sc.align.eulerAngles.y:0} Kamera-Ziel {sc.State}");
+                        }
                         _turnAlign += Mathf.Abs(Mathf.DeltaAngle(_lastAlign, sc.align.eulerAngles.y)); _lastAlign = sc.align.eulerAngles.y;
                         _turnBoard += Mathf.Abs(Mathf.DeltaAngle(_lastBoard, sc.boardPivot.eulerAngles.y)); _lastBoard = sc.boardPivot.eulerAngles.y;
                         _turnRoot += Mathf.Abs(Mathf.DeltaAngle(_lastRoot, sc.transform.eulerAngles.y)); _lastRoot = sc.transform.eulerAngles.y;

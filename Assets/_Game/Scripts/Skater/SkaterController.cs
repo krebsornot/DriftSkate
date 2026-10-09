@@ -178,6 +178,9 @@ namespace DriftSkate
         float _lastSlopeVy, _fallVy;
 
         // Fahrgefuehl
+        // Landung: 0 = gerade aufgesetzt, 1 = voller Grip (siehe LandSettleTime)
+        float _landSettle = 1f, _landLossRate;
+        const float LandSettleTime = 0.25f;
         float _turnVel, _spinVel, _pushPhase = -1f, _brake, _landAbsorb, _popTimer, _lean;
 
         /// <summary>-1 = kein Push, sonst Phase 0..1 eines Abstossens.</summary>
@@ -284,6 +287,7 @@ namespace DriftSkate
             _bailOutGrace = 0f;
             _steerLock = false;
             _revertLock = false;
+            _landSettle = 1f;
             _alignWorld = Quaternion.Euler(0, heading, 0); // nach dem Absetzen sofort richtig ausgerichtet
             _alignInit = true;
             _lastSlopeVy = _fallVy = 0f;
@@ -408,6 +412,9 @@ namespace DriftSkate
 
             Vector3 n = hit.normal;
             GroundNormal = Vector3.Slerp(GroundNormal, n, 1f - Mathf.Exp(-15f * dt));
+            // Nach der Landung: Grip und Stabilisierung weich hochfahren statt sofort voll anzuheften
+            _landSettle = Mathf.MoveTowards(_landSettle, 1f, dt / LandSettleTime);
+            float settle = Smooth01(_landSettle);
             Vector3 fwd = Vector3.ProjectOnPlane(Quaternion.Euler(0, Heading, 0) * Vector3.forward, n).normalized;
             Vector3 right = Vector3.Cross(n, fwd);
 
@@ -418,6 +425,7 @@ namespace DriftSkate
             // Hangabtrieb: bergab wird man schneller, quer zum Hang rutscht man leicht
             Vector3 slope = Vector3.ProjectOnPlane(Vector3.down * Gravity, n);
             along += Vector3.Dot(slope, fwd) * dt;
+            if (_landSettle < 1f) along = Mathf.MoveTowards(along, 0f, _landLossRate * dt); // Tempoverlust einer schraegen Landung, verteilt
             lat += Vector3.Dot(slope, right) * dt * 0.5f;
 
             float turbo = Admin.Turbo ? 1.8f : 1f;
@@ -457,7 +465,7 @@ namespace DriftSkate
 
             // Lenken mit Traegheit: einlenken braucht einen Moment, man carvt statt abzuknicken
             float speed = Mathf.Abs(along);
-            float maxTurn = Mathf.Lerp(165f, 72f, Mathf.Clamp01(speed / 12f)) * (Manualing ? 0.45f : 1f);
+            float maxTurn = Mathf.Lerp(165f, 72f, Mathf.Clamp01(speed / 12f)) * (Manualing ? 0.45f : 1f) * Mathf.Lerp(0.4f, 1f, settle);
             if (speed < 0.6f) maxTurn *= 0.7f; // im Stand umdrehen (Kickturn)
             // Nach der Landung lenkt eine noch vom Spin gehaltene Taste nicht weiter (erst loslassen oder kurz warten)
             if (_steerLock && (Mathf.Abs(_move.x) < 0.2f || Time.time - _landTime > 0.35f)) _steerLock = false;
@@ -486,7 +494,7 @@ namespace DriftSkate
             Vector3 fwd2 = Vector3.ProjectOnPlane(Quaternion.Euler(0, Heading, 0) * Vector3.forward, n).normalized;
             Vector3 right2 = Vector3.Cross(n, fwd2);
             // Rollen halten die Spur, seitliches Rutschen klingt schnell ab (in harten Kurven bleibt ein Rest)
-            lat *= Mathf.Exp(-sideGrip * dt);
+            lat *= Mathf.Exp(-sideGrip * Mathf.Lerp(0.15f, 1f, settle) * dt);
 
             // Am Boden bleiben, ohne festgesaugt zu werden. Zwei getrennte Teile:
             // 1) Bewegung entlang des Bodens: kippt der Boden nach unten weg (Kante, Kuppe, Bordstein), darf die
@@ -865,9 +873,15 @@ namespace DriftSkate
             State = SkaterState.Riding;
 
             Vector3 fwd = Vector3.ProjectOnPlane(Quaternion.Euler(0, Heading, 0) * Vector3.forward, hit.normal).normalized;
+            // Beim ersten Kontakt die Bewegung erhalten (nur der Fallanteil geht in den Boden), nicht hart auf die
+            // Board-Achse zwingen: Grip, Lenken und Tempoverlust fahren danach ueber LandSettleTime hoch (StepRiding)
+            Vector3 onGround = Vector3.ProjectOnPlane(_rb.linearVelocity, hit.normal);
             // Auf einer Schraege nach unten geht die Fallgeschwindigkeit in Tempo ueber (weich weiterrollen)
             float landSpeed = Mathf.Max(flatVel.magnitude, Vector3.Dot(_rb.linearVelocity, fwd));
-            _rb.linearVelocity = fwd * landSpeed * Mathf.Max(0f, keep);
+            if (landSpeed > onGround.magnitude) onGround += fwd * (landSpeed - onGround.magnitude);
+            _rb.linearVelocity = onGround;
+            _landSettle = 0f;
+            _landLossRate = landSpeed * (1f - Mathf.Clamp01(keep)) / LandSettleTime;
             _lastSlopeVy = _rb.linearVelocity.y;
             _fallVy = 0f;
         }
