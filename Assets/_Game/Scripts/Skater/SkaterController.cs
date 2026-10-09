@@ -683,7 +683,11 @@ namespace DriftSkate
         void StepAir(float dt)
         {
             _airTime += dt;
-            Vector3 v = _rb.linearVelocity + Vector3.down * Gravity * dt;
+            // Hang Time: rund um den hoechsten Punkt wirkt die Schwerkraft schwaecher, der Bogen wird runder statt
+            // gleich wieder nach unten zu ziehen (nicht beim Bail-Out, dort zaehlt das Landetiming)
+            float vy = _rb.linearVelocity.y;
+            float hang = _bailOutLanding ? 1f : Mathf.Lerp(0.55f, 1f, Mathf.Clamp01(Mathf.Abs(vy) / 2.2f));
+            Vector3 v = _rb.linearVelocity + Vector3.down * Gravity * hang * dt;
             _rb.linearVelocity = v;
             _rb.MoveRotation(Quaternion.Euler(0, Heading, 0));
             if (combo != null && combo.Active) combo.Hold();

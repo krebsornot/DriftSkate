@@ -101,6 +101,8 @@ namespace DriftSkate
 
         public void ClearDialogShot() => _shot = false;
 
+        float _focusY, _focusYVel;
+
         void LateUpdate()
         {
             float dt = Time.deltaTime;
@@ -161,7 +163,12 @@ namespace DriftSkate
 
             // Nicht unter -7 Grad, sonst taucht die tiefe Nah-Kamera beim Umsehen in den Boden
             Quaternion rot = Quaternion.Euler(Mathf.Max(-7f, _pitch + _pitchOffset), _yaw + _yawOffset, 0f);
-            Vector3 pivot = focus.position + Vector3.up * _pivot;
+            // Auf dem Board folgt die Kamera der Hoehe mit leichter Federung: Landungen werden weich abgefangen
+            // statt dass die Kamera den harten Stopp 1:1 mitmacht
+            float focusY = focus.position.y;
+            if (driving || _snap || Mathf.Abs(focusY - _focusY) > 4f) { _focusY = focusY; _focusYVel = 0f; }
+            else _focusY = Mathf.SmoothDamp(_focusY, focusY, ref _focusYVel, 0.13f, Mathf.Infinity, dt);
+            Vector3 pivot = new Vector3(focus.position.x, _focusY, focus.position.z) + Vector3.up * _pivot;
             Vector3 desired = pivot - rot * Vector3.forward * _dist + Vector3.up * (_height - 1f);
 
             if (Physics.SphereCast(pivot, 0.25f, desired - pivot, out RaycastHit hit, Vector3.Distance(pivot, desired), _mask, QueryTriggerInteraction.Ignore))
