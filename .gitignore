@@ -3,7 +3,10 @@
 /[Tt]emp/
 /[Oo]bj/
 /[Bb]uild/
-/[Bb]uilds/
+/[Bb]uilds/*
+# Die fertige Windows-Version wird mitgeliefert (zum Ausprobieren ohne Unity)
+!/Builds/DriftSkate/
+*.lnk
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /[Mm]emoryCaptures/
