@@ -1,6 +1,6 @@
 # DRIFT × SKATE (Arbeitstitel)
 
-Online-Spiel für den PC im Jet-Set-Radio-Look: mit dem Drift-Auto durch eine fiktive Stadt fahren, jederzeit aussteigen (auch per Bail-Out während der Fahrt) und auf dem Skateboard weiter. Drifts und Tricks zählen in **eine gemeinsame Combo**, Punkte sind Geld. Damit kauft man Autos, Boards, Outfits und Garagen.
+Online-Spiel für den PC im Jet-Set-Radio-Look: mit dem Drift-Auto durch eine fiktive Stadt fahren, jederzeit aussteigen (auch per Bail-Out während der Fahrt) und auf dem Skateboard weiter. Drifts und Tricks zählen in **eine gemeinsame Combo**; am Ende wird ein Hundertstel der Punkte als Geld ausgezahlt (800.000 Punkte = 8.000 $). Damit kauft man Autos, Boards, Outfits und Garagen.
 
 Game-Design-Dokument (Planung): https://claude.ai/code/artifact/58e41e38-1480-4a29-b6c1-7b521ce4a3fd
 

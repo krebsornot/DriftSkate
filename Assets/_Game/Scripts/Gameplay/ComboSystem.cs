@@ -5,13 +5,19 @@ namespace DriftSkate
 {
     /// <summary>
     /// Eine gemeinsame Combo fuer Drifts und Skate-Tricks. Jede neue Aktion erhoeht den Multiplikator.
-    /// Ohne Aktion laeuft ein Zeitfenster ab; dann wird die Combo 1:1 als Geld gutgeschrieben.
+    /// Ohne Aktion laeuft ein Zeitfenster ab; dann wird ein Hundertstel der Punkte als Geld gutgeschrieben (MoneyPerPoint).
     /// Sturz, Dreher oder Wandkontakt beenden sie mit halben Punkten.
     /// </summary>
     public class ComboSystem : MonoBehaviour
     {
         public const float Window = 2.2f;
         public const int MaxMultiplier = 20;
+        /// <summary>
+        /// Geld pro Combo-Punkt. Die Punkte (Anzeige, Bestwert, Quest-Ziele) bleiben, ausgezahlt wird ein Hundertstel:
+        /// eine richtig gute Combo (800.000 Punkte) bringt 8.000 $, das guenstigste Garagen-Auto kostet 120.000 $.
+        /// </summary>
+        public const float MoneyPerPoint = 0.01f;
+        public static long ToMoney(long points) => (long)Math.Round(points * (double)MoneyPerPoint);
 
         public bool Active { get; private set; }
         public float Points { get; private set; }
@@ -74,7 +80,8 @@ namespace DriftSkate
         void Finish(long amount, bool failed, string reason)
         {
             Active = false;
-            if (amount > 0) SaveSystem.AddMoney(amount);
+            long money = ToMoney(amount);
+            if (money > 0) SaveSystem.AddMoney(money);
             if (!failed && amount > SaveSystem.Profile.bestCombo)
             {
                 SaveSystem.Profile.bestCombo = amount;

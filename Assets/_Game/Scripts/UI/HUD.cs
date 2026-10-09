@@ -85,12 +85,12 @@ namespace DriftSkate
             _actions.Clear();
             if (failed)
             {
-                _result.text = (reason ?? "COMBO VERLOREN") + "\n+" + UIFactory.Money(amount) + " (halbe Punkte)";
+                _result.text = (reason ?? "COMBO VERLOREN") + "\n+" + UIFactory.Money(ComboSystem.ToMoney(amount)) + " (halbe Punkte)";
                 _result.color = Palette.Red;
             }
             else
             {
-                _result.text = "COMBO!\n+" + UIFactory.Money(amount);
+                _result.text = "COMBO!\n+" + UIFactory.Money(ComboSystem.ToMoney(amount));
                 _result.color = Palette.Lime;
             }
             _resultTime = 2.6f;
