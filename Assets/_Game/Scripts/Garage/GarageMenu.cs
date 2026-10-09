@@ -518,8 +518,13 @@ namespace DriftSkate
             if (_previewCar != def.id) { _previewCar = def.id; RebuildPreview(); }
             var list = List();
             Header(list, "TEILE  " + def.name.ToUpperInvariant());
-            bool popUps = CarShape.For(def.id).head == HeadStyle.PopUp;
-            for (int p = 0; p < CarDesign.PartCount; p++)
+            if (def.IsModel)
+            {
+                var fixedHint = Info(list, "Dieses Auto hat ein festes Design: Anbauteile und Felgen gehoeren zum Modell. Unterboden-Neon geht trotzdem.", 22, 60);
+                fixedHint.color = HintColor;
+            }
+            bool popUps = !def.IsModel && CarShape.For(def.id).head == HeadStyle.PopUp;
+            for (int p = 0; p < CarDesign.PartCount && !def.IsModel; p++)
             {
                 if (p == CarDesign.PopUps && !popUps) continue;
                 int part = p;
@@ -531,13 +536,16 @@ namespace DriftSkate
                 val.GetComponent<Outline>().enabled = false;
                 UIFactory.SprayButton(row, ">", Palette.Cyan, () => CyclePart(d, part, 1), new Vector2(70, 56), 34, Palette.Ink);
             }
-            Header(list, "FELGENFARBE");
-            SwatchGrid(list, c =>
+            if (!def.IsModel)
             {
-                d.rimColor = c;
-                MarkDesign();
-                RebuildPreview();
-            });
+                Header(list, "FELGENFARBE");
+                SwatchGrid(list, c =>
+                {
+                    d.rimColor = c;
+                    MarkDesign();
+                    RebuildPreview();
+                });
+            }
             Header(list, "UNTERBODEN-NEON");
             var neonRow = UIFactory.Row(list, 62);
             UIFactory.FlowLabel(neonRow, "LICHT", 26, TextColor, 230, TextAnchor.MiddleLeft, true).GetComponent<Outline>().enabled = false;
@@ -613,6 +621,14 @@ namespace DriftSkate
                 MarkDesign();
                 RebuildPreview();
             });
+            if (def.IsModel)
+            {
+                var modelHint = Info(list, "Festes Design: die Aufkleber gehoeren zum Modell, eine eigene Folie gibt es hier nicht.", 22, 60);
+                modelHint.color = HintColor;
+                var factoryRow = UIFactory.Row(list, 64);
+                UIFactory.SprayButton(factoryRow, "ORIGINAL-LACK", Palette.White, () => { save.paint = def.defaultColor; MarkDesign(); RebuildPreview(); }, new Vector2(320, 58), 26);
+                return;
+            }
 
             Header(list, "VORLAGEN");
             var presetRow = UIFactory.Row(list, 60);

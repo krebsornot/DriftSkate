@@ -36,6 +36,7 @@ namespace DriftSkate
             }
             if (design == null) design = CarDesign.Default(def.id, crew);
             design.Sanitize();
+            if (def.IsModel) return BuildModel(root, def, paint, design, vc);
 
             var res = new Result();
             var visual = Shapes.Group(root, "Visual");
@@ -103,6 +104,62 @@ namespace DriftSkate
             float seatZ = (s.RoofFrontT + s.RoofRearT) * 0.5f * L;
             res.seat = Shapes.Group(root, "Seat", new Vector3(W * 0.22f, sill + 0.1f, seatZ));
             res.exitPoint = Shapes.Group(root, "Exit", new Vector3(W * 0.5f + 1.1f, 0.1f, seatZ));
+            return res;
+        }
+
+        /// <summary>
+        /// Fertig modelliertes Auto (CarModel unter Resources/CarModels): Modell einsetzen, Lack umfaerben, die vier
+        /// Raeder an die Federbeine der Physik haengen. Folie und Anbauteile gibt es hier nicht, Neon und Sturz schon.
+        /// </summary>
+        static Result BuildModel(Transform root, CarDef def, Color paint, CarDesign design, VehicleController vc)
+        {
+            var res = new Result();
+            var visual = Shapes.Group(root, "Visual");
+            res.visual = visual;
+            float r = def.wheelRadius;
+            var prefab = Resources.Load<GameObject>("CarModels/" + def.model);
+            CarModel model = null;
+            if (prefab == null) Debug.LogError("[CarBuilder] Auto-Modell fehlt: Resources/CarModels/" + def.model);
+            else
+            {
+                var inst = Object.Instantiate(prefab, visual, false);
+                inst.name = "Model";
+                model = inst.GetComponent<CarModel>();
+                model.ApplyPaint(paint);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                bool left = i % 2 == 0;
+                var pivot = Shapes.Group(root, "Wheel" + i);
+                pivot.localPosition = vc != null
+                    ? vc.wheels[i].localTop
+                    : new Vector3((left ? -0.5f : 0.5f) * def.track, r, (i < 2 ? 0.5f : -0.5f) * def.wheelbase);
+                float side = left ? -1f : 1f;
+                var camber = Shapes.Group(pivot, "Camber");
+                camber.localRotation = Quaternion.Euler(0f, 0f, -side * design.camber * (i < 2 ? 1f : 0.6f));
+                var spin = Shapes.Group(camber, "Spin");
+                if (model != null && model.wheels[i] != null)
+                {
+                    var w = model.wheels[i];
+                    w.SetParent(spin, false);
+                    w.localPosition = Vector3.zero;
+                    w.localRotation = Quaternion.identity;
+                }
+                if (vc != null) vc.SetWheelVisual(i, pivot, spin);
+                if (i >= 2) res.rearWheels[i - 2] = pivot;
+            }
+            if (design.neon > 0) Underglow.Build(visual, def.track, def.wheelbase, def.length, r, 0.25f, design.neon, design.neonColor);
+
+            var col = root.GetComponent<BoxCollider>();
+            if (col == null) col = root.gameObject.AddComponent<BoxCollider>();
+            Vector3 size = model != null ? model.boxSize : new Vector3(def.width, def.height - 0.25f, def.length);
+            col.size = size;
+            col.center = model != null ? model.boxCenter : new Vector3(0f, 0.25f + size.y * 0.5f, 0f);
+            col.sharedMaterial = new PhysicsMaterial("CarBody") { dynamicFriction = 0.15f, staticFriction = 0.15f, bounciness = 0.05f, frictionCombine = PhysicsMaterialCombine.Minimum };
+
+            res.seat = Shapes.Group(root, "Seat", new Vector3(size.x * 0.22f, 0.35f, -0.1f));
+            res.exitPoint = Shapes.Group(root, "Exit", new Vector3(size.x * 0.5f + 1.1f, 0.1f, -0.1f));
             return res;
         }
 

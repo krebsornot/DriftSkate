@@ -19,6 +19,9 @@ namespace DriftSkate
         public bool popUpLights, spoiler;
         public float[] gears;
         public float finalDrive;
+        /// <summary>Fertiges Modell unter Resources/CarModels (statt prozedural gebaut). Lack ist waehlbar, Folie und Teile nicht.</summary>
+        public string model;
+        public bool IsModel => !string.IsNullOrEmpty(model);
     }
 
     public class BoardDef
@@ -92,6 +95,45 @@ namespace DriftSkate
                 price = 1500000, horsepower = 500, peakTorque = 620, maxRpm = 7600, mass = 1560,
                 length = 4.6f, width = 1.79f, height = 1.36f, wheelbase = 2.67f, track = 1.52f, wheelRadius = 0.34f,
                 style = BodyStyle.Coupe, defaultColor = Palette.Hex("3D5FD8"),
+                gears = new[] { 2.9f, 1.95f, 1.4f, 1.08f, 0.86f, 0.7f }, finalDrive = 3.6f },
+
+            // Getunte Modelle (GLB aus Art/Cars, gebaut mit DriftSkate → Autos → Garagen-Modelle bauen).
+            // Maße (Radstand, Spur, Radius) aus den Modellen gemessen; Fahrwerte wie das Grundmodell, etwas staerker.
+            new CarDef {
+                id = "roku86_street", name = "Roku AE Street", blurb = "Der Klassiker im Street-Trim. Zweifarbig, leicht, frech.", model = "roku_ae_street",
+                price = 120000, horsepower = 195, peakTorque = 300, maxRpm = 8000, mass = 1020,
+                length = 4.2f, width = 1.66f, height = 1.33f, wheelbase = 2.4f, track = 1.4f, wheelRadius = 0.29f,
+                style = BodyStyle.Hatch, defaultColor = new Color(1f, 0.578f, 0.047f).gamma,
+                gears = new[] { 3.6f, 2.2f, 1.55f, 1.18f, 0.95f }, finalDrive = 4.3f },
+            new CarDef {
+                id = "sylph15_drift", name = "Sylph S15 Drift", blurb = "Bodykit, Fluegel, Startnummern. Gebaut fuer Winkel.", model = "sylph_s15_drift",
+                price = 380000, horsepower = 300, peakTorque = 410, maxRpm = 7800, mass = 1210,
+                length = 4.45f, width = 1.75f, height = 1.29f, wheelbase = 2.53f, track = 1.5f, wheelRadius = 0.31f,
+                style = BodyStyle.Coupe, defaultColor = new Color(1f, 0.078f, 0.392f).gamma,
+                gears = new[] { 3.3f, 2.1f, 1.5f, 1.15f, 0.92f, 0.78f }, finalDrive = 4.1f },
+            new CarDef {
+                id = "kazefc_street", name = "Kaze FC Street", blurb = "Wankel mit Street-Folie. Dreht bis in den Himmel.", model = "kaze_fc_street",
+                price = 520000, horsepower = 320, peakTorque = 360, maxRpm = 9200, mass = 1190,
+                length = 4.3f, width = 1.69f, height = 1.27f, wheelbase = 2.43f, track = 1.44f, wheelRadius = 0.3f,
+                style = BodyStyle.Coupe, defaultColor = new Color(0.042f, 0.027f, 0.091f).gamma,
+                gears = new[] { 3.5f, 2.2f, 1.6f, 1.2f, 0.95f, 0.8f }, finalDrive = 4.3f },
+            new CarDef {
+                id = "mark2j_drift", name = "Mark II J Drift", blurb = "Die Limousine im Drift-Trim. Lang, stabil, laut.", model = "mark_ii_j_drift",
+                price = 800000, horsepower = 380, peakTorque = 500, maxRpm = 7400, mass = 1420,
+                length = 4.8f, width = 1.75f, height = 1.4f, wheelbase = 2.78f, track = 1.51f, wheelRadius = 0.32f,
+                style = BodyStyle.Sedan, defaultColor = new Color(0.905f, 0.863f, 0.791f).gamma,
+                gears = new[] { 3.2f, 2.0f, 1.45f, 1.1f, 0.88f, 0.76f }, finalDrive = 3.9f },
+            new CarDef {
+                id = "toro2j_smoke", name = "Toro 2J Rauch", blurb = "Mehr Ladedruck, mehr Rauch. Der Reifenkiller.", model = "toro_2j_smoke",
+                price = 1300000, horsepower = 480, peakTorque = 640, maxRpm = 7600, mass = 1460,
+                length = 4.52f, width = 1.81f, height = 1.27f, wheelbase = 2.55f, track = 1.52f, wheelRadius = 0.32f,
+                style = BodyStyle.Coupe, defaultColor = new Color(1f, 0.578f, 0.047f).gamma,
+                gears = new[] { 3.25f, 2.05f, 1.48f, 1.12f, 0.9f, 0.76f }, finalDrive = 3.8f },
+            new CarDef {
+                id = "muscle8_legend", name = "Raijin 34R Legende", blurb = "Die Legende mit Unterboden-Neon. Das Ende der Liste.", model = "raijin_34r_legend",
+                price = 2200000, horsepower = 560, peakTorque = 680, maxRpm = 7800, mass = 1540,
+                length = 4.6f, width = 1.79f, height = 1.36f, wheelbase = 2.7f, track = 1.58f, wheelRadius = 0.33f,
+                style = BodyStyle.Coupe, defaultColor = new Color(0.027f, 0.019f, 0.054f).gamma,
                 gears = new[] { 2.9f, 1.95f, 1.4f, 1.08f, 0.86f, 0.7f }, finalDrive = 3.6f },
         };
 

@@ -25,7 +25,11 @@ namespace DriftSkate.EditorTools
         {
             public string glb, name;
             public Dictionary<string, Color> overrides;
+            public bool traffic = true; // faehrt im NPC-Verkehr mit
         }
+
+        /// <summary>NPC-Autos etwas groesser als echt: auf den 24 m breiten Strassen wirkten sie sonst wie Spielzeug.</summary>
+        const float NpcScale = 1.4f;
 
         static Color Hex(string h) { ColorUtility.TryParseHtmlString("#" + h, out Color c); return c; }
 
@@ -43,7 +47,7 @@ namespace DriftSkate.EditorTools
                     o["faded_roof"] = Color.Lerp(paint, Color.white, 0.32f);
                     o["dent_shade"] = Color.Lerp(paint, Color.black, 0.3f);
                 }
-                list.Add(new CarSpec { glb = "toon-city-car", name = name, overrides = o });
+                list.Add(new CarSpec { glb = "toon-city-car", name = name, overrides = o, traffic = false });
             }
             // Serienautos (die getunten Varianten in Art/Cars kommen spaeter als Spielerautos)
             list.Add(new CarSpec { glb = "kaze_fc_sunny", name = "KazeFC" });
@@ -51,6 +55,7 @@ namespace DriftSkate.EditorTools
             list.Add(new CarSpec { glb = "roku_ae_panda", name = "RokuAE" });
             list.Add(new CarSpec { glb = "sylph_s15_pool", name = "SylphS15" });
             list.Add(new CarSpec { glb = "toro_2j_blaze", name = "Toro2J" });
+            list.Add(new CarSpec { glb = "mark_ii_j_night", name = "MarkIIJ" });
             return list;
         }
 
@@ -132,8 +137,9 @@ namespace DriftSkate.EditorTools
                 foreach (var w in wheelRoots) { if (IsFrontWheel(w)) front += w.position; else rear += w.position; }
                 Vector3 fwd = Vector3.ProjectOnPlane(front - rear, carRoot.up).normalized;
                 frame.SetPositionAndRotation(carRoot.position, Quaternion.LookRotation(fwd, carRoot.up));
-                // Ungelenkte Radachsen: die der Auto-Wurzel, im fertigen Auto ausgedrueckt
-                Matrix4x4 unsteer = Matrix4x4.Rotate(Quaternion.Inverse(frame.rotation) * carRoot.rotation);
+                frame.localScale = Vector3.one / NpcScale; // alles im fertigen Auto um NpcScale groesser
+                // Ungelenkte Radachsen: die der Auto-Wurzel, im fertigen Auto ausgedrueckt (inkl. Vergroesserung)
+                Matrix4x4 unsteer = Matrix4x4.Scale(Vector3.one * NpcScale) * Matrix4x4.Rotate(Quaternion.Inverse(frame.rotation) * carRoot.rotation);
 
                 var groups = new Dictionary<string, MeshBuilder>();
                 MeshBuilder G(string key) { if (!groups.TryGetValue(key, out var g)) groups[key] = g = new MeshBuilder(); return g; }
@@ -154,7 +160,7 @@ namespace DriftSkate.EditorTools
                         {
                             Matrix4x4 m = unsteer * (wheel.worldToLocalMatrix * mf.transform.localToWorldMatrix);
                             G("W:" + wheel.name).Add(mf.sharedMesh, sub, uv, m);
-                            if (mat.Contains("tire")) tireRadius = Mathf.Max(tireRadius, mf.sharedMesh.bounds.extents.y * mf.transform.lossyScale.y);
+                            if (mat.Contains("tire")) tireRadius = Mathf.Max(tireRadius, mf.sharedMesh.bounds.extents.y * mf.transform.lossyScale.y * NpcScale);
                             continue;
                         }
                         string key;
@@ -343,8 +349,9 @@ namespace DriftSkate.EditorTools
             readonly List<int> _tri = new List<int>();
 
             /// <summary>Teilmesh mit Matrix m (Mesh-Raum -> Zielraum) und Paletten-UV anhaengen.</summary>
-            public void Add(Mesh mesh, int sub, Vector2 uv, Matrix4x4 m)
+            public void Add(Mesh mesh, int sub, Vector2 uv, Matrix4x4 m, bool keepUv = false)
             {
+                var meshUv = keepUv ? mesh.uv : null;
                 Matrix4x4 n = m.inverse.transpose;
                 bool flip = m.determinant < 0f;
                 var verts = mesh.vertices;
@@ -366,7 +373,7 @@ namespace DriftSkate.EditorTools
                     Vector3 nn = norms != null && norms.Length > v ? n.MultiplyVector(norms[v]).normalized : Vector3.up;
                     if (float.IsNaN(nn.x) || nn.sqrMagnitude < 0.5f) nn = Vector3.up;
                     _nrm.Add(nn);
-                    _uv.Add(uv);
+                    _uv.Add(keepUv && meshUv != null && meshUv.Length > v ? meshUv[v] : uv);
                     map[v] = k;
                     return k;
                 }
@@ -385,13 +392,189 @@ namespace DriftSkate.EditorTools
             }
         }
 
+        // ------------------------------------------------------------------ Garagen-Modelle (Spielerautos)
+
+        const string ModelRoot = "Assets/_Game/CarModels";
+        const string ModelPrefabs = "Assets/_Game/Resources/CarModels";
+
+        /// <summary>
+        /// Getunte Autos aus Art/Cars als fahrbare Spielerautos: CarModel-Prefab unter Resources/CarModels/&lt;glb&gt;.
+        /// Karosserie, Anbauteile und Raeder ueber eine Paletten-Textur (Lack wird zur Laufzeit umgefaerbt),
+        /// Aufkleber (Decals) mit ihren Texturen ausgestanzt, Lichter und Neon leuchtend, Rauch-Effekte weggelassen.
+        /// </summary>
+        [MenuItem("DriftSkate/Autos/Garagen-Modelle bauen")]
+        public static void BuildPlayerModels()
+        {
+            AssetDatabase.Refresh();
+            Directory.CreateDirectory(ModelRoot + "/Meshes");
+            Directory.CreateDirectory(ModelRoot + "/Materials");
+            Directory.CreateDirectory(ModelRoot + "/Textures");
+            Directory.CreateDirectory(ModelPrefabs);
+            foreach (var def in Catalog.Cars.Where(c => c.IsModel))
+                BuildPlayerModel(def.model);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[CarModels] Gebaut: " + string.Join(", ", Catalog.Cars.Where(c => c.IsModel).Select(c => c.model)));
+        }
+
+        static void BuildPlayerModel(string glbName)
+        {
+            string glbPath = ModelRoot + "/Source/" + glbName + ".glb";
+            var src = AssetDatabase.LoadAssetAtPath<GameObject>(glbPath);
+            if (src == null) throw new Exception("Auto-Modell fehlt: " + glbPath);
+            var colors = ReadGlbColors(glbPath);
+            var names = colors.Keys.Where(n => !n.StartsWith("decal_") && n != "smoke").ToList();
+            if (names.Count > PalSize * PalSize) throw new Exception(glbName + ": zu viele Materialien fuer die Palette");
+
+            var inst = Object.Instantiate(src);
+            var wheelRoots = inst.GetComponentsInChildren<Transform>(true).Where(IsWheelRoot).ToList();
+            if (wheelRoots.Count != 4) throw new Exception(glbName + ": 4 Raeder erwartet, gefunden " + wheelRoots.Count);
+            Transform carRoot = wheelRoots[0].parent;
+            var frame = new GameObject("Frame").transform;
+            var root = new GameObject(glbName);
+            try
+            {
+                Vector3 front = Vector3.zero, rear = Vector3.zero, mid = Vector3.zero;
+                foreach (var w in wheelRoots) { if (IsFrontWheel(w)) front += w.position; else rear += w.position; mid += w.position * 0.25f; }
+                Vector3 fwd = Vector3.ProjectOnPlane(front - rear, carRoot.up).normalized;
+                // Achsmitte = Ursprung (wie die Federbeine der Physik), Boden = Hoehe der Modell-Wurzel
+                frame.SetPositionAndRotation(new Vector3(mid.x, carRoot.position.y, mid.z), Quaternion.LookRotation(fwd, carRoot.up));
+                Matrix4x4 unsteer = Matrix4x4.Rotate(Quaternion.Inverse(frame.rotation) * carRoot.rotation);
+
+                var groups = new Dictionary<string, MeshBuilder>();
+                MeshBuilder G(string key) { if (!groups.TryGetValue(key, out var g)) groups[key] = g = new MeshBuilder(); return g; }
+                var decalMats = new Dictionary<string, Material>();
+                float tireRadius = 0f;
+
+                foreach (var mf in inst.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    var mr = mf.GetComponent<MeshRenderer>();
+                    if (mr == null || mf.sharedMesh == null) continue;
+                    if (mf.transform.GetComponentsInParent<Transform>(true).Any(t => t.name.StartsWith("smoke") || t.name.StartsWith("tire_smoke"))) continue; // Rauch macht das Spiel selbst
+                    var wheel = mf.transform.GetComponentsInParent<Transform>(true).FirstOrDefault(IsWheelRoot);
+                    for (int sub = 0; sub < mf.sharedMesh.subMeshCount; sub++)
+                    {
+                        var srcMat = mr.sharedMaterials[Mathf.Min(sub, mr.sharedMaterials.Length - 1)];
+                        string mat = CleanName(srcMat.name);
+                        if (mat == "smoke" || mat.Contains("halo")) continue;
+                        Matrix4x4 toFrame = frame.worldToLocalMatrix * mf.transform.localToWorldMatrix;
+                        if (mat.StartsWith("decal_"))
+                        {
+                            // Aufkleber: eigenes Material mit der Textur aus der GLB, ausgestanzt
+                            if (!decalMats.ContainsKey(mat)) decalMats[mat] = DecalMaterial(glbName, mat, srcMat, colors.TryGetValue(mat, out var dc) ? dc : Color.white);
+                            G("Decal:" + mat).Add(mf.sharedMesh, sub, Vector2.zero, toFrame, keepUv: true);
+                            continue;
+                        }
+                        if (!colors.ContainsKey(mat)) throw new Exception(glbName + ": unbekanntes Material " + mat);
+                        Vector2 uv = PaletteUv(names.IndexOf(mat));
+                        if (wheel != null)
+                        {
+                            Matrix4x4 m = unsteer * (wheel.worldToLocalMatrix * mf.transform.localToWorldMatrix);
+                            G("W:" + wheel.name).Add(mf.sharedMesh, sub, uv, m);
+                            if (mat.Contains("tire")) tireRadius = Mathf.Max(tireRadius, mf.sharedMesh.bounds.extents.y * mf.transform.lossyScale.y);
+                            continue;
+                        }
+                        string key;
+                        if (mat.Contains("headl") || mat.Contains("taill") || mat.Contains("indicator")) key = "Lights";
+                        else if (mat.Contains("underglow") || mat.Contains("neon")) key = "Glow";
+                        else key = OutlinedPrefixes.Any(p => StripIndex(mf.name).StartsWith(p)) ? "Body" : "Details";
+                        G(key).Add(mf.sharedMesh, sub, uv, toFrame);
+                    }
+                }
+
+                var meshes = new Dictionary<string, Mesh>();
+                foreach (var kv in groups)
+                {
+                    string file = glbName + "_" + kv.Key.Replace("W:", "Wheel_").Replace("Decal:", "Decal_");
+                    meshes[kv.Key] = SaveMesh(kv.Value.ToMesh(file), ModelRoot + "/Meshes/" + file + ".asset");
+                }
+
+                var palCols = names.Select(n => colors[n]).ToArray();
+                var palette = MakePalette("Car_" + glbName, palCols);
+                var bodyMat = Mat("Car_" + glbName, Color.white, 0f, 0.3f, palette);
+                var detailMat = Mat("Car_" + glbName + "_Detail", Color.white, 0f, 0f, palette);
+                var lightMat = Mat("Car_" + glbName + "_Lights", Color.white, 1.2f, 0f, palette);
+                var glowMat = Mat("Car_" + glbName + "_Glow", Color.white, 2.5f, 0f, palette);
+
+                var model = root.AddComponent<CarModel>();
+                var paletteRenderers = new List<Renderer>();
+                Renderer Part(string key, Material m, Transform parent, bool shadows)
+                {
+                    if (!meshes.TryGetValue(key, out var mesh)) return null;
+                    var go = new GameObject(key.Replace("W:", "").Replace("Decal:", ""));
+                    go.transform.SetParent(parent, false);
+                    go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                    var r = go.AddComponent<MeshRenderer>();
+                    r.sharedMaterial = m;
+                    r.shadowCastingMode = shadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
+                    r.lightProbeUsage = LightProbeUsage.Off;
+                    r.reflectionProbeUsage = ReflectionProbeUsage.Off;
+                    return r;
+                }
+                foreach (var (key, mat, shadows) in new[] { ("Body", bodyMat, true), ("Details", detailMat, false), ("Lights", lightMat, false), ("Glow", glowMat, false) })
+                {
+                    var r = Part(key, mat, root.transform, shadows);
+                    if (r != null) paletteRenderers.Add(r);
+                }
+                foreach (var kv in decalMats) Part("Decal:" + kv.Key, kv.Value, root.transform, false);
+
+                var wheelInfo = wheelRoots.Select(w => (w, local: frame.InverseTransformPoint(w.position)))
+                    .OrderBy(x => x.local.z > 0f ? 0 : 1).ThenBy(x => x.local.x).ToList();
+                for (int i = 0; i < 4; i++)
+                {
+                    var r = Part("W:" + wheelInfo[i].w.name, bodyMat, root.transform, false);
+                    r.name = "Wheel" + i;
+                    r.transform.localPosition = wheelInfo[i].local;
+                    model.wheels[i] = r.transform;
+                    paletteRenderers.Add(r);
+                }
+
+                var b = meshes["Body"].bounds;
+                if (meshes.TryGetValue("Details", out var det)) b.Encapsulate(det.bounds);
+                float bottom = Mathf.Max(b.min.y, 0.25f);
+                model.boxCenter = new Vector3(b.center.x, (bottom + b.max.y) * 0.5f, b.center.z);
+                model.boxSize = new Vector3(b.size.x, b.max.y - bottom, b.size.z);
+                model.wheelRadius = tireRadius > 0.1f ? tireRadius : 0.31f;
+                model.palette = palCols;
+                model.paintSlots = names.Select((n, i) => (n, i)).Where(x => x.n == "paint" || x.n == "paint_upper").Select(x => x.i).ToArray();
+                model.paletteSize = PalSize;
+                model.cell = Cell;
+                model.paletteRenderers = paletteRenderers.ToArray();
+                PrefabUtility.SaveAsPrefabAsset(root, ModelPrefabs + "/" + glbName + ".prefab");
+                Debug.Log($"[CarModels] {glbName}: Radius {model.wheelRadius:0.000}, Box {model.boxSize}, Lack-Felder {model.paintSlots.Length}, Decals {decalMats.Count}");
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+                Object.DestroyImmediate(frame.gameObject);
+                Object.DestroyImmediate(inst);
+            }
+        }
+
+        /// <summary>Aufkleber-Material: Toon, Textur aus dem glTFast-Material, Alpha ausgestanzt, ohne Outline.</summary>
+        static Material DecalMaterial(string glbName, string matName, Material src, Color tint)
+        {
+            Texture tex = null;
+            foreach (var prop in src.GetTexturePropertyNames())
+            {
+                var t = src.GetTexture(prop);
+                if (t != null) { tex = t; break; }
+            }
+            if (tex == null) Debug.LogWarning($"[CarModels] {glbName}/{matName}: keine Textur gefunden");
+            var mat = Mat("Car_" + glbName + "_" + matName, tint, 0f, 0f, tex);
+            mat.SetFloat("_Cutoff", 0.5f);
+            mat.SetFloat("_RimStrength", 0.1f);
+            EditorUtility.SetDirty(mat);
+            return mat;
+        }
+
         // ------------------------------------------------------------------ Stadt
 
         [MenuItem("DriftSkate/Verkehr/In die Stadt setzen")]
         public static void PlaceInCity()
         {
-            var prefabs = Specs().Select(s => AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(s))).ToArray();
-            if (prefabs.Any(p => p == null)) { Build(); prefabs = Specs().Select(s => AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(s))).ToArray(); }
+            var specs = Specs().Where(s => s.traffic).ToList();
+            var prefabs = specs.Select(s => AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(s))).ToArray();
+            if (prefabs.Any(p => p == null)) { Build(); prefabs = specs.Select(s => AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath(s))).ToArray(); }
             var scene = EditorSceneManager.OpenScene(ProjectBuilder.CityPath);
             var traffic = Object.FindAnyObjectByType<Traffic>(FindObjectsInactive.Include);
             if (traffic == null) traffic = new GameObject("Traffic").AddComponent<Traffic>();
@@ -410,6 +593,40 @@ namespace DriftSkate.EditorTools
             Build();
             PlaceInCity();
             RenderCheck();
+        }
+
+        /// <summary>Batch: Garagen-Modelle + NPC-Autos bauen, Verkehr setzen, Kontrollbilder (Logs/cars, Logs/traffic).</summary>
+        public static void BatchCars()
+        {
+            BuildPlayerModels();
+            Build();
+            PlaceInCity();
+            RenderCheck();
+            RenderPlayerModels();
+        }
+
+        [MenuItem("DriftSkate/Autos/Garagen-Modelle rendern")]
+        public static void RenderPlayerModels()
+        {
+            Directory.CreateDirectory("Logs/cars");
+            EditorSceneManager.OpenScene(ProjectBuilder.CityPath);
+            var cam = Camera.main;
+            float z = CityBuilder.RoadCenter(1) - 4f, x0 = CityBuilder.BlockCenter(1) - 14f;
+            foreach (var def in Catalog.Cars.Where(c => c.IsModel))
+            {
+                var car = new GameObject("Preview_" + def.id);
+                try
+                {
+                    car.transform.SetPositionAndRotation(new Vector3(x0, 0f, z), Quaternion.Euler(0f, 90f, 0f));
+                    CarBuilder.Build(car.transform, def, def.defaultColor, Palette.Pink, null, null, null);
+                    var t = car.transform;
+                    Shot(cam, t.TransformPoint(new Vector3(-3.4f, 1.5f, 4.6f)), t.TransformPoint(new Vector3(0, 0.6f, 0)), 45f, "car_" + def.id, "Logs/cars/");
+                    Shot(cam, t.TransformPoint(new Vector3(3.6f, 1.6f, -4.8f)), t.TransformPoint(new Vector3(0, 0.6f, 0)), 45f, "car_" + def.id + "_rear", "Logs/cars/");
+                    var col = car.GetComponent<BoxCollider>();
+                    Debug.Log($"[CarModels] {def.name}: Collider {col.size} um {col.center}, Raeder {car.GetComponentsInChildren<Transform>().Count(x => x.name.StartsWith("Wheel"))}");
+                }
+                finally { Object.DestroyImmediate(car); }
+            }
         }
 
         [MenuItem("DriftSkate/Verkehr/Kontrollbilder rendern")]
@@ -461,12 +678,12 @@ namespace DriftSkate.EditorTools
             foreach (var s in shown) Object.DestroyImmediate(s);
         }
 
-        static void Shot(Camera cam, Vector3 pos, Vector3 look, float fov, string name)
+        static void Shot(Camera cam, Vector3 pos, Vector3 look, float fov, string name, string folder = null)
         {
             cam.fieldOfView = fov;
             cam.transform.position = pos;
             cam.transform.LookAt(look);
-            SimTests.Capture(cam, "Logs/traffic/traffic_" + name + ".png");
+            SimTests.Capture(cam, folder != null ? folder + name + ".png" : "Logs/traffic/traffic_" + name + ".png");
         }
     }
 }

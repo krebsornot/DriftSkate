@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 38813284432037165}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7600001, y: 0.32, z: -1.2200001}
+  m_LocalPosition: {x: -1.064, y: 0.44799995, z: -1.7080001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -687,7 +687,7 @@ Transform:
   m_GameObject: {fileID: 6218489955055594921}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7600001, y: 0.32, z: 1.3300002}
+  m_LocalPosition: {x: 1.064, y: 0.44799995, z: 1.862}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -719,7 +719,7 @@ Transform:
   m_GameObject: {fileID: 6638148519895402746}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7600001, y: 0.32, z: 1.3300002}
+  m_LocalPosition: {x: -1.064, y: 0.44799995, z: 1.862}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -751,7 +751,7 @@ Transform:
   m_GameObject: {fileID: 7229257482236903821}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7600001, y: 0.32, z: -1.2200001}
+  m_LocalPosition: {x: 1.064, y: 0.44799995, z: -1.7080001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -939,8 +939,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8165002, y: 1.0249372, z: 4.63}
-  m_Center: {x: -0.000000059604645, y: 0.7624686, z: -0.034999847}
+  m_Size: {x: 2.5430999, y: 1.5349119, z: 6.482}
+  m_Center: {x: 0, y: 1.0174559, z: -0.049000025}
 --- !u!114 &6810946557003478815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -958,8 +958,8 @@ MonoBehaviour:
   - {fileID: 8273227110997284467}
   - {fileID: 8902374087930294287}
   - {fileID: 7385201373042329496}
-  wheelRadius: 0.32
-  wheelBase: 2.5500002
+  wheelRadius: 0.44799998
+  wheelBase: 3.5700002
   tailLights: {fileID: 422061506431625542}
   indicatorLeft: {fileID: 1069001264208525798}
   indicatorRight: {fileID: 7992067530469781732}
@@ -968,6 +968,10 @@ MonoBehaviour:
   indicatorOff: {fileID: 2100000, guid: e0d2bd5fdca23de4aaf45fdeb8836156, type: 2}
   indicatorOn: {fileID: 2100000, guid: 108943e97ac89204097d9e85aabcf3c7, type: 2}
   cullDistance: 175
+  mass: 1050
+  followAccel: 9
+  knockDistance: 2.2
+  knockImpact: 3.5
 --- !u!114 &8503260823775559955
 MonoBehaviour:
   m_ObjectHideFlags: 0
