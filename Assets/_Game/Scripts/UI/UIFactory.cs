@@ -322,6 +322,7 @@ namespace DriftSkate
             scroll.vertical = true;
             scroll.movementType = ScrollRect.MovementType.Clamped;
             scroll.scrollSensitivity = 40f;
+            view.gameObject.AddComponent<ScrollToSelected>(); // Controller: ausgewaehlter Knopf bleibt sichtbar
             return content;
         }
 

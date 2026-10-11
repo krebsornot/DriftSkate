@@ -36,7 +36,7 @@ namespace DriftSkate
         float _toastTime;
         bool _helpVisible = true;
 
-        RectTransform _pause;
+        RectTransform _pause, _pauseMain, _weatherPanel, _weatherRows;
         RectTransform _mainRoot, _admin;
         Text _debug;
         readonly System.Collections.Generic.List<(Button button, int index)> _adminToggles = new System.Collections.Generic.List<(Button, int)>();
@@ -168,6 +168,14 @@ namespace DriftSkate
             _debug = UIFactory.LabelAt(root, "", 22, Palette.Lime, new Vector2(0, 1), new Vector2(0, 1), new Vector2(30, -100), new Vector2(900, 260), TextAnchor.UpperLeft, false);
 
             BuildPause(_canvas.transform);
+            // Controller: B geht im Pausemenue einen Schritt zurueck (Wetter -> Pause -> Spiel)
+            MenuGamepad.OnBack(this, () =>
+            {
+                if (!Paused) return false;
+                if (_weatherPanel != null && _weatherPanel.gameObject.activeSelf) ShowWeather(false);
+                else SetPaused(false);
+                return true;
+            });
             BuildAdmin(_canvas.transform);
         }
 
@@ -289,9 +297,10 @@ namespace DriftSkate
             _pause = UIFactory.Stretch(root, "Pause");
             var dim = _pause.gameObject.AddComponent<Image>();
             dim.color = new Color(0.05f, 0.03f, 0.1f, 0.7f);
-            var panel = UIFactory.Panel(_pause, "Panel", Palette.Pink, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(620, 560), -2f);
+            var panel = UIFactory.Panel(_pause, "Panel", Palette.Pink, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(620, 660), -2f);
+            _pauseMain = panel.rectTransform;
             UIFactory.LabelAt(panel.transform, "PAUSE", 80, Palette.Yellow, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -20), new Vector2(560, 110), TextAnchor.MiddleCenter);
-            var list = UIFactory.Rect(panel.transform, "Buttons", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, -50), new Vector2(460, 360));
+            var list = UIFactory.Rect(panel.transform, "Buttons", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, -50), new Vector2(460, 460));
             var v = list.gameObject.AddComponent<VerticalLayoutGroup>();
             v.spacing = 22;
             v.childAlignment = TextAnchor.MiddleCenter;
@@ -299,6 +308,11 @@ namespace DriftSkate
             v.childControlWidth = false;
             UIFactory.Button(list, "WEITER", Palette.Lime, () => SetPaused(false), new Vector2(420, 80), 36);
             UIFactory.Button(list, "HILFE AN/AUS", Palette.Cyan, () => _helpVisible = !_helpVisible, new Vector2(420, 80), 36);
+            UIFactory.Button(list, "WETTER & HIMMEL", Palette.Hex("B58CFF"), () =>
+            {
+                if (!WeatherSystem.CanControl) { Toast("Online bestimmt der Host Wetter und Himmel"); return; }
+                ShowWeather(true);
+            }, new Vector2(420, 80), 36);
             UIFactory.Button(list, "ZUR GARAGE", Palette.Yellow, LeaveToGarage, new Vector2(420, 80), 36);
             UIFactory.Button(list, "ADMIN-MENUE", Palette.White, () =>
             {
@@ -307,11 +321,81 @@ namespace DriftSkate
                 _admin.gameObject.SetActive(true);
                 RefreshAdmin();
             }, new Vector2(420, 70), 30);
+            BuildWeatherPanel();
             _pause.gameObject.SetActive(false);
+        }
+
+        /// <summary>Unterseite im Pausemenue: Himmel und Wetter fuer alle umstellen (nur Host bzw. Solo).</summary>
+        void BuildWeatherPanel()
+        {
+            var panel = UIFactory.Panel(_pause, "WeatherPanel", Palette.Hex("6A4CC8"), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1000, 600), -2f);
+            _weatherPanel = panel.rectTransform;
+            UIFactory.LabelAt(panel.transform, "WETTER & HIMMEL", 64, Palette.Yellow, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -20), new Vector2(940, 90), TextAnchor.MiddleCenter);
+            _weatherRows = UIFactory.Rect(panel.transform, "Rows", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, -10), new Vector2(940, 340));
+            var v = _weatherRows.gameObject.AddComponent<VerticalLayoutGroup>();
+            v.spacing = 14;
+            v.childAlignment = TextAnchor.MiddleCenter;
+            v.childControlHeight = true;
+            v.childControlWidth = true;
+            v.childForceExpandHeight = false;
+            var back = UIFactory.Button(panel.transform, "ZURUECK", Palette.Lime, () => ShowWeather(false), new Vector2(360, 70), 32);
+            var brt = (RectTransform)back.transform;
+            brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 0f);
+            brt.anchoredPosition = new Vector2(0, 26);
+            _weatherPanel.gameObject.SetActive(false);
+        }
+
+        void ShowWeather(bool show)
+        {
+            _pauseMain.gameObject.SetActive(!show);
+            _weatherPanel.gameObject.SetActive(show);
+            if (show) RefreshWeather();
+        }
+
+        /// <summary>Knoepfe neu aufbauen, die aktive Wahl ist gelb.</summary>
+        void RefreshWeather()
+        {
+            for (int i = _weatherRows.childCount - 1; i >= 0; i--)
+            {
+                var old = _weatherRows.GetChild(i).gameObject;
+                old.SetActive(false); // Destroy wirkt erst am Ende des Frames, das Layout soll sie schon jetzt ignorieren
+                Destroy(old);
+            }
+            var ws = WeatherSystem.Instance;
+
+            UIFactory.Label(_weatherRows, "HIMMEL", 32, Palette.White, TextAnchor.MiddleCenter, true).gameObject.AddComponent<LayoutElement>().preferredHeight = 44;
+            var skyRow = UIFactory.Row(_weatherRows, 80);
+            skyRow.GetComponent<HorizontalLayoutGroup>().childAlignment = TextAnchor.MiddleCenter;
+            foreach (var preset in SkyLook.Presets)
+            {
+                var p = preset;
+                UIFactory.Button(skyRow, p.name, WeatherSystem.Sky == p ? Palette.Yellow : Palette.White, () =>
+                {
+                    ws?.SetSky(p.id);
+                    RefreshWeather();
+                }, new Vector2(210, 70), 30);
+            }
+
+            UIFactory.Label(_weatherRows, "WETTER", 32, Palette.White, TextAnchor.MiddleCenter, true).gameObject.AddComponent<LayoutElement>().preferredHeight = 44;
+            var weatherRow = UIFactory.Row(_weatherRows, 80);
+            weatherRow.GetComponent<HorizontalLayoutGroup>().childAlignment = TextAnchor.MiddleCenter;
+            foreach (var (id, label) in new[] { ("klar", "KLAR"), ("dynamisch", "DYNAMISCH"), ("regen", "REGEN"), ("gewitter", "GEWITTER") })
+            {
+                string mode = id;
+                UIFactory.Button(weatherRow, label, SaveSystem.Profile.weather == mode ? Palette.Yellow : Palette.White, () =>
+                {
+                    ws?.SetMode(mode);
+                    RefreshWeather();
+                }, new Vector2(210, 70), 28);
+            }
+            bool online = NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer && NetworkManager.Singleton.ConnectedClientsIds.Count > 1;
+            UIFactory.Label(_weatherRows, online ? "Gilt fuer alle Spieler in deiner Runde." : "Gilt auch, wenn du online hostest.", 24, Palette.White, TextAnchor.MiddleCenter, false)
+                .gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
         }
 
         void SetPaused(bool paused)
         {
+            if (_weatherPanel != null) ShowWeather(false);
             _pause.gameObject.SetActive(paused);
             GameInput.Blocked = paused;
         }
@@ -429,6 +513,7 @@ namespace DriftSkate
             if (prompt == "SPRUEHEN") _prompt.text = "[T / Steuerkreuz hoch]  GRAFFITI SPRUEHEN";
             else if (prompt == "AUTO RUFEN") _prompt.text = "[R / Select]  AUTO RUFEN";
             else if (prompt != null && prompt.StartsWith("MIT ") && prompt.EndsWith(" REDEN")) _prompt.text = "[E / X]  " + prompt;
+            else if (prompt != null && prompt.StartsWith("W / S")) _prompt.text = prompt; // an der Leiter: eigene Tasten
             else if (prompt != null) _prompt.text = "[F / Y]  " + prompt;
             else _prompt.text = "";
 

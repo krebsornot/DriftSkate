@@ -44,11 +44,15 @@ Die Szene `City.unity` kann man auch direkt starten. Dann läuft automatisch ein
 | Vom Auto abschleudern (Slingshot) | Leertaste halten + loslassen | A |
 | Graffiti sprühen | T (an gelben Flächen) | Steuerkreuz hoch |
 | Tüte rauchen (Chill, siehe Gassen-Crew) | G | Steuerkreuz links |
+| Hotdog essen (Boost, siehe Imbiss im Park) | H | linken Stick drücken |
+| Leiter greifen (z. B. im Kranmast) / klettern / loslassen | F, dann W / S (Shift schneller), Leertaste | Y, Stick, A |
 | Auto rufen | R (weit weg) | Select |
 | Umsehen | rechte Maustaste + Maus | rechter Stick |
 | Kamera wechseln (Standard / Nah / Weit) | C | rechten Stick drücken |
 | Nächster Song / Pause | M / Esc | Steuerkreuz rechts / Start |
 | Admin-Menü (wenn Admin-Modus an) | F1 | – |
+| **Menüs:** Auswahl bewegen / drücken / zurück | Pfeiltasten, Enter | Steuerkreuz oder linker Stick, A, B |
+| Garage: Reiter wechseln | – | LB / RB |
 
 **Bail-Out:** Bei Tempo F/Y drücken, dann kurz vor der Landung bei **„JETZT!“** Leertaste/A drücken. Das gibt +800 und die Combo läuft weiter. Im Flug dreht man sich nicht (Lenken vom Auto stört also nicht), und ein einzelner etwas zu früher Druck ist noch in Ordnung (auch eine vom Driften noch gehaltene Leertaste zählt), nur wildes Drücken verpatzt die Landung. Noch gedrückte Auto-Tasten (Handbremse, Kupplung) lösen nach der Landung keinen Ollie oder Manual aus.
 
@@ -61,6 +65,7 @@ Die Szene `City.unity` kann man auch direkt starten. Dann läuft automatisch ein
 - **Skaten:** Schwung statt festem Tempo (einzelne Pushes, langes Ausrollen, bergab schneller), Carven mit Trägheit, Fußbremse, abgefederte Landungen. Ollie, 5 Flip-Tricks, 5 Grabs, Spins, Fakie fahren (nach 180 oder rückwärts von der Rampe), Revert, Grinds (50-50, Nosegrind, 5-0, Boardslide) mit Balance, Manuals, Stürze.
 - **Stoner-NPCs:** drei detaillierte Figuren mit humanoidem Skelett (Finger, Kiefer, Augen, Lider) und eigenen Animationen auf einem Sofa am Platz, siehe unten.
 - **Gassen-Crew:** Nix (Ticker) und Moe (vergibt Jobs) mit Kapuze auf und Baggy-Klamotten in einer Seitengasse am Brunnenplatz, siehe unten.
+- **Imbiss im Park:** Die Wurst-Brüder Bodo und Udo verkaufen an den Imbisswagen in den beiden Parks Hotdogs, die einen Tempo-Boost geben, siehe unten.
 - **NPC-Verkehr:** 8 Toon-Kleinwagen in 6 Farben fahren Runden auf der rechten Spur, bremsen vor Kurven, Autos und Skatern, blinken vor dem Abbiegen. Online richtet sich der Verkehr nach der Server-Zeit (alle sehen dasselbe).
 - **Skitchen:** Auf dem Board neben oder hinter einem fremden Auto (andere Spieler oder NPC) F/Y druecken: festhalten und mitfahren (Punkte nach Tempo, Combo bleibt offen). F/Y laesst los, Ollie laden + loslassen schleudert ab (SLINGSHOT). Wird online synchronisiert.
 - **Wechsel Auto ↔ Board** mit durchgehender Combo: Aussteigen, Bail-Out mit Timing, Einsteigen (aus Tricks heraus „HOP IN!“), Auto rufen.
@@ -134,7 +139,7 @@ Einschalten in der Garage unter **OPTIONEN → ADMIN: AN**. Im Spiel öffnet **F
 | Zeitlupe | Spiel auf 40 % Tempo (nur Solo) |
 | Debug-Anzeige | FPS, Tempo, Gang, Drehzahl, Driftwinkel, Zustand, Position |
 | HUD ausblenden | für Screenshots und Videos |
-| Teleport | Start, Brunnenplatz, Skatepark, Drift-Platz, Hafen Ost, Plaza, Gasse (Nix & Moe) |
+| Teleport | Start, Brunnenplatz, Skatepark, Drift-Platz, Hafen Ost, Plaza, Gasse (Nix & Moe), Engelsflügel, Park (Miru), Imbiss (Bodo) |
 
 Die Schalter werden im Spielstand gespeichert und wirken nur für dich.
 
@@ -225,6 +230,22 @@ Danach geht es von vorn los, mit kürzerer Zeit, höheren Zielen und mehr Geld.
 
 Die Modelle (und den Bierkasten `NPC_Crate`) baut `Tools/Blender/build_stoners.py` mit, Aufruf wie oben (`nix`, `moe`). Wichtige Werte: `WALL_Y` (Abstand Nix ↔ Wand, in Unity `AlleyCrew.WallGap`) und `CRATE_H` (Sitzhöhe). Die Tüte in Nix' Hand baut `NixDealer.cs` zur Laufzeit.
 
+## Imbiss im Park (Bodo und Udo)
+
+An den Imbisswagen in den beiden Parks stehen die Wurst-Brüder: **Bodo** (klein, rund, Walross-Schnauzer) im Park neben dem Brunnenplatz bei den Stonern, **Udo** (lang, dünn, roter Bart, Brille) in Mirus Park. Gleiche Uniform: rot-weiß geringeltes Hemd, Senf-Schürze mit Ketchup-Flecken, Papiermütze und Grillzange. Sie stehen hinter dem Wagen vor dem Grill, wenden ab und zu die Würstchen (`Grill`) und lachen über Stürze. Im Admin-Menü gibt es den Teleport *Imbiss (Bodo)*.
+
+**Hotdog kaufen** (`HotdogVendor.cs`): ansprechen mit E / X, kaufen mit E. Ein Hotdog kostet $250 (das „5$“-Schild am Wagen ist von 1990), er reicht ihn dir über die Theke (`Serve`). Höchstens 3 im Rucksack.
+
+**Hotdog essen** mit **H / linken Stick drücken** (`HotdogPower.cs`): Die Figur führt ihn zum Mund, zwei Bissen, dann gibt es **Hotdog-Power**: gut eine Sekunde Extraschub nach vorn, danach 30 s mehr Tempo (Pushen, Ducken, Rennen und Motor ×1,3). Mehrere Hotdogs verlängern bis 90 s. Geht auch im Auto. Dazu ein warmer Senf-Rand im Bild; rechts oben stehen Hotdogs und Restzeit. Nur lokal, online kommt das Tempo trotzdem an (jeder simuliert sein Auto und seinen Skater selbst).
+
+Die Modelle baut `Tools/Blender/build_hotdog_vendors.py` (mit den Helfern aus `build_stoners.py`):
+
+```
+blender --background --factory-startup --python Tools/Blender/build_hotdog_vendors.py -- <FBX-Ordner> [Vorschau-Ordner] [bodo|udo]
+```
+
+`HotdogStand.cs` stellt die beiden beim Start hinter die Wagen `HotdogCart_Park*` (aus *DriftSkate → Imbisswagen → In die Stadt setzen*), die Stadt-Szene bleibt unverändert. Der Wagen steht im Prefab gut 22° schräg; ob die Werte dazu noch passen, prüft *DriftSkate → Tests → Imbiss prüfen*. Spieltest: `HotdogPlayTest` (siehe unten).
+
 ## Fahrgefühl einstellen
 
 Am Skater im Prefab `NetworkPlayer` (Komponente *Skater Controller*, Abschnitt *Fahrgefühl*): Dauer eines Pushes, Beschleunigung, maximales Push-Tempo, Ausrollen, Luftwiderstand und seitlicher Grip. Die Auto-Physik steckt in `Scripts/Vehicle/VehicleSetup.cs`.
@@ -248,6 +269,12 @@ Kompletter Spieltest im Editor (Garage, Mods, Admin-Modus, Fahren, Drift, Bail-O
 
 ```
 Unity.exe -batchmode -projectPath "C:\Users\Fynn\Desktop\Driftskate" -executeMethod DriftSkate.EditorTools.AutoPlay.Run -autotest
+```
+
+Imbiss im Play-Mode (ohne `-quit`, vorher `profile.json` sichern): Bodo ansprechen, Hotdog kaufen, essen und das Tempo mit und ohne Hotdog auf dem Board und im Auto vergleichen, Bilder nach `Logs/hotdog/` (`-standardchar` nimmt die Standardfigur statt der gewählten):
+
+```
+Unity.exe -batchmode -projectPath "C:\Users\Fynn\Desktop\Driftskate" -executeMethod DriftSkate.EditorTools.HotdogPlayTest.Run
 ```
 
 Online-Test mit zwei Instanzen der Exe:

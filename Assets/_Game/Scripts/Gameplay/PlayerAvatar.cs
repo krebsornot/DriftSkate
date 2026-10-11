@@ -301,6 +301,18 @@ namespace DriftSkate
                 return;
             }
             if (SprayShop.TryInteract(this)) { Prompt = "SPRAYDOSEN KAUFEN [E]"; return; }
+            // Leiter: W/S klettern, Leertaste loslassen; in Reichweite (zu Fuss oder langsam auf dem Board) greift F / Y
+            if (skater.State == SkaterState.Climbing) { Prompt = "W / S KLETTERN   LEERTASTE: LOSLASSEN"; return; }
+            if (skater.State == SkaterState.Walking || (skater.State == SkaterState.Riding && skater.Speed < 4f))
+            {
+                var ladder = Ladder.FindNear(skater.transform.position, 1.3f, out float ladderS);
+                if (ladder != null && DistanceToCar > 3.5f)
+                {
+                    Prompt = "LEITER HOCH";
+                    if (GameInput.Pressed(GameInput.Interact)) skater.StartClimb(ladder, ladderS);
+                    return;
+                }
+            }
             float dist = DistanceToCar;
             bool canEnter = dist < 3.5f && car.Speed < 4f && skater.State != SkaterState.Bailed;
 

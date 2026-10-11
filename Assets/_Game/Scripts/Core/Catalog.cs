@@ -53,6 +53,7 @@ namespace DriftSkate
         public int slots;
         public Color wall, floor, neon;
         public float size;
+        public string model; // Resources-Pfad eines fertigen Raums (gebaut mit DriftSkate → Garagen), sonst Bauklotz-Raum
     }
 
     /// <summary>Alle kaufbaren Inhalte. Autos sind von japanischen Drift-Legenden inspiriert (Formen in CarShape), ohne Marken.</summary>
@@ -177,8 +178,8 @@ namespace DriftSkate
         {
             new GarageDef { id = "backyard", name = "Hinterhof", blurb = "Klein, aber deins. Platz fuer 2 Autos.", price = 0,
                 slots = 2, wall = Palette.Hex("8C7A9E"), floor = Palette.Hex("6E6A78"), neon = Palette.Pink, size = 10f },
-            new GarageDef { id = "workshop", name = "Werkstatt", blurb = "Mit Hebebuehne. Platz fuer 4 Autos.", price = 120000,
-                slots = 4, wall = Palette.Hex("3F6E8C"), floor = Palette.Hex("5E6470"), neon = Palette.Cyan, size = 14f },
+            new GarageDef { id = "workshop", name = "Werkstatt", blurb = "Hebebuehne, Lounge, Arcade-Automaten. Platz fuer 4 Autos.", price = 120000,
+                slots = 4, wall = Palette.Hex("3F6E8C"), floor = Palette.Hex("5E6470"), neon = Palette.Cyan, size = 14f, model = "Garages/GarageWorkshop" },
             new GarageDef { id = "hall", name = "Halle", blurb = "Grosse Halle fuer die Crew. 8 Autos.", price = 450000,
                 slots = 8, wall = Palette.Hex("7A3F5E"), floor = Palette.Hex("4E4A5A"), neon = Palette.Yellow, size = 18f },
             new GarageDef { id = "loft", name = "Rooftop-Loft", blurb = "Ganz oben ueber der Stadt. 12 Autos.", price = 1200000,

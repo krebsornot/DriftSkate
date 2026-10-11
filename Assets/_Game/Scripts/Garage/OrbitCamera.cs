@@ -30,11 +30,31 @@ namespace DriftSkate
                 pitch = Mathf.Clamp(pitch - s.y * 60f * Time.deltaTime, 2f, 45f);
             }
 
+            Apply();
+        }
+
+        /// <summary>Kamera aus yaw, pitch und distance setzen.</summary>
+        public void Apply()
+        {
             Quaternion rot = Quaternion.Euler(pitch, yaw, 0);
-            Vector3 pos = target - rot * Vector3.forward * distance;
-            transform.SetPositionAndRotation(pos, rot);
             // Bild leicht nach links schieben, damit rechts Platz fuer das Menue ist
-            transform.position += transform.right * screenOffset.x * distance;
+            Vector3 step = -(rot * Vector3.forward) + rot * Vector3.right * screenOffset.x;
+            transform.SetPositionAndRotation(target + step * Distance(step), rot);
+        }
+
+        /// <summary>Zoom-Abstand, in Raeumen mit Grenze (GarageEnvironment.CameraBounds) hoechstens bis vor Wand oder Decke.</summary>
+        float Distance(Vector3 step)
+        {
+            float d = distance;
+            var b = GarageEnvironment.CameraBounds;
+            if (b.size == Vector3.zero) return d;
+            for (int i = 0; i < 3; i++)
+            {
+                if (Mathf.Abs(step[i]) < 1e-4f) continue;
+                float face = step[i] > 0f ? b.max[i] : b.min[i];
+                d = Mathf.Min(d, (face - target[i]) / step[i]);
+            }
+            return Mathf.Max(d, 2f);
         }
     }
 }

@@ -131,11 +131,13 @@ namespace DriftSkate
                 sun.intensity = p.sunIntensity;
             }
             // Kopie des Himmel-Materials, damit das gespeicherte Asset unveraendert bleibt
-            if (RenderSettings.skybox != null && RenderSettings.skybox.shader.name == "DriftSkate/Sky")
+            var old = RenderSettings.skybox;
+            if (old != null && old.shader.name == "DriftSkate/Sky")
             {
-                var mat = new Material(RenderSettings.skybox) { name = "Sky_" + p.id };
+                var mat = new Material(old) { name = "Sky_" + p.id };
                 SetSkyMaterial(mat, p);
                 RenderSettings.skybox = mat;
+                if (old.name.StartsWith("Sky_")) Shapes.DestroySafe(old); // eigene Kopie vom letzten Wechsel
             }
             RenderSettings.fogColor = p.horizon;
             RenderSettings.fogStartDistance = p.fogStart;

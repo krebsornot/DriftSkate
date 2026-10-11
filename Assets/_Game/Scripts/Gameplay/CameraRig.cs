@@ -54,6 +54,9 @@ namespace DriftSkate
         Vector3 _shotPos, _shotLook;
         float _shotW;
 
+        /// <summary>Bis zu dieser Entfernung von der Kamera wird die kleine Deko (Ebene "Detail") gezeichnet (frueher 85 m, da sah man Deko aufploppen).</summary>
+        public const float DetailDistance = 120f;
+
         public int View => _view;
         public SpeedWind Wind => _wind;
 
@@ -70,7 +73,7 @@ namespace DriftSkate
             if (detail >= 0)
             {
                 var dist = new float[32];
-                dist[detail] = 85f;
+                dist[detail] = DetailDistance;
                 _cam.layerCullDistances = dist;
                 _cam.layerCullSpherical = true;
             }

@@ -62,6 +62,22 @@ namespace DriftSkate
             RebuildEnvironment();
             BuildUI();
             ShowTab("FAHREN");
+            // Controller: LB / RB wechseln den Reiter, B springt aus dem Inhalt zurueck in die Reiter-Spalte
+            MenuGamepad.OnTabSwitch(this, d =>
+            {
+                int i = Array.IndexOf(Tabs, _tab);
+                ShowTab(Tabs[(i + d + Tabs.Length) % Tabs.Length]);
+                // der alte Inhalt verschwindet erst am Ende des Frames: im neuen (letzten) Kind suchen
+                MenuGamepad.Select(MenuGamepad.FirstIn(_content.childCount > 0 ? _content.GetChild(_content.childCount - 1) : _content));
+            });
+            MenuGamepad.OnBack(this, () =>
+            {
+                var sel = UnityEngine.EventSystems.EventSystem.current != null ? UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject : null;
+                if (sel == null || !sel.transform.IsChildOf(_content)) return false;
+                MenuGamepad.Select(_tabButtons[Array.IndexOf(Tabs, _tab)].gameObject);
+                return true;
+            });
+            MenuGamepad.Select(MenuGamepad.FirstIn(_content));
             if (!string.IsNullOrEmpty(GameSession.LastError))
             {
                 Toast(GameSession.LastError, 5f);
@@ -1117,7 +1133,7 @@ namespace DriftSkate
             var reflRow = UIFactory.Row(list, 70);
             UIFactory.SprayButton(reflRow, P.reflections ? "SPIEGELUNGEN: AN" : "SPIEGELUNGEN: AUS", P.reflections ? Palette.Yellow : Palette.White,
                 () => { P.reflections = !P.reflections; SaveSystem.Save(); ShowTab("OPTIONEN"); }, new Vector2(420, 64), 28);
-            Info(list, "Dynamisch: ab und zu zieht ein Schauer auf, manchmal mit Gewitter. Online gilt das Wetter des Hosts. Spiegelungen auf nassem Boden kosten etwas Leistung.", 22, 80);
+            Info(list, "Dynamisch: ab und zu zieht ein Schauer auf, manchmal mit Gewitter. Online gelten Wetter und Himmel des Hosts, er kann beides auch im Spiel im Pausemenue umstellen. Spiegelungen auf nassem Boden kosten etwas Leistung.", 22, 80);
 
             Header(list, "EIGENE MUSIK");
             Info(list, "Lege MP3-, OGG- oder WAV-Dateien in diesen Ordner:\n" + SaveSystem.MusicFolder, 22, 70);

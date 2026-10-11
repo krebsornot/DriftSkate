@@ -31,13 +31,18 @@ namespace DriftSkate
             var weather = new GameObject("Weather");
             weather.AddComponent<WeatherSystem>();
             weather.AddComponent<PlanarReflection>();
+            // Hydranten zum Umfahren (Wasserfontaene schleudert aufs Dach)
+            FireHydrant.Setup();
             // Stoner-NPCs mit Sofa am Platz (nur Deko, auf jedem Rechner gleich)
             StonerNpc.SpawnHangout();
             // Nix und Moe in der Seitengasse hinter dem Brunnenplatz, dazu der Chill-Effekt der Tueten
             AlleyCrew.Spawn();
             // Miru neben einer Bank im leeren Park gegenueber
             ParkMiru.Spawn();
+            // Bodo und Udo hinter den Imbisswagen in den Parks, dazu die Hotdog-Power beim Essen
+            HotdogStand.Spawn();
             Chill.Ensure();
+            HotdogPower.Ensure();
 
             bool ok;
             switch (GameSession.Mode)

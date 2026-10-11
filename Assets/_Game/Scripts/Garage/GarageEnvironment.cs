@@ -19,6 +19,11 @@ namespace DriftSkate
                 Shapes.DestroySafe(_room.gameObject);
             }
             _room = Shapes.Group(transform, "Room");
+            EnsureTurntable();
+
+            var model = string.IsNullOrEmpty(g.model) ? null : Resources.Load<GameObject>(g.model);
+            if (model != null) { BuildFromModel(model, g, p); return; }
+            UseTurntable(_defaultTurntable);
             float w = g.size, d = g.size * 0.8f, h = 6.5f;
 
             Shapes.Box(_room, new Vector3(0, -0.1f, 0), new Vector3(w * 2f, 0.2f, d * 2f), g.floor, 0f, name: "Floor");
@@ -64,16 +69,69 @@ namespace DriftSkate
                 CarBuilder.Build(parked, def, p.GetCarSave(id).paint, p.crewColor, SaveSystem.Graffiti, null, p.GetCarSave(id).design);
                 slot++;
             }
+        }
 
-            if (turntable == null)
+        /// <summary>Fertig modellierter Raum (Prefab aus Resources): Stellplaetze und Graffiti-Rahmen stehen im Prefab unter "Anchors".</summary>
+        void BuildFromModel(GameObject model, GarageDef g, PlayerProfile p)
+        {
+            var room = Instantiate(model, _room, false).transform;
+            room.name = model.name;
+            Transform Anchor(string n) => room.Find("Anchors/" + n);
+
+            UseTurntable(room.Find("Turntable"));
+
+            // Kamera bleibt zwischen Waenden, Boden und Decke
+            Transform min = Anchor("CameraMin"), max = Anchor("CameraMax");
+            if (min != null && max != null)
             {
-                var tt = Shapes.Part(PrimitiveType.Cylinder, transform, new Vector3(0, 0.05f, 0), new Vector3(6.4f, 0.05f, 6.4f), Palette.Hex("3B3A48"), 0.3f, name: "Turntable");
-                turntable = tt.transform;
-                carRoot = Shapes.Group(transform, "CarRoot", new Vector3(0, 0.1f, 0));
-                skaterRoot = Shapes.Group(transform, "SkaterRoot", new Vector3(3.9f, 0f, -1.2f));
-                skaterRoot.localRotation = Quaternion.Euler(0, -150f, 0);
+                CameraBounds = new Bounds();
+                CameraBounds.SetMinMax(room.TransformPoint(min.localPosition), room.TransformPoint(max.localPosition));
+            }
+
+            var slotAnchor = Anchor("GraffitiSlot");
+            if (slotAnchor != null)
+            {
+                var decal = ToonMaterials.CreateDecal(SaveSystem.Graffiti);
+                Shapes.Decal(_room, slotAnchor.localPosition, new Vector2(4.4f, 4.4f), Vector3.back, decal, "WallGraffiti");
+            }
+
+            int slot = 0;
+            foreach (var id in p.ownedCars)
+            {
+                if (id == p.selectedCar) continue;
+                if (slot >= g.slots - 1) break;
+                var a = Anchor("Slot_" + slot);
+                if (a == null) break;
+                var parked = Shapes.Group(_room, "Parked_" + id);
+                parked.localPosition = a.localPosition;
+                parked.localRotation = a.localRotation;
+                CarBuilder.Build(parked, Catalog.Car(id), p.GetCarSave(id).paint, p.crewColor, SaveSystem.Graffiti, null, p.GetCarSave(id).design);
+                slot++;
             }
         }
+
+        Transform _defaultTurntable;
+
+        void EnsureTurntable()
+        {
+            if (carRoot != null) { if (_defaultTurntable == null) _defaultTurntable = turntable; return; }
+            _defaultTurntable = Shapes.Part(PrimitiveType.Cylinder, transform, new Vector3(0, 0.05f, 0), new Vector3(6.4f, 0.05f, 6.4f), Palette.Hex("3B3A48"), 0.3f, name: "Turntable").transform;
+            turntable = _defaultTurntable;
+            carRoot = Shapes.Group(transform, "CarRoot", new Vector3(0, 0.1f, 0));
+            skaterRoot = Shapes.Group(transform, "SkaterRoot", new Vector3(3.9f, 0f, -1.2f));
+            skaterRoot.localRotation = Quaternion.Euler(0, -150f, 0);
+        }
+
+        /// <summary>Drehscheibe des Raums nehmen (die eingebaute Scheibe nur ohne eigene).</summary>
+        void UseTurntable(Transform tt)
+        {
+            turntable = tt != null ? tt : _defaultTurntable;
+            _defaultTurntable.gameObject.SetActive(turntable == _defaultTurntable);
+            CameraBounds = default;
+        }
+
+        /// <summary>Raum, den die Garagen-Kamera nicht verlassen soll (Welt). Groesse null = keine Grenze (Bauklotz-Raeume).</summary>
+        public static Bounds CameraBounds;
 
         /// <summary>Beim Folieren: Auto anhalten und so drehen, dass die bearbeitete Seite zur Kamera zeigt (null = Drehscheibe laeuft).</summary>
         public static float? HoldYaw;

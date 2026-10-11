@@ -79,6 +79,7 @@ namespace DriftSkate
             ("Gasse (Nix & Moe)", AlleyCrew.TeleportPoint),
             ("Engelsfluegel", AngelWingsPickup.Instance != null ? AngelWingsPickup.Instance.transform.position + Vector3.back * 3f : new Vector3(0f, 0.5f, -26f)),
             ("Park (Miru)", ParkMiru.TeleportPoint),
+            ("Imbiss (Bodo)", HotdogStand.TeleportPoint),
         };
     }
 }

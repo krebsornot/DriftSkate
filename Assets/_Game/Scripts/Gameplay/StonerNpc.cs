@@ -28,6 +28,7 @@ namespace DriftSkate
         static readonly Dictionary<string, string> Specials = new Dictionary<string, string>
         {
             { "Jojo", "Smoke" }, { "Kalle", "Snack" }, { "Luna", "Vibe" }, { "Nix", "Lookout" }, { "Moe", "Count" },
+            { "Bodo", "Grill" }, { "Udo", "Grill" },
         };
 
         static readonly Dictionary<string, string[]> Cheers = new Dictionary<string, string[]>
@@ -38,6 +39,8 @@ namespace DriftSkate
             { "Nix", new[] { "Heh. Nicht schlecht.", "Mach nicht so laut hier, Mann.", "Okay, okay. Du kannst was." } },
             { "Moe", new[] { "So will ich das sehen!", "Ey, der Junge hat Style.", "Sauber. Merk ich mir." } },
             { "Miru", new[] { "Hm. Gar nicht mal schlecht.", "Okay, das war cool.", "Mach weiter, ich guck zu." } },
+            { "Bodo", new[] { "Hoho! Das gibt 'ne Extrawurst!", "Sauber! So wird man satt vom Zugucken.", "Junge, Junge. Nochmal!" } },
+            { "Udo", new[] { "Oh. Nicht schlecht.", "Das hat Bodo noch nie hingekriegt.", "Pass auf den Senf auf, ja?" } },
         };
 
         static readonly Dictionary<string, string[]> Fails = new Dictionary<string, string[]>
@@ -48,6 +51,8 @@ namespace DriftSkate
             { "Nix", new[] { "Pfff. Steh auf, Mann. Leise." } },
             { "Moe", new[] { "Hahaha! Das kostet extra." } },
             { "Miru", new[] { "Autsch. Lebst du noch?" } },
+            { "Bodo", new[] { "Hoho! Erstmal 'nen Hotdog?" } },
+            { "Udo", new[] { "Autsch. Hab Servietten, falls du blutest." } },
         };
 
         Animator _anim;
@@ -475,6 +480,8 @@ namespace DriftSkate
                 case "Nix": return NixDealer.NameColor;
                 case "Moe": return MoeQuests.NameColor;
                 case "Miru": return MiruTalk.NameColor;
+                case "Bodo":
+                case "Udo": return HotdogVendor.NameColor;
                 default: return Palette.Pink;
             }
         }

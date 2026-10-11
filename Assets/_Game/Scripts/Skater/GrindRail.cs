@@ -67,6 +67,9 @@ namespace DriftSkate
             }
         }
 
+        /// <summary>Geschlossener Ring (Anfang = Ende, z. B. Rund-Grind ums Denkmal): man grindet endlos im Kreis.</summary>
+        public bool Closed => _world != null && _world.Length > 3 && (_world[0] - _world[_world.Length - 1]).sqrMagnitude < 0.01f;
+
         public Vector3 StartPoint => _world[0];
         public Vector3 EndPoint => _world[_world.Length - 1];
 

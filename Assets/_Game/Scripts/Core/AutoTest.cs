@@ -1449,20 +1449,63 @@ namespace DriftSkate
                 Check(!miru.Talking && miruNpc.Sitting && miruNpc.SitAmount > 0.99f && !GameInput.Blocked, "Miru setzt sich wieder, Steuerung frei");
                 Capture("Logs/play_miru_sits.png");
 
-                // Zweites Gespraech: "bis dann", dann wegfahren -> sie setzt sich von selbst
+                // Zweites Gespraech: Auftrag (Patrouillen-Bot) annehmen, dann wegfahren -> sie setzt sich von selbst
                 yield return WaitFor(() => false, 1f);
                 miru.Talk();
                 yield return WaitFor(() => miru.Talking, 3f);
                 Check(miru.Talking, $"Miru redet nochmal (sitzt {miruNpc.SitAmount:0.00})");
                 yield return WaitFor(() => false, 1f);
                 for (int i = 0; i < 12 && miru.Talking && !miru.ChoiceOpen; i++) { miru.TestPress(true); yield return WaitFor(() => false, 0.6f); }
+                Capture("Logs/play_miru_quest.png");
                 yield return WaitFor(() => false, 3f); // letzte Seite zu Ende lesen
                 miru.TestPress(true);
                 yield return WaitFor(() => false, 1.5f);
+                bool miruQuestOn = SaveSystem.Profile.miruQuest > 0 || (miru.State == MiruTalk.Phase.Active && miru.Bot != null);
+                Check(miruQuestOn, $"Miru gibt den Bot-Auftrag, Bot fliegt ueber dem Park ({miru.State}, Bot {(miru.Bot != null ? miru.Bot.transform.position.ToString() : "-")})");
+                if (miru.Bot != null) { yield return WaitFor(() => false, 2f); Capture("Logs/play_miru_bot.png"); }
                 Check(!miru.Talking && !miruNpc.Sitting && miruNpc.SitAmount < 0.01f, $"Miru bleibt stehen, solange man da ist (redet {miru.Talking}, sitzt {miruNpc.Sitting} {miruNpc.SitAmount:0.00})");
                 a.skater.Place(front + ParkMiru.Facing * 15f + Vector3.up * 0.1f, a.skater.Heading);
                 yield return WaitFor(() => miruNpc.SitAmount > 0.99f, 6f);
                 Check(miruNpc.Sitting && miruNpc.SitAmount > 0.99f && Vector3.Distance(miru.transform.position, ParkMiru.SeatPosition) < 0.05f, $"Miru setzt sich wieder, als man weg ist (redet {miru.Talking}, sitzt {miruNpc.SitAmount:0.00})");
+            }
+
+            // 12d. Imbiss im Park: Bodo steht hinter dem Wagen, verkauft einen Hotdog (liegt beim Reichen in seiner Hand),
+            // essen gibt Hotdog-Power
+            var vendor = HotdogStand.Spawned.Find(hv => hv != null);
+            var vendorNpc = vendor != null ? vendor.GetComponent<StonerNpc>() : null;
+            Check(HotdogStand.Spawned.Count == 2 && vendorNpc != null, $"Imbiss-Verkaeufer an den Park-Wagen ({HotdogStand.Spawned.Count})");
+            if (vendor != null && vendorNpc != null)
+            {
+                var prof = SaveSystem.Profile;
+                prof.hotdogs = 0;
+                prof.hotdogsBought = 0;
+                if (prof.money < 5000) prof.money = 5000;
+                if (a.Mode == PlayerMode.Driving) a.TestInteract();
+                yield return Frames(10);
+                var cart = HotdogStand.Carts[0];
+                a.skater.Place(HotdogStand.CustomerSpot(cart, 1.7f) + Vector3.up * 0.1f, Quaternion.LookRotation(HotdogStand.CustomerFacing(cart)).eulerAngles.y);
+                yield return WaitFor(() => false, 1f);
+                Check(QuestNpc.Near(a.skater.transform.position) == vendor, $"Nah genug, um {vendor.Speaker} anzusprechen");
+                long m0 = prof.money;
+                vendor.Talk();
+                for (int i = 0; i < 12 && vendor.Talking && !vendor.ChoiceOpen; i++) { vendor.TestPress(true); yield return WaitFor(() => false, 0.4f); }
+                yield return WaitFor(() => false, 3f);
+                Capture("Logs/play_hotdog_dialog.png");
+                Check(vendor.ChoiceOpen, $"{vendor.Speaker} bietet einen Hotdog an (kaufen / ablehnen)");
+                for (int i = 0; i < 4 && vendor.Talking; i++) { vendor.TestPress(true); yield return Frames(3); }
+                yield return Frames(3);
+                Check(prof.hotdogs == 1 && prof.money == m0 - (Admin.Free ? 0 : HotdogVendor.Price) && !GameInput.Blocked, $"Hotdog gekauft (Geld {m0} -> {prof.money}, Steuerung frei)");
+                yield return WaitFor(() => false, 1.3f);
+                var served = GameObject.Find("ServedHotdog");
+                var vendorHand = vendorNpc.Animator.GetBoneTransform(HumanBodyBones.LeftHand);
+                float servedDist = served != null ? Vector3.Distance(served.transform.position, vendorHand.position) : -1f;
+                Check(served != null && served.activeInHierarchy && servedDist < 0.25f && vendorNpc.CurrentAction == "Serve", $"Hotdog liegt beim Reichen in {vendor.Speaker}s Hand ({servedDist:0.00} m)");
+                yield return WaitFor(() => false, 2f);
+                Check(HotdogPower.Instance != null && HotdogPower.Instance.Eat() && prof.hotdogs == 0, "Hotdog gegessen");
+                yield return WaitFor(() => false, 0.6f);
+                Capture("Logs/play_hotdog_eat.png");
+                yield return WaitFor(() => HotdogPower.Active, 2f);
+                Check(HotdogPower.Active && HotdogPower.SkateFactor > 1f && !HotdogPower.Instance.Eat(), $"Hotdog-Power an ({HotdogPower.TimeLeft:0} s), ohne Hotdog kein zweiter");
             }
 
             // 13. Auto zuruecksetzen
@@ -1479,6 +1522,7 @@ namespace DriftSkate
         {
             SaveSystem.Profile.playerName = "HostTester";
             SaveSystem.Profile.weather = "gewitter"; // der Client muss das Gewitter des Hosts bekommen
+            SaveSystem.Profile.sky = "nacht";        // und den Himmel des Hosts
             yield return WaitFor(() => ModLibrary.Characters.TrueForAll(m => !m.loading) && ModLibrary.Boards.TrueForAll(m => !m.loading), 20f);
             var hostChar = ModLibrary.Characters.Find(m => m.loaded);
             var hostBoard = ModLibrary.Boards.Find(m => m.loaded);
@@ -1572,6 +1616,7 @@ namespace DriftSkate
         {
             SaveSystem.Profile.playerName = "ClientTester";
             SaveSystem.Profile.weather = "klar"; // eigene Einstellung, online gilt aber das Wetter des Hosts
+            SaveSystem.Profile.sky = "abend";
             GameSession.Mode = SessionMode.Client;
             GameSession.Address = ArgValue("-nettest-client", "127.0.0.1");
             if (GameSession.Address.StartsWith("-")) GameSession.Address = "127.0.0.1";
@@ -1615,6 +1660,7 @@ namespace DriftSkate
             Check(sawSkating, "Bail-Out des Hosts beim Client angekommen");
             Log($"Wetter beim Client: Regen {WeatherSystem.Rain:0.00}, Gewitter {WeatherSystem.Storm}, Blitze {WeatherSystem.Strikes}, Nachrichten vom Host {WeatherSystem.SyncMessages}");
             Check(WeatherSystem.SyncMessages > 0 && WeatherSystem.Rain > 0.8f && WeatherSystem.Storm && WeatherSystem.Strikes > 0, "Wetter des Hosts beim Client (Gewitter mit Blitzen)");
+            Check(WeatherSystem.Sky.id == "nacht" && RenderSettings.skybox != null && RenderSettings.skybox.name == "Sky_nacht", "Himmel des Hosts beim Client (NACHT)");
             if (host != null)
             {
                 // Eigenes Graffiti des Hosts: uebertragen, und sein Tag auf dem Spot zeigt genau dieses Bild

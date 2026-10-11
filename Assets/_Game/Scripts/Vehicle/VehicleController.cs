@@ -158,6 +158,11 @@ namespace DriftSkate
             if (Grounded && flatVel.magnitude > 0.5f)
                 _rb.AddForce(-flatVel.normalized * setup.rolling * setup.mass * 9.81f);
             _rb.AddForce(-up * fwdSpeed * fwdSpeed * setup.downforce);
+
+            // Hotdog-Power: direkt nach dem Essen ein kurzer Schub nach vorn (nur das eigene Auto, am Boden, nicht rueckwaerts)
+            float rush = HotdogPower.CarRush;
+            if (rush > 0f && hasDriver && Grounded && fwdSpeed > -0.5f && Gear >= 0 && HotdogPower.IsMine(this))
+                _rb.AddForce(t.forward * rush * setup.mass);
         }
 
         void HandleGears(VehicleInput inp, float fwdSpeed, float dt)
@@ -362,7 +367,8 @@ namespace DriftSkate
         {
             float x = rpm / setup.maxRpm;
             float d = (x - 0.68f) / 0.6f;
-            return setup.peakTorque * Mathf.Clamp(0.55f + 0.45f * (1f - d * d), 0.3f, 1f) * (Admin.Turbo ? 1.8f : 1f);
+            return setup.peakTorque * Mathf.Clamp(0.55f + 0.45f * (1f - d * d), 0.3f, 1f) * (Admin.Turbo ? 1.8f : 1f)
+                   * (HotdogPower.Active && HotdogPower.IsMine(this) ? HotdogPower.TorqueFactor : 1f);
         }
 
         static float LateralCurve(float alpha, float slideRatio)

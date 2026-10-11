@@ -28,6 +28,7 @@ namespace DriftSkate
         public static InputAction Spray { get; private set; }
         public static InputAction Board { get; private set; }
         public static InputAction UseItem { get; private set; }
+        public static InputAction Eat { get; private set; }
         public static InputAction ResetCar { get; private set; }
         public static InputAction LookStick { get; private set; }
         public static InputAction LookMouse { get; private set; }
@@ -72,6 +73,7 @@ namespace DriftSkate
             Spray = Button("Spray", "<Keyboard>/t", "<Gamepad>/dpad/up");
             Board = Button("Board", "<Keyboard>/b", "<Gamepad>/dpad/down"); // absteigen und zu Fuss gehen / wieder aufsteigen
             UseItem = Button("UseItem", "<Keyboard>/g", "<Gamepad>/dpad/left"); // Tuete von Nix rauchen (Chill)
+            Eat = Button("Eat", "<Keyboard>/h", "<Gamepad>/leftStickPress");     // Hotdog essen (HotdogPower)
 
             ResetCar = Button("Reset", "<Keyboard>/r", "<Gamepad>/select");
             Pause = Button("Pause", "<Keyboard>/escape", "<Gamepad>/start");

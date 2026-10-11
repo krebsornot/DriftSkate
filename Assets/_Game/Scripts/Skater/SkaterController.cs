@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DriftSkate
 {
-    public enum SkaterState : byte { Riding, Air, Grinding, Bailed, Hidden, Walking, WallPlant, WallRide, Hitched }
+    public enum SkaterState : byte { Riding, Air, Grinding, Bailed, Hidden, Walking, WallPlant, WallRide, Hitched, Climbing }
 
     /// <summary>
     /// Arcade-Skaten per Knopf: Pushen, Ollie (halten und loslassen, geduckt nimmt man Tempo auf), Flip- und Grab-Tricks,
@@ -18,6 +18,8 @@ namespace DriftSkate
         const float GroundProbeHeight = 0.6f, ProbeRadius = 0.22f, StandDistance = GroundProbeHeight - ProbeRadius;
         const float FlipDuration = 0.42f;
         static float Gravity => 9.81f * 1.35f * (Admin.Moon ? 0.4f : 1f);
+        /// <summary>Schwerkraft des Skaters (m/s², staerker als die Physik, damit Spruenge knackig sind).</summary>
+        public static float GravityAccel => Gravity;
 
         public bool isLocal = true;
         public bool inputEnabled = true;
@@ -168,6 +170,14 @@ namespace DriftSkate
         /// <summary>Zeit an der Wand (fuer Tests und Optik).</summary>
         public float PlantTime => _plantTime;
 
+        // Leiter (Climbing): Hoehe auf der Leiter, Absteigen oben (0..1, -1 = klettert)
+        Ladder _ladder;
+        float _climbS, _climbExit = -1f, _climbGrabCooldown;
+        public float climbSpeed = 2.2f;         // W/S auf der Leiter (m/s), mit Shift / LB schneller
+        /// <summary>Leiter, an der man gerade haengt (sonst null), und Hoehe darauf (m ab unten).</summary>
+        public Ladder ClimbLadder => State == SkaterState.Climbing ? _ladder : null;
+        public float ClimbHeight => _climbS;
+
         // Skitchen: am Auto festhalten
         Hitchable _hitch;
         int _hitchAnchor;
@@ -248,6 +258,30 @@ namespace DriftSkate
             ResetPhysics(position, heading);
             State = SkaterState.Riding;
             _rb.linearVelocity = Vector3.zero;
+        }
+
+        /// <summary>Von der Wasserfontaene eines Hydranten hochgeschleudert werden (vom Board, vom Grind oder schon in der Luft).</summary>
+        public bool Geyser(Vector3 velocity)
+        {
+            if (!isLocal || (State != SkaterState.Riding && State != SkaterState.Air && State != SkaterState.Grinding)) return false;
+            _rail = null;
+            _rb.isKinematic = false;
+            if (State != SkaterState.Air) EnterAir();
+            _rb.linearVelocity = velocity;
+            // Board in Flugrichtung drehen (die Fontaene wirft oft seitlich aufs Dach), sonst landet man quer
+            Vector3 flat = new Vector3(velocity.x, 0f, velocity.z);
+            if (flat.sqrMagnitude > 1f)
+            {
+                Heading = Mathf.Atan2(flat.x, flat.z) * Mathf.Rad2Deg;
+                _rb.rotation = Quaternion.Euler(0f, Heading, 0f);
+                _prevAirFlat = flat;
+                Fakie = false;
+            }
+            _doubleJumpUsed = false;
+            _airTime = 0f;
+            Manualing = false;
+            combo?.AddAction("GEYSER", 300f);
+            return true;
         }
 
         /// <summary>Bail-Out waehrend der Fahrt: rausfallen, rechtzeitig Ollie druecken, um sauber zu landen.</summary>
@@ -348,6 +382,8 @@ namespace DriftSkate
         {
             if (!isLocal) return;
             float dt = Time.fixedDeltaTime;
+            if (State == SkaterState.Walking || State == SkaterState.Riding) CarryOnMovingGround();
+            _climbGrabCooldown = Mathf.Max(0f, _climbGrabCooldown - dt);
             switch (State)
             {
                 case SkaterState.Riding: StepRiding(dt); break;
@@ -358,6 +394,7 @@ namespace DriftSkate
                 case SkaterState.WallPlant: StepWallPlant(dt); break;
                 case SkaterState.WallRide: StepWallRide(dt); break;
                 case SkaterState.Hitched: StepHitched(dt); break;
+                case SkaterState.Climbing: StepClimbing(dt); break;
             }
             _plantCooldown = Mathf.Max(0f, _plantCooldown - dt);
             _rideCooldown = Mathf.Max(0f, _rideCooldown - dt);
@@ -428,7 +465,7 @@ namespace DriftSkate
             if (_landSettle < 1f) along = Mathf.MoveTowards(along, 0f, _landLossRate * dt); // Tempoverlust einer schraegen Landung, verteilt
             lat += Vector3.Dot(slope, right) * dt * 0.5f;
 
-            float turbo = Admin.Turbo ? 1.8f : 1f;
+            float turbo = (Admin.Turbo ? 1.8f : 1f) * (isLocal ? HotdogPower.SkateFactor : 1f); // Hotdog-Power: schneller pushen
             float maxPush = maxPushSpeed * board.speed * turbo;
             bool crouching = _ollieHeld;
             // Geduckt (Ollie gehalten) nimmt man gleichmaessig Tempo auf; eine noch vom Auto gehaltene Leertaste zaehlt nicht
@@ -454,6 +491,9 @@ namespace DriftSkate
                 float room = Mathf.Clamp01(1f - along / maxPush);
                 along += crouchAccel * turbo * board.speed * (0.35f + 0.65f * room) * dt;
             }
+            // Direkt nach dem Hotdog: kurzer Schub nach vorn, auch etwas ueber das Push-Tempo hinaus
+            float rush = isLocal && !Manualing ? HotdogPower.SkateRush : 0f;
+            if (rush > 0f && along < maxPush * 1.25f) along += rush * dt;
 
             // Fussbremse
             float brakeTarget = _move.y < -0.3f && !Manualing && along > 0.5f ? -_move.y : 0f;
@@ -645,7 +685,7 @@ namespace DriftSkate
             Vector3 fwd = Quaternion.Euler(0, Heading, 0) * Vector3.forward;
 
             float along = Vector3.Dot(Vector3.ProjectOnPlane(v, Vector3.up), fwd);
-            float target = _move.y > 0.1f ? _move.y * (run ? runSpeed : walkSpeed) * (Admin.Turbo ? 1.6f : 1f)
+            float target = _move.y > 0.1f ? _move.y * (run ? runSpeed : walkSpeed) * (Admin.Turbo ? 1.6f : 1f) * (isLocal ? HotdogPower.WalkFactor : 1f)
                          : _move.y < -0.1f ? _move.y * walkSpeed * 0.6f : 0f;
 
             if (!grounded)
@@ -684,6 +724,120 @@ namespace DriftSkate
 
             _safeTimer += dt;
             if (_safeTimer > 1f) { _safeTimer = 0f; _lastSafePos = _rb.position; }
+
+            // Gegen eine Leiter laufen: greifen (nicht oben am Ausstieg, dort mit F / Y)
+            if (_move.y > 0.5f && _climbGrabCooldown <= 0f)
+            {
+                var l = Ladder.FindNear(_rb.position, 0.8f, out float ls);
+                if (l != null && ls < l.Length - 1.2f)
+                {
+                    Vector3 to = Vector3.ProjectOnPlane(l.PointAt(ls) - _rb.position, Vector3.up);
+                    if (to.sqrMagnitude < 1e-4f || Vector3.Dot(fwd, to.normalized) > 0.6f) StartClimb(l, ls);
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------- Leiter
+
+        /// <summary>An eine Leiter greifen (zu Fuss oder vom Board, das kommt auf den Ruecken). s = Hoehe auf der Leiter.</summary>
+        public bool StartClimb(Ladder ladder, float s)
+        {
+            if (!isLocal || ladder == null || (State != SkaterState.Walking && State != SkaterState.Riding)) return false;
+            _ladder = ladder;
+            _climbS = Mathf.Clamp(s, 0f, ladder.Length);
+            _climbExit = -1f;
+            State = SkaterState.Climbing;
+            _rb.linearVelocity = Vector3.zero;
+            _rb.isKinematic = true; // an der Leiter ohne Physik (sie steckt oft in Gitterstreben)
+            if (_col != null) _col.enabled = false;
+            Manualing = false;
+            CurrentTrick = null;
+            _pushPhase = -1f;
+            _brake = 0f;
+            _turnVel = 0f;
+            OllieCharge = 0f;
+            Fakie = false;
+            _ollieLock = _ollieHeld;
+            Vector3 face = -ladder.Side;
+            Heading = Mathf.Atan2(face.x, face.z) * Mathf.Rad2Deg;
+            return true;
+        }
+
+        /// <summary>Von der Leiter: zu Fuss weiter (in der Luft, wenn man loslaesst).</summary>
+        void EndClimb(Vector3 position, Vector3 velocity, bool air)
+        {
+            State = SkaterState.Walking;
+            _ladder = null;
+            _climbExit = -1f;
+            _climbGrabCooldown = 0.6f;
+            if (_col != null) _col.enabled = true;
+            _rb.isKinematic = false;
+            _rb.position = position;
+            transform.position = position;
+            _rb.linearVelocity = velocity;
+            _walkAirTime = air ? 0.01f : 0f;
+            _ollieLock = _ollieHeld;
+            _lastSafePos = position;
+        }
+
+        void StepClimbing(float dt)
+        {
+            var l = _ladder;
+            if (l == null || !l.isActiveAndEnabled) { EndClimb(_rb.position, Vector3.zero, true); return; }
+            Vector3 face = -l.Side;
+            Heading = Mathf.Atan2(face.x, face.z) * Mathf.Rad2Deg;
+            _rb.MoveRotation(Quaternion.Euler(0f, Heading, 0f));
+
+            // Oben absteigen: kurzer Bogen von der Leiter auf den Ausstieg (dreht er sich, wird er mitverfolgt)
+            if (_climbExit >= 0f)
+            {
+                _climbExit = Mathf.Min(1f, _climbExit + dt / 0.5f);
+                float t = Smooth01(_climbExit);
+                Vector3 p = Vector3.Lerp(l.ClimbPosition(l.Length), l.TopExit, t) + Vector3.up * Mathf.Sin(t * Mathf.PI) * 0.3f;
+                _rb.MovePosition(p);
+                if (_climbExit >= 1f)
+                {
+                    Vector3 away = Vector3.ProjectOnPlane(l.TopExit - l.Top, Vector3.up);
+                    if (away.sqrMagnitude > 1e-4f) Heading = Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg;
+                    EndClimb(l.TopExit + Vector3.up * 0.05f, Vector3.zero, false);
+                }
+                return;
+            }
+
+            // Leertaste: loslassen (nach hinten weg)
+            if (_ollieLock && !_ollieHeld) _ollieLock = false;
+            if (_olliePressed && !_ollieLock)
+            {
+                EndClimb(l.ClimbPosition(_climbS) + l.Side * 0.15f, l.Side * 2.2f + Vector3.up * 2.5f, true);
+                return;
+            }
+
+            float speed = climbSpeed * (_manualHeld ? 1.6f : 1f) * (Admin.Turbo ? 1.6f : 1f);
+            _climbS += _move.y * speed * dt;
+            float len = l.Length;
+            if (_climbS >= len)
+            {
+                _climbS = len;
+                if (l.hasTopExit && _move.y > 0.1f) _climbExit = 0f;
+            }
+            else if (_climbS <= 0f)
+            {
+                _climbS = 0f;
+                if (_move.y < -0.1f) { EndClimb(l.BottomExit + Vector3.up * 0.05f, Vector3.zero, false); return; }
+            }
+            _rb.MovePosition(l.ClimbPosition(_climbS));
+        }
+
+        /// <summary>Auf bewegtem Boden (drehender Kran) mitfahren: Position und Blickrichtung um dessen Bewegung versetzen.</summary>
+        void CarryOnMovingGround()
+        {
+            if (_rb.isKinematic || !ProbeGround(out RaycastHit hit, 0.35f)) return;
+            var mg = MovingGround.Of(hit.collider);
+            if (mg == null) return;
+            Vector3 p = mg.Delta.MultiplyPoint3x4(_rb.position);
+            _rb.position = p;
+            _rb.linearVelocity = mg.Delta.MultiplyVector(_rb.linearVelocity);
+            Heading += mg.DeltaYaw;
         }
 
         // ---------------------------------------------------------------- Luft
@@ -1242,9 +1396,14 @@ namespace DriftSkate
             Vector3 dir = _rail.DirectionAt(_railS) * _railDir;
             _grindSpeed += Gravity * -dir.y * dt;
             // Auf der Rail Tempo aufbauen (bis zur Obergrenze); bergab kommt die Schwerkraft dazu
-            if (_grindSpeed < grindMaxSpeed) _grindSpeed = Mathf.Min(grindMaxSpeed, _grindSpeed + grindAccel * dt);
+            // Auf Ringen (Rund-Grind) etwa 2,5 s pro Runde, sonst dreht man sich auf dem kleinen Kreis wie im Karussell
+            float maxSpeed = _rail.Closed ? Mathf.Min(grindMaxSpeed, _rail.Length * 0.4f) : grindMaxSpeed;
+            if (_grindSpeed < maxSpeed) _grindSpeed = Mathf.Min(maxSpeed, _grindSpeed + grindAccel * dt);
+            else if (_rail.Closed) _grindSpeed = Mathf.MoveTowards(_grindSpeed, maxSpeed, grindAccel * 2f * dt);
             _grindSpeed = Mathf.Max(2.5f, _grindSpeed);
             _railS += _grindSpeed * _railDir * dt;
+            // Ring: ueber die Naht einfach weiter (360 Grad und mehr), statt dort abzuspringen
+            if (_rail.Closed) _railS = Mathf.Repeat(_railS, _rail.Length);
 
             if (_railS < 0f || _railS > _rail.Length)
             {
@@ -1596,7 +1755,7 @@ namespace DriftSkate
             _crouch = Mathf.Lerp(_crouch, crouchTarget, 1f - Mathf.Exp(-16f * dt));
             _bailAnim = Mathf.MoveTowards(_bailAnim, s == SkaterState.Bailed ? 1f : 0f, dt * 3f);
             // Zu Fuss: Figur dreht sich von seitlich (Board-Stand) nach vorn in Laufrichtung
-            _walkAnim = Mathf.MoveTowards(_walkAnim, s == SkaterState.Walking ? 1f : 0f, dt * 5f);
+            _walkAnim = Mathf.MoveTowards(_walkAnim, s == SkaterState.Walking || s == SkaterState.Climbing ? 1f : 0f, dt * 5f);
 
             bodyPivot.localPosition = rig != null ? new Vector3(0, 0.1f, 0) : new Vector3(0, 0.13f - _crouch * 0.28f - _bailAnim * 0.3f, 0);
             bodyPivot.localRotation = Quaternion.Euler(_bailAnim * 75f, Mathf.Lerp(80f, 0f, Smooth01(_walkAnim)), rig != null ? 0f : -_lean * 14f);
@@ -1616,6 +1775,22 @@ namespace DriftSkate
                 bool walkAir = s == SkaterState.Walking && (isLocal ? _walkAirTime > 0.03f : !ProbeGround(out _, 0.25f));
                 rig.walkJump = Mathf.MoveTowards(rig.walkJump, walkAir ? 1f : 0f, dt * (walkAir ? 9f : 7f));
                 rig.grab = isLocal && _grabbing ? _grabName : null;
+                // Leiter: Haende und Fuesse auf die Sprossen (entfernte Spieler: Leiter in der Naehe suchen)
+                Ladder ladder = null;
+                float ls = 0f;
+                if (s == SkaterState.Climbing)
+                {
+                    if (isLocal) { ladder = _ladder; ls = _climbS; }
+                    else ladder = Ladder.FindNear(transform.position, 1f, out ls);
+                }
+                rig.climb = Mathf.MoveTowards(rig.climb, ladder != null ? 1f : 0f, dt * 6f);
+                if (ladder != null)
+                {
+                    rig.climbRungs = ls / Mathf.Max(0.05f, ladder.rungSpacing);
+                    rig.climbSpacing = ladder.rungSpacing;
+                    rig.climbPlane = ladder.PointAt(ls);
+                    rig.climbSide = ladder.Side;
+                }
             }
 
             if (!isLocal) return; // Board-Rotation kommt bei entfernten Spielern per Netzwerk
@@ -1650,6 +1825,7 @@ namespace DriftSkate
             else if (Manualing) boardRot = Quaternion.Euler(-12f, 0, 0);
             else if (State == SkaterState.Bailed) { boardRot = Quaternion.Euler(0, 40f, 170f); boardPos = new Vector3(0.6f, 0.08f, 0.5f); }
             else if (State == SkaterState.Walking) { boardRot = Quaternion.Euler(0f, 0f, 90f); boardPos = new Vector3(0.3f, 0.66f, 0.04f); } // unter dem rechten Arm
+            else if (State == SkaterState.Climbing) { boardRot = Quaternion.Euler(-90f, 0f, 0f); boardPos = new Vector3(0f, 1.05f, -0.26f); } // auf dem Ruecken
 
             boardPivot.localRotation = Quaternion.Slerp(boardPivot.localRotation, boardRot, _flip != FlipKind.None ? 1f : 1f - Mathf.Exp(-18f * dt));
             boardPivot.localPosition = Vector3.Lerp(boardPivot.localPosition, boardPos, 1f - Mathf.Exp(-20f * dt));

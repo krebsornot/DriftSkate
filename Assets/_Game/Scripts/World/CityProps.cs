@@ -109,7 +109,7 @@ namespace DriftSkate
 
         /// <summary>
         /// Leistung: Kleinteile werfen keinen Schatten (sonst wird jedes Teil pro Schatten-Kaskade nochmal gezeichnet),
-        /// Strassen-Deko und Kleinkram kommen auf die Ebene "Detail", die die Kamera nur bis 85 m zeichnet.
+        /// Strassen-Deko und Kleinkram kommen auf die Ebene "Detail", die die Kamera nur bis CameraRig.DetailDistance (120 m) zeichnet.
         /// Ausnahmen: Automat und Container werfen weiter Schatten.
         /// </summary>
         void OptimizeDetails()

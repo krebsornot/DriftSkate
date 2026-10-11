@@ -75,6 +75,47 @@ namespace DriftSkate.EditorTools
         [MenuItem("DriftSkate/Imbisswagen/In die Stadt setzen")] public static void PlaceHotdogCarts() => PlaceInCity(HotdogCart);
         [MenuItem("DriftSkate/Imbisswagen/Kontrollbilder rendern")] public static void RenderHotdogCarts() => RenderCheck(HotdogCart);
 
+        [MenuItem("DriftSkate/Imbisswagen/Aus dem Parkhaus entfernen")]
+        public static void RemoveHotdogCartsFromSites() => RemoveFromSites(HotdogCart);
+
+        /// <summary>
+        /// Die Wagen wurden vor dem Parkhaus verteilt; einer stand danach mitten darin. Entfernt Instanzen
+        /// auf dem Grundstueck aus der Szene (PlaceInCity laesst es inzwischen selbst aus).
+        /// </summary>
+        public static void RemoveFromSites(Config c)
+        {
+            var scene = EditorSceneManager.OpenScene(ProjectBuilder.CityPath);
+            var group = GameObject.Find(c.group);
+            var sites = SiteBounds();
+            int n = 0;
+            if (group != null)
+                foreach (var t in group.transform.Cast<Transform>().ToList())
+                    if (InSite(sites, t.position)) { Debug.Log($"[{c.name}] {t.name} bei ({t.position.x:0}, {t.position.z:0}) entfernt"); Object.DestroyImmediate(t.gameObject); n++; }
+            if (n > 0) { EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene); }
+            Debug.Log($"[{c.name}] {n} Instanzen im Parkhaus entfernt ({sites.Count} Grundstuecke)");
+        }
+
+        /// <summary>Grundflaeche des Parkhauses (Renderer-Huelle plus 6 m Rand).</summary>
+        static List<Bounds> SiteBounds()
+        {
+            var list = new List<Bounds>();
+            foreach (var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            {
+                if (t.name != "Parkhaus") continue; // Baustelle nicht: der Kran-Ausleger wuerde die Huelle riesig machen
+                if (t.parent == null || !t.parent.name.StartsWith("Block_")) continue;
+                var rs = t.GetComponentsInChildren<Renderer>();
+                if (rs.Length == 0) continue;
+                var b = rs[0].bounds;
+                foreach (var r in rs) b.Encapsulate(r.bounds);
+                b.Expand(new Vector3(6f, 0f, 6f));
+                list.Add(b);
+            }
+            return list;
+        }
+
+        static bool InSite(List<Bounds> sites, Vector3 p) =>
+            sites.Any(b => p.x > b.min.x && p.x < b.max.x && p.z > b.min.z && p.z < b.max.z);
+
         /// <summary>Batch: Prefab bauen, verteilen, Kontrollbilder.</summary>
         public static void BatchPhoneBooths() => BatchAll(PhoneBooth);
         public static void BatchHotdogCarts() => BatchAll(HotdogCart);
@@ -273,10 +314,12 @@ namespace DriftSkate.EditorTools
             cands = cands.OrderBy(_ => rng.Next()).ToList();
 
             var placed = new List<Vector3>();
+            var sites = SiteBounds();
             foreach (var cd in cands)
             {
                 if (placed.Count >= c.count) break;
                 if (placed.Any(p => Vector3.Distance(p, cd.pos) < c.spacing)) continue;
+                if (InSite(sites, cd.pos)) continue; // nicht ins Parkhaus
                 if (!Physics.Raycast(cd.pos + Vector3.up * 3f, Vector3.down, out RaycastHit hit, 4f, ground, QueryTriggerInteraction.Ignore)) continue;
                 if (hit.point.y < 0.07f || hit.point.y > 0.25f) continue; // nur auf dem Gehweg
                 var rot = Quaternion.LookRotation(cd.facing);

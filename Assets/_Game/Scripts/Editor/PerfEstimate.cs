@@ -49,7 +49,7 @@ namespace DriftSkate.EditorTools
                 {
                     if (!r.enabled || !r.gameObject.activeInHierarchy || r is ParticleSystemRenderer) continue;
                     float dist = Vector3.Distance(cam.transform.position, r.bounds.ClosestPoint(cam.transform.position));
-                    if (detail >= 0 && r.gameObject.layer == detail && dist > 85f) continue;
+                    if (detail >= 0 && r.gameObject.layer == detail && dist > CameraRig.DetailDistance) continue;
                     var mats = r.sharedMaterials;
                     if (dist < shadowDist && r.shadowCastingMode != ShadowCastingMode.Off) shadow += mats.Length * cascades;
                     if (dist > cam.farClipPlane || !GeometryUtility.TestPlanesAABB(planes, r.bounds)) continue;

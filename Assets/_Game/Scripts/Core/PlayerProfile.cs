@@ -91,9 +91,12 @@ namespace DriftSkate
         public int lunaChallenge;           // wie viele Spielmodi von Luna schon geschafft sind (LunaChallenges)
         public int jojoQuest;               // wie viele Auftraege von Jojo schon erledigt sind (JojoQuests)
         public int moeQuest;                // wie viele Jobs von Moe in der Gasse schon erledigt sind (MoeQuests)
+        public int miruQuest;               // Mirus Auftrag (Patrouillen-Bot runterholen): 1 = erledigt (MiruTalk)
         public int nixDeals;                // wie oft man bei Nix schon gekauft hat (NixDealer)
         public bool nixFriend;              // Nix hat den Freundschaftspreis schon angesagt
         public int baggies;                 // Tueten im Rucksack (Chill: G / Steuerkreuz links)
+        public int hotdogs;                 // Hotdogs im Rucksack (HotdogPower: H / linken Stick druecken)
+        public int hotdogsBought;           // wie oft man bei Bodo oder Udo schon gekauft hat (HotdogVendor)
         public bool angelWings;             // Easter Egg: Engelsfluegel gefunden und am Ruecken (AngelWingsPickup)
         public int cameraView;              // Kamera-Perspektive in der Stadt (CameraRig.Views): 0 Standard, 1 Nah, 2 Weit
 

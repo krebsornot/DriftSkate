@@ -39,6 +39,13 @@ namespace DriftSkate
         [Range(0, 1)] public float walk;
         /// <summary>Zu Fuss gesprungen: Knie angezogen, Arme hoch (0..1).</summary>
         [Range(0, 1)] public float walkJump;
+        /// <summary>Essen (Hotdog): die linke Hand kommt vor den Mund (0..1). Die rechte haelt zu Fuss das Board.</summary>
+        [Range(0, 1)] public float eat;
+        /// <summary>Leiter (0..1): Haende und Fuesse auf den Sprossen. climbRungs = Hoehe der Fuesse in Sprossen ab unten,
+        /// climbPlane = Punkt auf der Sprossen-Ebene in Fusshoehe, climbSide = von der Leiter zur Figur.</summary>
+        [Range(0, 1)] public float climb;
+        public float climbRungs, climbSpacing = 0.3f;
+        public Vector3 climbPlane, climbSide = Vector3.back;
 
         [Header("Animation Lab (0 = bisherige Animation)")]
         [Range(0, 1)] public float proceduralLife;
@@ -56,7 +63,7 @@ namespace DriftSkate
         Vector3[] _restPos;
         readonly Vector3[] _toeLocal = new Vector3[2], _soleUpLocal = new Vector3[2];
         Vector3 _headFaceLocal;
-        float _thigh, _shin, _upper, _fore;
+        float _thigh, _shin, _upper, _fore, _scale = 1f;
         float _pushWeight, _grabWeight, _armSwing, _feetFree;
         // Gehen: Tempo und Schrittphase aus der tatsaechlichen Bewegung (so stimmt es auch bei anderen Spielern online)
         Vector3 _lastRoot;
@@ -65,6 +72,17 @@ namespace DriftSkate
         bool _ok;
 
         public bool Ready => _ok;
+
+        /// <summary>Groesse der Figur relativ zur Standardfigur (aus der Beinlaenge).</summary>
+        public float Scale => _scale;
+        /// <summary>Mund (nach dem Posieren): vor und etwas ueber dem Kopfknochen, der am Hals sitzt. Wie weit das Gesicht
+        /// vorsteht, wird beim Aufbau am Modell gemessen (Mods mit grossem Kopf).</summary>
+        public Vector3 Mouth => _head.position + _head.TransformDirection(_headFaceLocal) * _faceDepth + Vector3.up * 0.048f * _scale;
+        float _faceDepth = 0.1f;
+        public float FaceDepth => _faceDepth;
+        /// <summary>Hand beim Essen: Richtung des Unterarms und Griffpunkt etwas vor dem Handgelenk.</summary>
+        public Vector3 EatHandForward => (_hand[0].position - _lowerArm[0].position).normalized;
+        public Vector3 EatGrip => _hand[0].position + EatHandForward * 0.06f * _scale;
 
         /// <summary>Warum das Modell nicht animiert werden kann (z. B. fehlende Knochen), sonst null.</summary>
         public string Error { get; private set; }
@@ -125,6 +143,8 @@ namespace DriftSkate
             _upper = Vector3.Distance(_upperArm[0].position, _lowerArm[0].position);
             float legLength = _thigh + _shin;
             _fore = Vector3.Distance(_lowerArm[0].position, _hand[0].position) + legLength * 0.09f;
+            _scale = Mathf.Clamp(legLength / 0.78f, 0.5f, 2f);
+            _faceDepth = MeasureFace(modelRoot, facing, modelUp);
 
             // Knoechelhoehe = Fussknochen ueber dem tiefsten Punkt des Modells (Sohle)
             float sole = float.MaxValue;
@@ -136,6 +156,32 @@ namespace DriftSkate
             StandHip = AnkleHeight + hipDrop + legLength * 0.94f;
             CrouchHip = AnkleHeight + hipDrop + legLength * 0.5f;
             TuckHip = AnkleHeight + hipDrop + legLength * 0.4f;
+        }
+
+        /// <summary>
+        /// Wie weit der Mund vor dem Kopfknochen liegt: vorderster Punkt des Modells zwischen Kinn und Nase (schmaler Streifen
+        /// um die Mitte, Ruhepose, die Haende sind weit weg), etwas zurueckgenommen. Ohne Messung 10 cm.
+        /// </summary>
+        float MeasureFace(Transform modelRoot, Vector3 facing, Vector3 up)
+        {
+            float depth = 0f;
+            Vector3 hp = _head.position, side = Vector3.Cross(up, facing);
+            var baked = new Mesh();
+            foreach (var smr in modelRoot.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                if (!smr.enabled) continue;
+                smr.BakeMesh(baked, true); // Punkte relativ zum Renderer, schon skaliert
+                var toWorld = Matrix4x4.TRS(smr.transform.position, smr.transform.rotation, Vector3.one);
+                foreach (var v in baked.vertices)
+                {
+                    Vector3 d = toWorld.MultiplyPoint3x4(v) - hp;
+                    float h = Vector3.Dot(d, up);
+                    if (h < 0f || h > 0.16f * _scale || Mathf.Abs(Vector3.Dot(d, side)) > 0.05f * _scale) continue;
+                    depth = Mathf.Max(depth, Vector3.Dot(d, facing));
+                }
+            }
+            Shapes.DestroySafe(baked);
+            return depth > 0.02f ? Mathf.Clamp(depth * 0.85f, 0.06f * _scale, 0.4f) : 0.1f * _scale;
         }
 
         void LateUpdate() => ApplyPose(Time.deltaTime);
@@ -420,6 +466,56 @@ namespace DriftSkate
             Quaternion turn = Quaternion.FromToRotation(Vector3.ProjectOnPlane(face, up), look);
             _neck.rotation = Quaternion.Slerp(Quaternion.identity, turn, 0.35f) * _neck.rotation;
             _head.rotation = Quaternion.Slerp(Quaternion.identity, turn, 0.65f) * _head.rotation;
+
+            // ---------------------------------------------------- Essen: linke Hand vor den Mund, Ellbogen nach unten aussen
+            if (eat > 0.001f && bail < 0.5f)
+            {
+                const int h = 0;
+                Vector3 faceDir = _head.TransformDirection(_headFaceLocal);
+                // Handgelenk gut eine Hotdog-Laenge vor und unter dem Mund (der Hotdog zeigt von der Hand zum Mund). Nicht mit
+                // der Figur skaliert: Mods sind auf Spielgroesse gebracht, haben aber oft kurze Beine (Scale waere zu klein)
+                Vector3 wrist = Mouth + faceDir * 0.16f - up * 0.1f - bodyRight * 0.04f;
+                Vector3 hint = _upperArm[h].position - up * 0.4f - bodyRight * 0.35f - faceDir * 0.1f;
+                TwoBone(_upperArm[h], _lowerArm[h], _hand[h], Vector3.Lerp(_hand[h].position, wrist, Smooth(eat)), hint, _upper, _fore);
+                _head.rotation = Quaternion.AngleAxis(8f * eat, bodyRight) * _head.rotation; // Kopf ein wenig zum Essen neigen
+            }
+
+            if (climb > 0.001f) PoseClimb(up, bodyRight);
+        }
+
+        /// <summary>
+        /// Klettern: jeder Fuss steht auf einer Sprosse und steigt alle zwei Sprossen nach (die Fuesse abwechselnd), die
+        /// Haende greifen gegengleich Sprossen ueber dem Kopf. Alles relativ zur Sprossen-Ebene, so passt es bei jeder Hoehe.
+        /// </summary>
+        void PoseClimb(Vector3 up, Vector3 bodyRight)
+        {
+            float sp = Mathf.Max(0.1f, climbSpacing), w = Smooth(climb);
+            Vector3 n = Vector3.ProjectOnPlane(climbSide, up).normalized; // von der Leiter zur Figur
+            int handUp = Mathf.Max(2, Mathf.RoundToInt(1.55f * _scale / sp));
+            // Sprosse, auf der ein Glied gerade ist (fliessend beim Umsetzen), relativ zur Fusshoehe
+            float Rung(float offset, float extraLift, out float lift)
+            {
+                float q = (climbRungs - offset) * 0.5f;
+                float k = Mathf.Floor(q), t = q - k;
+                lift = t > 0.55f ? Smooth((t - 0.55f) / 0.45f) : 0f;
+                return 2f * k + offset + 2f * lift - climbRungs + 1f + extraLift;
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                float r = Rung(i, 0f, out float lift);
+                Vector3 sole = climbPlane + up * (r * sp) + n * (0.05f + Mathf.Sin(lift * Mathf.PI) * 0.12f) + bodyRight * (i == 0 ? -0.11f : 0.11f) * _scale;
+                Vector3 ankle = sole + up * AnkleHeight;
+                Vector3 kneeHint = _upperLeg[i].position - n * 0.7f + up * 0.2f;
+                TwoBone(_upperLeg[i], _lowerLeg[i], _foot[i], Vector3.Lerp(_foot[i].position, ankle, w), kneeHint, _thigh, _shin);
+                OrientFoot(i, -n, up);
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                float r = Rung(i == 0 ? 1f : 0f, handUp, out float lift);
+                Vector3 grip = climbPlane + up * (r * sp) + n * (0.04f + Mathf.Sin(lift * Mathf.PI) * 0.1f) + bodyRight * (i == 0 ? -0.2f : 0.2f) * _scale;
+                Vector3 hint = _upperArm[i].position - up * 0.3f + (i == 0 ? -bodyRight : bodyRight) * 0.35f + n * 0.2f;
+                TwoBone(_upperArm[i], _lowerArm[i], _hand[i], Vector3.Lerp(_hand[i].position, grip, w), hint, _upper, _fore);
+            }
         }
 
         static float Smooth(float t)

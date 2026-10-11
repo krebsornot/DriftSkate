@@ -9,7 +9,8 @@ namespace DriftSkate
     /// dann Regen mit Tropfen-Streifen, Spritzern und Rauschen; der Boden wird nass und spiegelt (PlanarReflection).
     /// Bei Gewitter schlagen Blitze am Horizont ein (Strahl, Himmel und Stadt flackern hell, Donner je nach Entfernung
     /// verzoegert). Modus aus dem Spielstand: "klar", "dynamisch", "regen" oder "gewitter".
-    /// Online bestimmt der Host das Wetter und schickt es an alle Clients (Zustand alle 2 s, jeder Blitz sofort).
+    /// Online bestimmt der Host Wetter und Himmel und schickt beides an alle Clients (Zustand alle 2 s, jeder Blitz sofort).
+    /// Host und Solo koennen beides im Pausemenue umstellen (SetMode, SetSky).
     /// </summary>
     public class WeatherSystem : MonoBehaviour
     {
@@ -26,10 +27,13 @@ namespace DriftSkate
         /// <summary>Zahl der vom Host empfangenen Wetter-Nachrichten (fuer Tests).</summary>
         public static int SyncMessages { get; private set; }
 
-        const float BuildUp = 25f, WetUp = 15f, DryDown = 70f;
+        const float BuildUp = 25f, QuickBuildUp = 6f, WetUp = 15f, DryDown = 70f;
         const string MsgState = "DS_Weather", MsgStrike = "DS_Lightning";
 
         float _rain, _wet, _target, _timer, _nextStrike, _flash, _sendTimer, _boltTime;
+        float _buildUp = BuildUp; // von Hand umgestellt: schneller aufziehen bzw. aufklaeren
+        float _shelter;           // 1 = Kamera steht unter einem Dach (Parkhaus, Bruecke): keine Tropfen, Rauschen leiser
+        int _shelterMask;
         bool _storm, _registered;
         SkyPreset _preset;
         Material _sky;
@@ -100,6 +104,43 @@ namespace DriftSkate
             }
         }
 
+        /// <summary>Host oder Solo: Wettermodus sofort umstellen ("klar", "dynamisch", "regen", "gewitter"), Clients folgen.</summary>
+        public void SetMode(string mode)
+        {
+            if (FollowsHost) return;
+            SaveSystem.Profile.weather = mode;
+            SaveSystem.Save();
+            bool wet = mode == "regen" || mode == "gewitter";
+            _target = wet ? 1f : 0f;
+            _storm = mode == "gewitter";
+            _timer = mode == "dynamisch" ? Random.Range(50f, 90f) : float.MaxValue;
+            _nextStrike = Random.Range(2f, 4f);
+            _buildUp = QuickBuildUp;
+            SendState();
+        }
+
+        /// <summary>Host oder Solo: Himmel-Variante wechseln, Clients folgen.</summary>
+        public void SetSky(string id)
+        {
+            if (FollowsHost) return;
+            SaveSystem.Profile.sky = id;
+            SaveSystem.Save();
+            ApplySky(SkyLook.Find(id));
+            SendState();
+        }
+
+        void ApplySky(SkyPreset p)
+        {
+            if (p == _preset) return;
+            _preset = p;
+            SkyLook.Apply(p);
+            _sky = RenderSettings.skybox; // Apply legt eine neue Kopie des Himmel-Materials an
+            Apply();
+        }
+
+        /// <summary>Aktuelle Himmel-Variante (online die des Hosts).</summary>
+        public static SkyPreset Sky => Instance != null ? Instance._preset : SkyLook.Find(SaveSystem.Profile?.sky);
+
         /// <summary>Fuer Screenshots und Tests: Regen und Naesse direkt setzen.</summary>
         public void SetInstant(float rain, float wet)
         {
@@ -130,6 +171,9 @@ namespace DriftSkate
                 return nm != null && nm.IsListening && nm.IsClient && !nm.IsServer;
             }
         }
+
+        /// <summary>Darf dieser Rechner Wetter und Himmel bestimmen (Host oder Solo)?</summary>
+        public static bool CanControl => !FollowsHost;
 
         static bool HostWithClients
         {
@@ -174,7 +218,8 @@ namespace DriftSkate
                 _sendTimer -= dt;
                 if (_sendTimer <= 0f) { _sendTimer = 2f; SendState(); }
             }
-            _rain = Mathf.MoveTowards(_rain, _target, dt / BuildUp);
+            _rain = Mathf.MoveTowards(_rain, _target, dt / _buildUp);
+            if (_rain == _target) _buildUp = BuildUp;
             float wetTarget = _rain > 0.35f ? 1f : 0f;
             _wet = Mathf.MoveTowards(_wet, wetTarget, dt / (wetTarget > _wet ? WetUp : DryDown));
             UpdateLightning(dt);
@@ -184,7 +229,13 @@ namespace DriftSkate
         void LateUpdate()
         {
             if (_follow == null && Camera.main != null) _follow = Camera.main.transform;
-            if (_follow != null) Follow(_follow);
+            if (_follow != null)
+            {
+                Follow(_follow);
+                if (_shelterMask == 0) _shelterMask = ~LayerMask.GetMask("Car", "Skater", "Ignore Raycast", "Rail");
+                bool covered = _rain > 0.01f && Physics.Raycast(_follow.position + Vector3.up * 0.3f, Vector3.up, 30f, _shelterMask, QueryTriggerInteraction.Ignore);
+                _shelter = Mathf.MoveTowards(_shelter, covered ? 1f : 0f, Time.deltaTime * 2.5f);
+            }
         }
 
         /// <summary>Regen und Spritzer um die Kamera herum halten (vor ihr etwas mehr).</summary>
@@ -220,11 +271,11 @@ namespace DriftSkate
             if (_drops != null)
             {
                 var e = _drops.emission;
-                e.rateOverTime = r * (_storm ? 5500f : 4000f);
+                e.rateOverTime = r * (1f - _shelter) * (_storm ? 5500f : 4000f);
                 var s = _splashes.emission;
-                s.rateOverTime = r * 700f;
+                s.rateOverTime = r * (1f - _shelter) * 700f;
             }
-            if (_audio != null) _audio.volume = r * 0.55f * SaveSystem.Profile.sfxVolume;
+            if (_audio != null) _audio.volume = r * (1f - 0.6f * _shelter) * 0.55f * SaveSystem.Profile.sfxVolume;
         }
 
         // ------------------------------------------------------------------ Blitz und Donner
@@ -340,6 +391,9 @@ namespace DriftSkate
             w.WriteValueSafe(_rain);
             w.WriteValueSafe(_wet);
             w.WriteValueSafe(_storm);
+            // Neu (hinten angehaengt, aeltere Clients lesen es einfach nicht): Himmel und Aufzieh-Tempo
+            w.WriteValueSafe((byte)Mathf.Max(0, System.Array.IndexOf(SkyLook.Presets, _preset)));
+            w.WriteValueSafe(_buildUp);
             if (to.HasValue) nm.CustomMessagingManager.SendNamedMessage(MsgState, to.Value, w, NetworkDelivery.Reliable);
             else nm.CustomMessagingManager.SendNamedMessageToAll(MsgState, w, NetworkDelivery.Reliable);
         }
@@ -365,6 +419,13 @@ namespace DriftSkate
             SyncMessages++;
             _target = target;
             _storm = storm;
+            if (r.TryBeginRead(sizeof(byte) + sizeof(float)))
+            {
+                r.ReadValue(out byte sky);
+                r.ReadValue(out float buildUp);
+                if (sky < SkyLook.Presets.Length) ApplySky(SkyLook.Presets[sky]);
+                _buildUp = Mathf.Clamp(buildUp, QuickBuildUp, BuildUp);
+            }
             // Beim Beitreten (oder nach Aussetzern) direkt auf den Stand des Hosts springen, sonst weich folgen
             if (Mathf.Abs(_rain - rain) > 0.25f) _rain = rain;
             if (Mathf.Abs(_wet - wet) > 0.25f) _wet = wet;

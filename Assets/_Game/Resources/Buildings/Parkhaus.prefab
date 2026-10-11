@@ -1,0 +1,5267 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &79877850948514449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5955807595594936566}
+  - component: {fileID: 2991839712424900678}
+  m_Layer: 10
+  m_Name: Grind_Curb_Roof_Edge_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5955807595594936566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79877850948514449}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2991839712424900678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79877850948514449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 31.08125, y: 26.27, z: 31.852077}
+  - {x: 29.64375, y: 26.27, z: 31.835936}
+  - {x: 28.293753, y: 26.27, z: 31.848438}
+  - {x: 26.931252, y: 26.27, z: 31.857811}
+  - {x: 25.58125, y: 26.27, z: 31.870312}
+  - {x: 24.01389, y: 26.27, z: 31.828468}
+  - {x: 22.830555, y: 26.27, z: 31.83264}
+  - {x: 21.252777, y: 26.27, z: 31.838194}
+  - {x: 19.981482, y: 26.27, z: 31.84537}
+  - {x: 18.491667, y: 26.27, z: 31.847916}
+  - {x: 17.11389, y: 26.27, z: 31.85347}
+  - {x: 15.730556, y: 26.27, z: 31.857635}
+  - {x: 14.352778, y: 26.27, z: 31.863195}
+  - {x: 12.848148, y: 26.27, z: 31.862038}
+  - {x: 11.591667, y: 26.27, z: 31.872915}
+  - {x: 10, y: 26.27, z: 31.849998}
+  - {x: 8.708333, y: 26.27, z: 31.827084}
+  - {x: 7.322917, y: 26.27, z: 31.830729}
+  - {x: 5.9375, y: 26.27, z: 31.834373}
+  - {x: 4.5520835, y: 26.27, z: 31.83802}
+  - {x: 3.1666667, y: 26.27, z: 31.841667}
+  - {x: 1.78125, y: 26.27, z: 31.845312}
+  - {x: 0.19791663, y: 26.27, z: 31.84948}
+  - {x: -0.98958343, y: 26.27, z: 31.852602}
+  - {x: -2.5729165, y: 26.27, z: 31.856768}
+  - {x: -3.7604163, y: 26.27, z: 31.859894}
+  - {x: -5.34375, y: 26.27, z: 31.864061}
+  - {x: -6.53125, y: 26.27, z: 31.867188}
+  - {x: -8.114583, y: 26.27, z: 31.871353}
+  - {x: -9.401042, y: 26.27, z: 31.855984}
+  - {x: -10.9375, y: 26.27, z: 31.849995}
+  - {x: -12.380556, y: 26.27, z: 31.829859}
+  - {x: -13.563889, y: 26.27, z: 31.834028}
+  - {x: -15.10476, y: 26.27, z: 31.84524}
+  - {x: -16.414816, y: 26.27, z: 31.846296}
+  - {x: -17.803705, y: 26.27, z: 31.849073}
+  - {x: -19.280554, y: 26.27, z: 31.854858}
+  - {x: -20.66389, y: 26.27, z: 31.859024}
+  - {x: -22.041666, y: 26.27, z: 31.864584}
+  - {x: -23.54815, y: 26.27, z: 31.862963}
+  - {x: -24.90139, y: 26.27, z: 31.855898}
+  - {x: -26.35625, y: 26.27, z: 31.835936}
+  - {x: -27.706247, y: 26.27, z: 31.848438}
+  - {x: -29.068748, y: 26.27, z: 31.857811}
+  - {x: -30.41875, y: 26.27, z: 31.870312}
+  - {x: -31.817642, y: 26.27, z: 31.81372}
+  label: PARKHAUS CURB
+--- !u!1 &89525396927391388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4406925813343403943}
+  - component: {fileID: 6227516711293474403}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4406925813343403943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89525396927391388}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6227516711293474403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89525396927391388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.727833, y: 7.0165277, z: -7.794781}
+  - {x: -15.456331, y: 7.3116665, z: -8.7760315}
+  - {x: -14.550718, y: 7.379375, z: -9.722478}
+  - {x: -14.153998, y: 7.4470835, z: -10.790868}
+  - {x: -13.430129, y: 7.5147915, z: -11.487317}
+  - {x: -12.4274025, y: 7.5825, z: -12.4274025}
+  - {x: -11.599114, y: 7.6502085, z: -13.100471}
+  - {x: -10.7607, y: 7.7179165, z: -13.830372}
+  - {x: -9.72248, y: 7.785625, z: -14.550719}
+  - {x: -8.784629, y: 7.8759027, z: -15.130644}
+  - {x: -7.878773, y: 7.9210415, z: -15.734453}
+  - {x: -7.218506, y: 7.7161803, z: -15.931583}
+  label: PARKHAUS CURB
+--- !u!1 &115690507085361179
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 502397816571905170}
+  - component: {fileID: 6444364475591568774}
+  m_Layer: 10
+  m_Name: Grind_Rail_Helix_Inner_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &502397816571905170
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115690507085361179}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6444364475591568774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115690507085361179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -5.9011483, y: 1.6654466, z: -4.0371933}
+  - {x: -5.0240445, y: 1.8637131, z: -5.0873837}
+  - {x: -4.2282248, y: 2.012399, z: -5.735292}
+  - {x: -3.3604815, y: 2.1610756, z: -6.273212}
+  - {x: -1.6162602, y: 2.4584002, z: -6.9401193}
+  - {x: -0.17429022, y: 2.656592, z: -7.1401987}
+  - {x: 1.121173, y: 2.813002, z: -7.049983}
+  - {x: 2.5088303, y: 3.0529199, z: -6.687192}
+  - {x: 3.4961762, y: 3.1798358, z: -6.1823587}
+  - {x: 4.3542814, y: 3.3501148, z: -5.6298027}
+  - {x: 5.3480434, y: 3.5133216, z: -4.695563}
+  - {x: 6.296325, y: 3.772624, z: -3.2867837}
+  - {x: 6.9139404, y: 4.0434194, z: -1.7917122}
+  - {x: 7.12106, y: 4.2172127, z: -0.47681358}
+  - {x: 7.0710363, y: 4.48219, z: 1.049114}
+  - {x: 6.720847, y: 4.6870036, z: 2.4172354}
+  - {x: 6.091927, y: 4.9150724, z: 3.7169764}
+  - {x: 5.42747, y: 5.0334764, z: 4.642973}
+  - {x: 4.3977365, y: 5.2314363, z: 5.63759}
+  - {x: 3.1637251, y: 5.4788623, z: 6.4034104}
+  - {x: 1.9679487, y: 5.600429, z: 6.87275}
+  - {x: 0.53921306, y: 5.8746934, z: 7.1219397}
+  - {x: -0.82732475, y: 6.072619, z: 7.0942473}
+  - {x: -1.8833709, y: 6.221131, z: 6.880169}
+  - {x: -3.2579572, y: 6.4197965, z: 6.3592453}
+  - {x: -4.2132215, y: 6.568784, z: 5.76154}
+  - {x: -4.9799795, y: 6.7177644, z: 5.084707}
+  - {x: -5.6630654, y: 6.866736, z: 4.324483}
+  - {x: -6.2460113, y: 7.0157, z: 3.4799178}
+  - {x: -6.760255, y: 7.214302, z: 2.3047338}
+  - {x: -6.9977827, y: 7.3297715, z: 1.2196615}
+  - {x: -7.1316223, y: 7.6114564, z: -0.39089808}
+  - {x: -6.975127, y: 7.718873, z: -1.4934103}
+  - {x: -6.675466, y: 7.958909, z: -2.4683206}
+  - {x: -6.260618, y: 8.058172, z: -3.4023716}
+  - {x: -5.72788, y: 8.20706, z: -4.2794733}
+  - {x: -5.0378175, y: 8.355934, z: -5.039033}
+  - {x: -4.259719, y: 8.504801, z: -5.701688}
+  - {x: -3.403621, y: 8.653657, z: -6.2599382}
+  - {x: -2.47502, y: 8.852117, z: -6.6940064}
+  - {x: -1.0713425, y: 9.050558, z: -7.0615206}
+  - {x: 0.29342878, y: 9.2489805, z: -7.1362925}
+  - {x: 1.5711614, y: 9.376689, z: -7.0006433}
+  - {x: 2.9411457, y: 9.645771, z: -6.5086465}
+  - {x: 3.9870143, y: 9.79455, z: -5.9259176}
+  - {x: 5.108247, y: 9.992904, z: -5.00283}
+  - {x: 5.7619405, y: 10.141655, z: -4.2114944}
+  - {x: 6.28088, y: 10.290396, z: -3.3302705}
+  - {x: 6.840551, y: 10.514764, z: -1.9649512}
+  - {x: 7.0608416, y: 10.686991, z: -0.9100615}
+  - {x: 7.1049104, y: 10.88526, z: 0.45162782}
+  - {x: 6.88878, y: 11.083511, z: 1.7967774}
+  - {x: 6.497363, y: 11.218254, z: 2.9242184}
+  - {x: 6.0213933, y: 11.430405, z: 3.8312268}
+  - {x: 5.3601475, y: 11.559277, z: 4.6828237}
+  - {x: 4.575429, y: 11.727696, z: 5.4470515}
+  - {x: 3.2712429, y: 11.916307, z: 6.332008}
+  - {x: 1.7629204, y: 12.173558, z: 6.9213357}
+  - {x: 0.41218907, y: 12.371688, z: 7.1304245}
+  - {x: -1.0575877, y: 12.608962, z: 7.069006}
+  - {x: -2.445187, y: 12.817411, z: 6.7107263}
+  - {x: -3.7758374, y: 13.064997, z: 6.052011}
+  - {x: -4.6496778, y: 13.164026, z: 5.421561}
+  - {x: -5.6565914, y: 13.362065, z: 4.3759046}
+  - {x: -6.1836886, y: 13.485856, z: 3.4947581}
+  - {x: -6.695427, y: 13.708591, z: 2.4196978}
+  - {x: -6.989087, y: 13.857087, z: 1.265496}
+  - {x: -7.1134725, y: 14.018753, z: -0.090970226}
+  - {x: -6.9346886, y: 14.302519, z: -1.6105192}
+  - {x: -6.372685, y: 14.547162, z: -3.2367737}
+  - {x: -5.7342715, y: 14.698386, z: -4.2296085}
+  - {x: -5.0639377, y: 14.84682, z: -5.001099}
+  - {x: -4.300875, y: 14.995246, z: -5.681014}
+  - {x: -3.4538908, y: 15.143663, z: -6.260443}
+  - {x: -2.2765784, y: 15.341954, z: -6.769784}
+  - {x: -0.9453107, y: 15.540614, z: -7.079487}
+  - {x: 0.42057666, y: 15.73926, z: -7.129931}
+  - {x: 1.7710623, y: 15.937888, z: -6.9192595}
+  - {x: 3.0239422, y: 16.110167, z: -6.468469}
+  - {x: 4.3032765, y: 16.335098, z: -5.71002}
+  - {x: 5.059957, y: 16.484034, z: -5.0168014}
+  - {x: 5.719367, y: 16.63296, z: -4.235952}
+  - {x: 6.2740493, y: 16.781878, z: -3.377538}
+  - {x: 6.7042513, y: 16.98042, z: -2.447137}
+  - {x: 7.0659127, y: 17.178942, z: -1.0419433}
+  - {x: 7.135012, y: 17.377449, z: 0.32312778}
+  - {x: 6.9677253, y: 17.51725, z: 1.5956138}
+  - {x: 6.496348, y: 17.774408, z: 2.9682093}
+  - {x: 5.9169602, y: 17.92325, z: 3.999213}
+  - {x: 4.9815235, y: 18.12169, z: 5.1290283}
+  - {x: 3.9061093, y: 18.36971, z: 5.973083}
+  - {x: 2.6198072, y: 18.568111, z: 6.644502}
+  - {x: 1.3868557, y: 18.70341, z: 6.993883}
+  - {x: 0.114849254, y: 18.915264, z: 7.1414046}
+  - {x: -1.2476248, y: 19.113611, z: 7.032515}
+  - {x: -2.5644085, y: 19.31194, z: 6.6660776}
+  - {x: -3.8562546, y: 19.559822, z: 6.005393}
+  - {x: -4.669774, y: 19.658966, z: 5.383452}
+  - {x: -5.3670135, y: 19.839863, z: 4.6625223}
+  - {x: -6.4714155, y: 20.105064, z: 3.0221832}
+  - {x: -6.928614, y: 20.303299, z: 1.7340996}
+  - {x: -7.1320734, y: 20.501514, z: 0.38250828}
+  - {x: -7.074343, y: 20.699713, z: -0.9830902}
+  - {x: -6.700494, y: 20.947432, z: -2.4730954}
+  - {x: -6.0473733, y: 21.195122, z: -3.7843468}
+  - {x: -5.402161, y: 21.294193, z: -4.6722}
+  - {x: -4.350656, y: 21.492317, z: -5.6739984}
+  - {x: -3.4802747, y: 21.640896, z: -6.2176495}
+  - {x: -2.39181, y: 21.838987, z: -6.705442}
+  - {x: -1.2357898, y: 21.975948, z: -6.989633}
+  - {x: 0.28964296, y: 22.235117, z: -7.1133547}
+  - {x: 1.5979283, y: 22.408707, z: -6.936047}
+  - {x: 3.2635481, y: 22.674223, z: -6.359255}
+  - {x: 4.253438, y: 22.82918, z: -5.7166195}
+  - {x: 5.0221324, y: 22.977669, z: -5.0430784}
+  - {x: 5.6979747, y: 23.126152, z: -4.2797565}
+  - {x: 6.274763, y: 23.274626, z: -3.4278042}
+  - {x: 6.7515955, y: 23.472574, z: -2.3088822}
+  - {x: 7.083361, y: 23.670507, z: -0.91583747}
+  - {x: 7.1227746, y: 23.818945, z: 0.19374983}
+  - {x: 6.911828, y: 24.066324, z: 1.7998438}
+  - {x: 6.4424133, y: 24.26421, z: 3.083527}
+  - {x: 5.6920605, y: 24.462774, z: 4.327003}
+  - {x: 4.995698, y: 24.611767, z: 5.0807934}
+  - {x: 4.213751, y: 24.76075, z: 5.7389307}
+  - {x: 3.3474298, y: 24.909725, z: 6.2806582}
+  - {x: 1.7841489, y: 25.207647, z: 6.8882947}
+  - {x: 0.24417284, y: 25.406242, z: 7.11506}
+  - {x: -1.0741599, y: 25.60482, z: 7.0415325}
+  - {x: -2.4346185, y: 25.803383, z: 6.6900187}
+  - {x: -3.516395, y: 25.916668, z: 6.1854963}
+  - {x: -4.370349, y: 26.101192, z: 5.627745}
+  - {x: -5.1344604, y: 26.250082, z: 4.975082}
+  - {x: -5.989291, y: 26.498209, z: 3.8812156}
+  - {x: -6.626562, y: 26.608656, z: 2.6693265}
+  - {x: -6.998281, y: 26.835453, z: 1.3599969}
+  - {x: -7.119494, y: 27.043993, z: 0.2923416}
+  - {x: -7.0708942, y: 27.045, z: -1.0466702}
+  - {x: -6.7563286, y: 27.045, z: -2.337672}
+  label: PARKHAUS RAIL
+--- !u!1 &154564131180135721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 333106948229930323}
+  - component: {fileID: 216252156181708404}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_12
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &333106948229930323
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154564131180135721}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &216252156181708404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154564131180135721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 6.983865, y: 23.08771, z: 0.44010025}
+  - {x: 7.105495, y: 23.290834, z: 1.656769}
+  - {x: 6.3219843, y: 23.561666, z: 3.6500006}
+  label: PARKHAUS CURB
+--- !u!1 &186622152206996290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2617473394656185493}
+  - component: {fileID: 231893212566553794}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_16
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2617473394656185493
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186622152206996290}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &231893212566553794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186622152206996290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 9.889152, y: 15.504375, z: -14.8001585}
+  - {x: 8.900001, y: 15.436667, z: -15.415252}
+  - {x: 7.856546, y: 15.391528, z: -15.714461}
+  - {x: 6.6373525, y: 15.30125, z: -16.273764}
+  - {x: 5.7216225, y: 15.233542, z: -16.855356}
+  - {x: 4.5117574, y: 15.165833, z: -17.002821}
+  - {x: 3.342881, y: 15.098125, z: -17.247393}
+  - {x: 2.378092, y: 15.052987, z: -17.638683}
+  - {x: 1.034823, y: 14.962708, z: -17.7439}
+  label: PARKHAUS CURB
+--- !u!1 &325811897194056274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7569166259111345789}
+  - component: {fileID: 2321771938365608585}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_8
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7569166259111345789
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325811897194056274}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2321771938365608585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325811897194056274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 11.617041, y: 9.162362, z: -13.1008}
+  - {x: 12.374368, y: 8.9575, z: -12.374368}
+  - {x: 13.421566, y: 9.297778, z: -11.4951515}
+  - {x: 14.106029, y: 9.115487, z: -10.343043}
+  - {x: 14.8001585, y: 9.410625, z: -9.889152}
+  label: PARKHAUS CURB
+--- !u!1 &1023803409181676436
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8792649361131170274}
+  - component: {fileID: 605330401086485857}
+  m_Layer: 0
+  m_Name: Roof
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8792649361131170274
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023803409181676436}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7053062757278896630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &605330401086485857
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023803409181676436}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 3f0dd86ea8db72f4fb2d393e9deb72e9, type: 2}
+--- !u!1 &1030557153410415637
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2488014769575851522}
+  - component: {fileID: 6657833340898385131}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2488014769575851522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030557153410415637}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6657833340898385131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030557153410415637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -10.110332, y: 5.6102777, z: 14.272787}
+  - {x: -11.243476, y: 5.6172223, z: 13.399359}
+  - {x: -12.141783, y: 5.9349303, z: 12.744365}
+  - {x: -13.100471, y: 6.0252085, z: 11.599114}
+  - {x: -13.830372, y: 6.0929165, z: 10.7607}
+  - {x: -14.550718, y: 6.160625, z: 9.722478}
+  - {x: -15.151584, y: 6.2509027, z: 8.747768}
+  - {x: -15.75389, y: 6.2960415, z: 7.8755345}
+  label: PARKHAUS CURB
+--- !u!1 &1037205132640119641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 304918399253775905}
+  - component: {fileID: 29757077155477392}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_29
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &304918399253775905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037205132640119641}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &29757077155477392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037205132640119641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 9.889152, y: 22.004375, z: -14.8001585}
+  - {x: 8.748439, y: 21.709236, z: -15.152739}
+  - {x: 7.8756976, y: 21.89153, z: -15.727032}
+  - {x: 7.215569, y: 21.84639, z: -16.152367}
+  label: PARKHAUS CURB
+--- !u!1 &1131420000276916279
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3801069424231200390}
+  - component: {fileID: 1019248554015886923}
+  m_Layer: 10
+  m_Name: Grind_Curb_Roof_Edge_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3801069424231200390
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131420000276916279}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1019248554015886923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131420000276916279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 31.817642, y: 26.27, z: -31.81372}
+  - {x: 31.826439, y: 26.27, z: -30.408657}
+  - {x: 31.829807, y: 26.27, z: -29.028843}
+  - {x: 31.833174, y: 26.27, z: -27.649042}
+  - {x: 31.836536, y: 26.27, z: -26.269228}
+  - {x: 31.839903, y: 26.27, z: -24.889423}
+  - {x: 31.843748, y: 26.27, z: -23.3125}
+  - {x: 31.846634, y: 26.27, z: -22.129807}
+  - {x: 31.85048, y: 26.27, z: -20.552885}
+  - {x: 31.853363, y: 26.27, z: -19.370193}
+  - {x: 31.857208, y: 26.27, z: -17.793272}
+  - {x: 31.860577, y: 26.27, z: -16.413462}
+  - {x: 31.863943, y: 26.27, z: -15.033653}
+  - {x: 31.867306, y: 26.27, z: -13.653847}
+  - {x: 31.870672, y: 26.27, z: -12.274038}
+  - {x: 31.874039, y: 26.27, z: -10.894232}
+  - {x: 31.844004, y: 26.27, z: -9.401042}
+  - {x: 31.828644, y: 26.27, z: -8.114583}
+  - {x: 31.832811, y: 26.27, z: -6.53125}
+  - {x: 31.835938, y: 26.27, z: -5.34375}
+  - {x: 31.840103, y: 26.27, z: -3.7604165}
+  - {x: 31.843227, y: 26.27, z: -2.5729165}
+  - {x: 31.847397, y: 26.27, z: -0.9895834}
+  - {x: 31.85052, y: 26.27, z: 0.19791663}
+  - {x: 31.854685, y: 26.27, z: 1.78125}
+  - {x: 31.858334, y: 26.27, z: 3.1666665}
+  - {x: 31.861979, y: 26.27, z: 4.5520835}
+  - {x: 31.865623, y: 26.27, z: 5.9375}
+  - {x: 31.86927, y: 26.27, z: 7.322917}
+  - {x: 31.872917, y: 26.27, z: 8.708333}
+  - {x: 31.849998, y: 26.27, z: 10}
+  - {x: 31.8274, y: 26.27, z: 11.485578}
+  - {x: 31.831251, y: 26.27, z: 13.0625}
+  - {x: 31.834135, y: 26.27, z: 14.245193}
+  - {x: 31.83798, y: 26.27, z: 15.822115}
+  - {x: 31.840864, y: 26.27, z: 17.004807}
+  - {x: 31.84471, y: 26.27, z: 18.581728}
+  - {x: 31.848076, y: 26.27, z: 19.961538}
+  - {x: 31.85144, y: 26.27, z: 21.341345}
+  - {x: 31.854809, y: 26.27, z: 22.721153}
+  - {x: 31.85817, y: 26.27, z: 24.100958}
+  - {x: 31.86202, y: 26.27, z: 25.677885}
+  - {x: 31.864904, y: 26.27, z: 26.860573}
+  - {x: 31.86875, y: 26.27, z: 28.4375}
+  - {x: 31.871634, y: 26.27, z: 29.620193}
+  - {x: 31.84791, y: 26.27, z: 31.085415}
+  - {x: 31.81372, y: 26.27, z: 31.817642}
+  label: PARKHAUS CURB
+--- !u!1 &1505636190031366813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3041642689219055403}
+  - component: {fileID: 2632609181797666868}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_12
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3041642689219055403
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505636190031366813}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2632609181797666868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505636190031366813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -0.43754697, y: 19.77, z: 18.075676}
+  - {x: -1.5279194, y: 19.5825, z: 18.228212}
+  - {x: -3.1763117, y: 19.52, z: 18.013393}
+  - {x: -4.6041183, y: 19.77, z: 17.399403}
+  - {x: -5.919532, y: 19.77, z: 17.196426}
+  - {x: -6.835807, y: 19.77, z: 16.649588}
+  - {x: -7.9825706, y: 19.77, z: 16.374052}
+  - {x: -9.292264, y: 19.77, z: 15.715663}
+  - {x: -10.127901, y: 19.77, z: 15.117367}
+  - {x: -11.02493, y: 19.77, z: 14.480781}
+  label: PARKHAUS CURB
+--- !u!1 &1591151793636851578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1345925930798824133}
+  - component: {fileID: 8513105002279397044}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_14
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1345925930798824133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591151793636851578}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8513105002279397044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591151793636851578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.426684, y: 6.924752, z: -9.827956}
+  - {x: -16.177559, y: 7.2178674, z: -8.533932}
+  - {x: -16.305147, y: 6.9939585, z: -8.040808}
+  label: PARKHAUS CURB
+--- !u!1 &1687154430046770100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6577480995948057666}
+  - component: {fileID: 3511843059773964472}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6577480995948057666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687154430046770100}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3511843059773964472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687154430046770100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 1.6567695, y: 11.191875, z: 7.1054945}
+  - {x: 0.4576469, y: 11.611147, z: 6.982343}
+  - {x: -0.9505578, y: 11.814272, z: 7.2155085}
+  - {x: -3.1696289, y: 12.152813, z: 6.499725}
+  label: PARKHAUS CURB
+--- !u!1 &1882095748598879319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9218237309981914929}
+  - component: {fileID: 5920371857769083944}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9218237309981914929
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882095748598879319}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5920371857769083944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882095748598879319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 9.889152, y: 4.535625, z: 14.8001585}
+  - {x: 10.695479, y: 4.2179165, z: 13.849089}
+  - {x: 12.095763, y: 4.1884027, z: 12.635311}
+  label: PARKHAUS CURB
+--- !u!1 &1984510280711414738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9105510562164600345}
+  - component: {fileID: 3786712329926101821}
+  m_Layer: 10
+  m_Name: Grind_Curb_Roof_Edge_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9105510562164600345
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984510280711414738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3786712329926101821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984510280711414738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -31.817642, y: 26.27, z: 31.81372}
+  - {x: -31.826439, y: 26.27, z: 30.408657}
+  - {x: -31.829807, y: 26.27, z: 29.028843}
+  - {x: -31.833174, y: 26.27, z: 27.649042}
+  - {x: -31.836536, y: 26.27, z: 26.269228}
+  - {x: -31.839903, y: 26.27, z: 24.889423}
+  - {x: -31.843748, y: 26.27, z: 23.3125}
+  - {x: -31.846634, y: 26.27, z: 22.129807}
+  - {x: -31.85048, y: 26.27, z: 20.552885}
+  - {x: -31.853363, y: 26.27, z: 19.370193}
+  - {x: -31.857208, y: 26.27, z: 17.793272}
+  - {x: -31.860577, y: 26.27, z: 16.413462}
+  - {x: -31.863943, y: 26.27, z: 15.033653}
+  - {x: -31.867306, y: 26.27, z: 13.653847}
+  - {x: -31.870672, y: 26.27, z: 12.274038}
+  - {x: -31.856005, y: 26.27, z: 10.598557}
+  - {x: -31.844004, y: 26.27, z: 9.401042}
+  - {x: -31.828644, y: 26.27, z: 8.114583}
+  - {x: -31.832811, y: 26.27, z: 6.53125}
+  - {x: -31.835938, y: 26.27, z: 5.34375}
+  - {x: -31.840103, y: 26.27, z: 3.7604165}
+  - {x: -31.843227, y: 26.27, z: 2.5729165}
+  - {x: -31.847397, y: 26.27, z: 0.9895834}
+  - {x: -31.85104, y: 26.27, z: -0.39583325}
+  - {x: -31.854685, y: 26.27, z: -1.78125}
+  - {x: -31.858334, y: 26.27, z: -3.1666665}
+  - {x: -31.861979, y: 26.27, z: -4.5520835}
+  - {x: -31.865623, y: 26.27, z: -5.9375}
+  - {x: -31.86927, y: 26.27, z: -7.322917}
+  - {x: -31.872917, y: 26.27, z: -8.708333}
+  - {x: -31.850002, y: 26.27, z: -10.3}
+  - {x: -31.8274, y: 26.27, z: -11.485578}
+  - {x: -31.831251, y: 26.27, z: -13.0625}
+  - {x: -31.834135, y: 26.27, z: -14.245193}
+  - {x: -31.83798, y: 26.27, z: -15.822115}
+  - {x: -31.840864, y: 26.27, z: -17.004807}
+  - {x: -31.84471, y: 26.27, z: -18.581728}
+  - {x: -31.848076, y: 26.27, z: -19.961538}
+  - {x: -31.85144, y: 26.27, z: -21.341345}
+  - {x: -31.854809, y: 26.27, z: -22.721153}
+  - {x: -31.85817, y: 26.27, z: -24.100958}
+  - {x: -31.86202, y: 26.27, z: -25.677885}
+  - {x: -31.864904, y: 26.27, z: -26.860573}
+  - {x: -31.86875, y: 26.27, z: -28.4375}
+  - {x: -31.871634, y: 26.27, z: -29.620193}
+  - {x: -31.84791, y: 26.27, z: -31.085415}
+  - {x: -31.08125, y: 26.27, z: -31.852077}
+  - {x: -29.620193, y: 26.27, z: -31.828362}
+  - {x: -28.4375, y: 26.27, z: -31.831251}
+  - {x: -26.860573, y: 26.27, z: -31.835096}
+  - {x: -25.677887, y: 26.27, z: -31.83798}
+  - {x: -24.10096, y: 26.27, z: -31.841825}
+  - {x: -22.721153, y: 26.27, z: -31.845192}
+  - {x: -21.341345, y: 26.27, z: -31.848557}
+  - {x: -19.961538, y: 26.27, z: -31.851925}
+  - {x: -18.581728, y: 26.27, z: -31.855286}
+  - {x: -17.004807, y: 26.27, z: -31.859135}
+  - {x: -15.822115, y: 26.27, z: -31.86202}
+  - {x: -14.245193, y: 26.27, z: -31.865866}
+  - {x: -13.0625, y: 26.27, z: -31.86875}
+  - {x: -11.485578, y: 26.27, z: -31.872595}
+  - {x: -10.3, y: 26.27, z: -31.85}
+  - {x: -8.708333, y: 26.27, z: -31.827084}
+  - {x: -7.322917, y: 26.27, z: -31.830729}
+  - {x: -5.9375, y: 26.27, z: -31.834373}
+  - {x: -4.5520835, y: 26.27, z: -31.83802}
+  - {x: -3.1666667, y: 26.27, z: -31.841667}
+  - {x: -1.78125, y: 26.27, z: -31.845312}
+  - {x: -0.39583325, y: 26.27, z: -31.848957}
+  - {x: 0.98958343, y: 26.27, z: -31.852602}
+  - {x: 2.5729165, y: 26.27, z: -31.856768}
+  - {x: 3.7604163, y: 26.27, z: -31.859894}
+  - {x: 5.34375, y: 26.27, z: -31.864061}
+  - {x: 6.53125, y: 26.27, z: -31.867188}
+  - {x: 8.114583, y: 26.27, z: -31.871353}
+  - {x: 9.401042, y: 26.27, z: -31.855984}
+  - {x: 10.5985565, y: 26.27, z: -31.843985}
+  - {x: 12.274038, y: 26.27, z: -31.829325}
+  - {x: 13.653847, y: 26.27, z: -31.832691}
+  - {x: 15.033653, y: 26.27, z: -31.836058}
+  - {x: 16.413462, y: 26.27, z: -31.839424}
+  - {x: 17.793272, y: 26.27, z: -31.842787}
+  - {x: 19.370193, y: 26.27, z: -31.846634}
+  - {x: 20.552885, y: 26.27, z: -31.849518}
+  - {x: 22.129808, y: 26.27, z: -31.853363}
+  - {x: 23.3125, y: 26.27, z: -31.856247}
+  - {x: 24.889427, y: 26.27, z: -31.860096}
+  - {x: 26.26923, y: 26.27, z: -31.86346}
+  - {x: 27.649042, y: 26.27, z: -31.866827}
+  - {x: 29.028843, y: 26.27, z: -31.870193}
+  - {x: 30.408657, y: 26.27, z: -31.873556}
+  - {x: 31.817642, y: 26.27, z: -31.81372}
+  label: PARKHAUS CURB
+--- !u!1 &1985281410286004093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1167160475495471577}
+  - component: {fileID: 3720071487525315336}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_25
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1167160475495471577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985281410286004093}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3720071487525315336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985281410286004093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.731277, y: 20.26653, z: -7.864838}
+  - {x: -15.166792, y: 20.311666, z: -8.722663}
+  - {x: -14.550719, y: 20.379375, z: -9.72248}
+  label: PARKHAUS CURB
+--- !u!1 &1996961242159083532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1610687460829885207}
+  - component: {fileID: 1469781083209742731}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_21
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1610687460829885207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996961242159083532}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1469781083209742731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996961242159083532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 5.2672997, y: 17.82903, z: 16.709682}
+  - {x: 6.6459236, y: 17.51132, z: 16.187101}
+  - {x: 7.260929, y: 17.71618, z: 15.934305}
+  label: PARKHAUS CURB
+--- !u!1 &2261340533096673671
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8549420857181171326}
+  - component: {fileID: 1963879547445880749}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_27
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8549420857181171326
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2261340533096673671}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1963879547445880749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2261340533096673671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -13.119919, y: 20.287361, z: -11.578353}
+  - {x: -12.4274025, y: 20.5825, z: -12.4274025}
+  - {x: -11.599114, y: 20.65021, z: -13.100471}
+  - {x: -10.7607, y: 20.717916, z: -13.830372}
+  - {x: -9.722478, y: 20.785625, z: -14.550718}
+  - {x: -8.747768, y: 20.875904, z: -15.151584}
+  - {x: -7.858948, y: 20.921041, z: -15.72026}
+  - {x: -6.634578, y: 21.01132, z: -16.268135}
+  - {x: -5.7216225, y: 21.05646, z: -16.855356}
+  - {x: -4.5380387, y: 21.146736, z: -17.0151}
+  - {x: -3.3602774, y: 20.964445, z: -17.172625}
+  - {x: -2.41265, y: 21.259584, z: -17.35159}
+  - {x: -1.061616, y: 21.349861, z: -17.465244}
+  - {x: 0.38151824, y: 21.41757, z: -17.48751}
+  - {x: 1.7143815, y: 21.507847, z: -17.406406}
+  - {x: 3.0895274, y: 21.575556, z: -17.521225}
+  - {x: 4.5117574, y: 21.665834, z: -17.002821}
+  - {x: 5.7216225, y: 21.733541, z: -16.855356}
+  - {x: 6.577874, y: 21.695347, z: -16.212713}
+  - {x: 7.7881446, y: 21.64153, z: -15.669568}
+  - {x: 8.7760315, y: 21.936666, z: -15.456331}
+  - {x: 9.722478, y: 22.004375, z: -14.550718}
+  - {x: 10.790868, y: 22.072084, z: -14.153998}
+  - {x: 11.487317, y: 22.139791, z: -13.430129}
+  - {x: 12.4274025, y: 22.2075, z: -12.4274025}
+  - {x: 13.100471, y: 22.27521, z: -11.599114}
+  - {x: 13.830372, y: 22.342916, z: -10.7607}
+  - {x: 14.550718, y: 22.410625, z: -9.722478}
+  - {x: 15.152739, y: 22.500904, z: -8.748439}
+  - {x: 15.734453, y: 22.546041, z: -7.878773}
+  - {x: 16.290821, y: 22.63632, z: -6.6314015}
+  - {x: 16.855356, y: 22.68146, z: -5.7216225}
+  - {x: 16.988361, y: 22.771736, z: -4.53595}
+  - {x: 17.241135, y: 22.839445, z: -3.3412068}
+  - {x: 17.41992, y: 22.929722, z: -1.7471285}
+  - {x: 17.48751, y: 22.99743, z: -0.38151824}
+  - {x: 17.7439, y: 23.08771, z: 1.034823}
+  - {x: 17.638683, y: 23.177986, z: 2.378092}
+  - {x: 17.18447, y: 23.117222, z: 3.2885394}
+  - {x: 17.031143, y: 23.290834, z: 4.5067353}
+  - {x: 16.855356, y: 23.358541, z: 5.7216225}
+  - {x: 16.273764, y: 23.42625, z: 6.6373525}
+  - {x: 15.714461, y: 23.51653, z: 7.856546}
+  - {x: 15.151582, y: 23.584236, z: 8.74777}
+  - {x: 14.550718, y: 23.629375, z: 9.722478}
+  - {x: 14.153998, y: 23.697084, z: 10.790868}
+  - {x: 13.430129, y: 23.764791, z: 11.487317}
+  - {x: 12.445081, y: 23.8325, z: 12.445081}
+  - {x: 11.63142, y: 23.794306, z: 13.070216}
+  - {x: 10.78473, y: 23.967916, z: 13.823477}
+  - {x: 9.72248, y: 24.035625, z: 14.550719}
+  - {x: 8.747768, y: 24.125904, z: 15.151584}
+  - {x: 7.858948, y: 24.171041, z: 15.72026}
+  - {x: 6.634578, y: 24.26132, z: 16.268135}
+  - {x: 5.7216225, y: 24.30646, z: 16.855356}
+  - {x: 4.53595, y: 24.396736, z: 16.988361}
+  - {x: 3.3412068, y: 24.464445, z: 17.241135}
+  - {x: 1.7798758, y: 24.554722, z: 17.433435}
+  - {x: 0.38151824, y: 24.62243, z: 17.48751}
+  - {x: -1.034823, y: 24.71271, z: 17.7439}
+  label: PARKHAUS CURB
+--- !u!1 &2376909384826500942
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 917194721578080459}
+  - component: {fileID: 2480050818452611152}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_15
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &917194721578080459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2376909384826500942}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2480050818452611152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2376909384826500942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -12.374368, y: 13.8325, z: -12.374368}
+  - {x: -11.540911, y: 14.172778, z: -13.425605}
+  - {x: -10.214839, y: 14.263056, z: -14.283022}
+  - {x: -9.722478, y: 14.285625, z: -14.550718}
+  label: PARKHAUS CURB
+--- !u!1 &2430146848783929016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 259316543674161932}
+  - component: {fileID: 3147236094995876238}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &259316543674161932
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430146848783929016}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3147236094995876238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2430146848783929016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 0.43754697, y: 19.77, z: -18.075676}
+  - {x: 1.5279194, y: 19.5825, z: -18.228212}
+  - {x: 3.1763117, y: 19.52, z: -18.013393}
+  - {x: 4.6041183, y: 19.77, z: -17.399403}
+  - {x: 5.919532, y: 19.77, z: -17.196426}
+  - {x: 6.835807, y: 19.77, z: -16.649588}
+  - {x: 7.9825706, y: 19.77, z: -16.374052}
+  - {x: 9.292264, y: 19.77, z: -15.715663}
+  - {x: 10.127901, y: 19.77, z: -15.117367}
+  - {x: 11.02493, y: 19.77, z: -14.480781}
+  label: PARKHAUS CURB
+--- !u!1 &2648333318186511888
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5448259946574684637}
+  - component: {fileID: 421209766922971272}
+  m_Layer: 0
+  m_Name: Drive
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5448259946574684637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2648333318186511888}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7053062757278896630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &421209766922971272
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2648333318186511888}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: a94fc6bed514a204492cef1817bd845a, type: 2}
+--- !u!1 &2827547822171972295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8232955082739828456}
+  - component: {fileID: 6538004598288683584}
+  m_Layer: 10
+  m_Name: Grind_Rail_Roof_Outer_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8232955082739828456
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2827547822171972295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6538004598288683584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2827547822171972295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -31.86258, y: 27.045, z: -31.862534}
+  - {x: -30.528265, y: 27.045, z: -31.900007}
+  - {x: -28.932049, y: 27.045, z: -31.900005}
+  - {x: -27.73483, y: 27.045, z: -31.900007}
+  - {x: -26.138605, y: 27.045, z: -31.900005}
+  - {x: -24.941406, y: 27.045, z: -31.9}
+  - {x: -23.345154, y: 27.045, z: -31.900005}
+  - {x: -22.147972, y: 27.045, z: -31.900007}
+  - {x: -20.551704, y: 27.045, z: -31.900002}
+  - {x: -19.354542, y: 27.045, z: -31.90001}
+  - {x: -17.758286, y: 27.045, z: -31.900007}
+  - {x: -16.561094, y: 27.045, z: -31.900003}
+  - {x: -14.964843, y: 27.045, z: -31.90001}
+  - {x: -13.76765, y: 27.045, z: -31.900007}
+  - {x: -12.171399, y: 27.045, z: -31.900002}
+  - {x: -10.9742155, y: 27.045, z: -31.900005}
+  - {x: -9.377972, y: 27.045, z: -31.900003}
+  - {x: -8.180782, y: 27.045, z: -31.900002}
+  - {x: -6.5845304, y: 27.045, z: -31.90001}
+  - {x: -5.3873444, y: 27.045, z: -31.90001}
+  - {x: -3.791096, y: 27.045, z: -31.900003}
+  - {x: -2.5939064, y: 27.045, z: -31.900003}
+  - {x: -0.997656, y: 27.045, z: -31.900003}
+  - {x: 0.19953154, y: 27.045, z: -31.900002}
+  - {x: 1.7957813, y: 27.045, z: -31.900002}
+  - {x: 3.1924996, y: 27.045, z: -31.899998}
+  - {x: 4.589218, y: 27.045, z: -31.900002}
+  - {x: 5.985936, y: 27.045, z: -31.899998}
+  - {x: 7.382657, y: 27.045, z: -31.90001}
+  - {x: 8.779375, y: 27.045, z: -31.899998}
+  - {x: 10.176093, y: 27.045, z: -31.900003}
+  - {x: 11.572814, y: 27.045, z: -31.9}
+  - {x: 12.969536, y: 27.045, z: -31.900002}
+  - {x: 14.366248, y: 27.045, z: -31.9}
+  - {x: 15.762969, y: 27.045, z: -31.90001}
+  - {x: 17.159689, y: 27.045, z: -31.899998}
+  - {x: 18.55641, y: 27.045, z: -31.900007}
+  - {x: 19.953125, y: 27.045, z: -31.899996}
+  - {x: 21.349833, y: 27.045, z: -31.900002}
+  - {x: 22.746565, y: 27.045, z: -31.9}
+  - {x: 24.14327, y: 27.045, z: -31.900002}
+  - {x: 25.539993, y: 27.045, z: -31.899998}
+  - {x: 26.93671, y: 27.045, z: -31.900003}
+  - {x: 28.333437, y: 27.045, z: -31.899996}
+  - {x: 29.73016, y: 27.045, z: -31.900003}
+  - {x: 31.12688, y: 27.045, z: -31.899998}
+  - {x: 31.900002, y: 27.045, z: -31.12688}
+  - {x: 31.900007, y: 27.045, z: -29.73016}
+  - {x: 31.899998, y: 27.045, z: -28.333437}
+  - {x: 31.900015, y: 27.045, z: -26.93671}
+  - {x: 31.899998, y: 27.045, z: -25.539993}
+  - {x: 31.900005, y: 27.045, z: -24.14327}
+  - {x: 31.899998, y: 27.045, z: -22.746565}
+  - {x: 31.900007, y: 27.045, z: -21.349833}
+  - {x: 31.900002, y: 27.045, z: -19.953125}
+  - {x: 31.900015, y: 27.045, z: -18.55641}
+  - {x: 31.899998, y: 27.045, z: -17.159689}
+  - {x: 31.90001, y: 27.045, z: -15.762969}
+  - {x: 31.899998, y: 27.045, z: -14.366248}
+  - {x: 31.90001, y: 27.045, z: -12.969536}
+  - {x: 31.899998, y: 27.045, z: -11.572814}
+  - {x: 31.900013, y: 27.045, z: -10.176093}
+  - {x: 31.900002, y: 27.045, z: -8.779375}
+  - {x: 31.90001, y: 27.045, z: -7.382657}
+  - {x: 31.9, y: 27.045, z: -5.985936}
+  - {x: 31.900007, y: 27.045, z: -4.589218}
+  - {x: 31.899998, y: 27.045, z: -3.1924996}
+  - {x: 31.900013, y: 27.045, z: -1.7957813}
+  - {x: 31.899998, y: 27.045, z: -0.39906308}
+  - {x: 31.900003, y: 27.045, z: 0.997656}
+  - {x: 31.900013, y: 27.045, z: 2.5939064}
+  - {x: 31.900007, y: 27.045, z: 3.791096}
+  - {x: 31.90001, y: 27.045, z: 5.3873444}
+  - {x: 31.900019, y: 27.045, z: 6.5845304}
+  - {x: 31.900007, y: 27.045, z: 8.180782}
+  - {x: 31.90001, y: 27.045, z: 9.377972}
+  - {x: 31.900013, y: 27.045, z: 10.9742155}
+  - {x: 31.900005, y: 27.045, z: 12.171399}
+  - {x: 31.900007, y: 27.045, z: 13.76765}
+  - {x: 31.900015, y: 27.045, z: 14.964843}
+  - {x: 31.900007, y: 27.045, z: 16.561094}
+  - {x: 31.900005, y: 27.045, z: 17.758286}
+  - {x: 31.900019, y: 27.045, z: 19.354542}
+  - {x: 31.900007, y: 27.045, z: 20.551704}
+  - {x: 31.900013, y: 27.045, z: 22.147972}
+  - {x: 31.900013, y: 27.045, z: 23.345154}
+  - {x: 31.900005, y: 27.045, z: 24.941406}
+  - {x: 31.900003, y: 27.045, z: 26.138605}
+  - {x: 31.900015, y: 27.045, z: 27.73483}
+  - {x: 31.900011, y: 27.045, z: 28.932049}
+  - {x: 31.90001, y: 27.045, z: 30.528265}
+  - {x: 31.900002, y: 27.045, z: 31.12688}
+  label: PARKHAUS RAIL
+--- !u!1 &2872992894316264459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 707275733136085884}
+  - component: {fileID: 9152578044699281330}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &707275733136085884
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872992894316264459}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9152578044699281330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872992894316264459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -9.827956, y: 19.77, z: -15.426684}
+  - {x: -8.307465, y: 19.77, z: -15.958625}
+  - {x: -6.6917834, y: 19.5825, z: -17.024168}
+  - {x: -5.564022, y: 19.5825, z: -17.425383}
+  label: PARKHAUS CURB
+--- !u!1 &3228954152238894278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2252038077988504841}
+  - component: {fileID: 7769321618590040985}
+  m_Layer: 10
+  m_Name: Grind_Rail_Roof_Grind_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2252038077988504841
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228954152238894278}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7769321618590040985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228954152238894278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -24.07152, y: 26.659508, z: -29.664036}
+  - {x: -25.09779, y: 26.659508, z: -28.634678}
+  - {x: -25.894293, y: 26.648285, z: -27.798769}
+  - {x: -26.869991, y: 26.659508, z: -26.869986}
+  - {x: -27.627474, y: 26.659508, z: -26.123943}
+  - {x: -28.636694, y: 26.659508, z: -25.09982}
+  - {x: -29.651821, y: 26.613743, z: -24.093868}
+  label: PARKHAUS RAIL
+--- !u!1 &3305314497219129102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4772471546370635028}
+  - component: {fileID: 3287974269551273992}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_18
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4772471546370635028
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3305314497219129102}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3287974269551273992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3305314497219129102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -1.061616, y: 18.21271, z: 17.465242}
+  - {x: 0.04263315, y: 18.145, z: 17.591196}
+  - {x: 1.6406454, y: 18.054722, z: 17.664745}
+  - {x: 3.0895274, y: 17.964445, z: 17.521225}
+  - {x: 4.53595, y: 17.896736, z: 16.988361}
+  - {x: 5.7216225, y: 17.80646, z: 16.855356}
+  - {x: 6.6314015, y: 17.76132, z: 16.290821}
+  - {x: 7.788144, y: 17.421041, z: 15.669568}
+  - {x: 8.763638, y: 17.625904, z: 15.437771}
+  - {x: 9.72248, y: 17.535625, z: 14.550719}
+  - {x: 10.790868, y: 17.490486, z: 14.153997}
+  - {x: 11.477174, y: 17.42278, z: 13.41998}
+  - {x: 12.4274025, y: 17.3325, z: 12.4274025}
+  - {x: 13.089788, y: 17.287361, z: 11.622215}
+  - {x: 13.823955, y: 17.219654, z: 10.756407}
+  - {x: 14.550718, y: 17.129375, z: 9.722478}
+  - {x: 15.141724, y: 17.084236, z: 8.763057}
+  - {x: 15.669568, y: 16.76653, z: 7.7881446}
+  - {x: 16.187101, y: 16.67625, z: 6.645923}
+  - {x: 16.855356, y: 16.858541, z: 5.7216225}
+  - {x: 17.002821, y: 16.790834, z: 4.5117574}
+  - {x: 17.247393, y: 16.723125, z: 3.342881}
+  - {x: 17.638683, y: 16.677986, z: 2.378092}
+  - {x: 17.7439, y: 16.58771, z: 1.034823}
+  - {x: 17.591196, y: 16.52, z: -0.04263315}
+  - {x: 17.664745, y: 16.429722, z: -1.6406454}
+  - {x: 17.521225, y: 16.339445, z: -3.0895274}
+  - {x: 17.0151, y: 16.271736, z: -4.5380387}
+  - {x: 16.682085, y: 16.037361, z: -5.259905}
+  label: PARKHAUS CURB
+--- !u!1 &3335905915861999196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1604548214069288830}
+  - component: {fileID: 435073047402166466}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_20
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1604548214069288830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335905915861999196}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &435073047402166466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335905915861999196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 14.8001585, y: 17.129375, z: 9.889152}
+  - {x: 15.456331, y: 17.061666, z: 8.7760315}
+  - {x: 16.152367, y: 16.97139, z: 7.215569}
+  label: PARKHAUS CURB
+--- !u!1 &3564550106914220366
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7350585633970939733}
+  - component: {fileID: 7822238998290649514}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7350585633970939733
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564550106914220366}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7822238998290649514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3564550106914220366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -5.564022, y: 19.5825, z: -17.425383}
+  - {x: -6.8358073, y: 19.77, z: -16.649588}
+  - {x: -8.044398, y: 19.77, z: -16.330626}
+  - {x: -9.643915, y: 19.77, z: -15.232181}
+  - {x: -10.677276, y: 19.77, z: -14.788712}
+  - {x: -11.482845, y: 19.77, z: -14.162683}
+  - {x: -12.894506, y: 19.5825, z: -12.979138}
+  - {x: -13.641335, y: 19.77, z: -12.154751}
+  - {x: -14.543277, y: 19.559334, z: -11.10557}
+  - {x: -15.13727, y: 19.988312, z: -10.146925}
+  - {x: -15.723822, y: 20.169584, z: -9.2860155}
+  - {x: -16.032774, y: 20.225365, z: -8.274753}
+  - {x: -16.29843, y: 20.24396, z: -8.06316}
+  label: PARKHAUS CURB
+--- !u!1 &3697347018454410304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6037214809638951036}
+  - component: {fileID: 5669423350256732878}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_30
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6037214809638951036
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3697347018454410304}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5669423350256732878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3697347018454410304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 12.374368, y: 23.5825, z: 12.374368}
+  - {x: 11.243476, y: 23.756111, z: 13.399358}
+  - {x: 9.889152, y: 24.035625, z: 14.8001585}
+  - {x: 9.362738, y: 24.080765, z: 14.915652}
+  label: PARKHAUS CURB
+--- !u!1 &3707263428413448870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6191381461518244843}
+  - component: {fileID: 8047716507455262855}
+  - component: {fileID: 7752514635414543590}
+  m_Layer: 0
+  m_Name: Markings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6191381461518244843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3707263428413448870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7053062757278896630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8047716507455262855
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3707263428413448870}
+  m_Mesh: {fileID: 4300000, guid: 7d7489bec8479664b89b120f9823cc04, type: 2}
+--- !u!23 &7752514635414543590
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3707263428413448870}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 673be45740e8c9d4f891da33de71cce5, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &3783756001207550411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8955927381432896566}
+  - component: {fileID: 2085759803134731761}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_10
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8955927381432896566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783756001207550411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2085759803134731761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783756001207550411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 18.075676, y: 19.77, z: 0.43754697}
+  - {x: 18.228212, y: 19.5825, z: 1.5279194}
+  - {x: 18.013393, y: 19.52, z: 3.1763117}
+  - {x: 17.399403, y: 19.77, z: 4.6041183}
+  - {x: 17.196426, y: 19.77, z: 5.919532}
+  - {x: 16.649588, y: 19.77, z: 6.835807}
+  - {x: 16.374052, y: 19.77, z: 7.9825706}
+  - {x: 15.715663, y: 19.77, z: 9.292264}
+  - {x: 15.117367, y: 19.77, z: 10.127901}
+  - {x: 14.480781, y: 19.77, z: 11.02493}
+  label: PARKHAUS CURB
+--- !u!1 &3902218293252853230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3177289962934390251}
+  - component: {fileID: 2918981280020694913}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3177289962934390251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3902218293252853230}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2918981280020694913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3902218293252853230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -0.2785677, y: 8.395, z: -6.9892526}
+  - {x: 0.9050973, y: 8.371563, z: -7.2406807}
+  - {x: 1.779869, y: 8.415833, z: -6.768911}
+  label: PARKHAUS CURB
+--- !u!1 &3913018615516651648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6547701037467028681}
+  - component: {fileID: 6419152341383994057}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6547701037467028681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3913018615516651648}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6419152341383994057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3913018615516651648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 6.3219843, y: 4.0616665, z: 3.6500006}
+  - {x: 5.444829, y: 4.1970835, z: 4.470518}
+  - {x: 4.5830398, y: 4.4679165, z: 5.400163}
+  label: PARKHAUS CURB
+--- !u!1 &3972742015129096624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1293517338043499166}
+  - component: {fileID: 4863871456668090143}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1293517338043499166
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3972742015129096624}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4863871456668090143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3972742015129096624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.7560005, y: 0.7665278, z: -7.8830953}
+  - {x: -15.15274, y: 0.8342361, z: -8.748439}
+  - {x: -14.550719, y: 0.629375, z: -9.72248}
+  label: PARKHAUS CURB
+--- !u!1 &4057583465141529473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1087178670691624895}
+  - component: {fileID: 7677984315549863613}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_24
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1087178670691624895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4057583465141529473}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7677984315549863613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4057583465141529473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -12.374368, y: 18.7075, z: 12.374368}
+  - {x: -13.399358, y: 18.881111, z: 11.243476}
+  - {x: -14.8001585, y: 19.160625, z: 9.889152}
+  label: PARKHAUS CURB
+--- !u!1 &4105110241138340028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 300496692741639438}
+  - component: {fileID: 1858132029243629865}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &300496692741639438
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4105110241138340028}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1858132029243629865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4105110241138340028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -8.763638, y: 7.8759027, z: -15.437771}
+  - {x: -7.788144, y: 7.6710415, z: -15.669568}
+  - {x: -6.634578, y: 8.011319, z: -16.268135}
+  - {x: -5.7216225, y: 8.056458, z: -16.855356}
+  - {x: -4.53595, y: 8.146737, z: -16.988361}
+  - {x: -3.3412068, y: 8.214445, z: -17.241135}
+  - {x: -1.7471285, y: 8.304723, z: -17.41992}
+  - {x: -0.12789945, y: 8.395, z: -17.77359}
+  - {x: 1.017382, y: 8.356806, z: -17.466696}
+  - {x: 2.380803, y: 8.552987, z: -17.346998}
+  - {x: 3.3602774, y: 8.348125, z: -17.172625}
+  - {x: 4.529333, y: 8.415833, z: -16.903702}
+  - {x: 5.7216225, y: 8.733542, z: -16.855356}
+  - {x: 6.6373525, y: 8.80125, z: -16.273764}
+  - {x: 7.856546, y: 8.891528, z: -15.714461}
+  - {x: 8.74777, y: 8.959237, z: -15.151582}
+  - {x: 9.722478, y: 9.004375, z: -14.550718}
+  - {x: 10.790868, y: 9.072083, z: -14.153998}
+  - {x: 11.736356, y: 9.139792, z: -13.382749}
+  - {x: 12.445081, y: 9.2075, z: -12.445081}
+  - {x: 13.091961, y: 9.275208, z: -11.6082}
+  - {x: 13.823477, y: 9.342917, z: -10.78473}
+  - {x: 14.550718, y: 9.410625, z: -9.722478}
+  - {x: 15.151584, y: 9.500903, z: -8.747768}
+  - {x: 15.72026, y: 9.546042, z: -7.858948}
+  - {x: 16.268135, y: 9.63632, z: -6.634578}
+  - {x: 16.855356, y: 9.681458, z: -5.7216225}
+  - {x: 16.988361, y: 9.771737, z: -4.53595}
+  - {x: 17.23604, y: 9.816875, z: -3.3852391}
+  - {x: 17.638683, y: 9.884583, z: -2.378092}
+  - {x: 17.464314, y: 9.974862, z: -1.0900522}
+  - {x: 17.617252, y: 10.02, z: -0.054814048}
+  - {x: 17.4648, y: 10.087708, z: 1.0751877}
+  - {x: 17.34072, y: 10.177987, z: 2.3912241}
+  - {x: 17.081102, y: 10.268264, z: 3.9377863}
+  - {x: 16.792894, y: 10.313403, z: 4.894619}
+  - {x: 16.273764, y: 10.42625, z: 6.6373525}
+  - {x: 15.714461, y: 10.516528, z: 7.856546}
+  - {x: 15.15274, y: 10.584237, z: 8.748439}
+  - {x: 14.550719, y: 10.379375, z: 9.72248}
+  label: PARKHAUS CURB
+--- !u!1 &4107229130395723355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 572653142578180574}
+  - component: {fileID: 45723190724551630}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_10
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &572653142578180574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4107229130395723355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &45723190724551630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4107229130395723355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -1.6567695, y: 20.941875, z: -7.1054945}
+  - {x: -0.2785677, y: 21.395, z: -6.9892526}
+  - {x: 0.9505578, y: 21.56427, z: -7.2155085}
+  label: PARKHAUS CURB
+--- !u!1 &4108653863299918144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7300231810459901547}
+  - component: {fileID: 6887238624445402258}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7300231810459901547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4108653863299918144}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6887238624445402258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4108653863299918144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -16.311096, y: 0.27, z: 8.091013}
+  - {x: -15.232181, y: 0.27, z: 9.643915}
+  - {x: -14.783308, y: 0.27, z: 10.697073}
+  - {x: -14.15946, y: 0.27, z: 11.498891}
+  - {x: -13.119808, y: 0.27, z: 12.419166}
+  - {x: -12.351107, y: 0.27, z: 13.183552}
+  - {x: -11.488233, y: 0.27, z: 14.142348}
+  - {x: -10.699351, y: 0.27, z: 14.7816725}
+  - {x: -9.827956, y: 0.27, z: 15.426684}
+  - {x: -8.852272, y: 0.27, z: 15.826788}
+  - {x: -8.017913, y: 0.27, z: 16.381052}
+  - {x: -7.0031056, y: 0.27, z: 16.906994}
+  - {x: -5.9382586, y: 0.27, z: 17.222675}
+  - {x: -4.6041183, y: 0.27, z: 17.399403}
+  - {x: -3.6949115, y: 0.27, z: 17.838032}
+  - {x: -2.4641786, y: 0.27, z: 18.050241}
+  - {x: -1.1188198, y: 0.27, z: 18.263369}
+  - {x: 0.13262302, y: 0.27, z: 18.290098}
+  - {x: 1.622503, y: 0.27, z: 18.218899}
+  - {x: 3.1269596, y: 0.27, z: 17.932905}
+  - {x: 4.6384315, y: 0.27, z: 17.68081}
+  - {x: 5.9409833, y: 0.27, z: 17.23166}
+  - {x: 7.0031056, y: 0.27, z: 16.906994}
+  - {x: 8.031151, y: 0.27, z: 16.363516}
+  - {x: 9.643915, y: 0.27, z: 15.232181}
+  - {x: 10.697073, y: 0.27, z: 14.783308}
+  - {x: 11.498891, y: 0.27, z: 14.15946}
+  - {x: 12.419166, y: 0.27, z: 13.119808}
+  - {x: 13.183552, y: 0.27, z: 12.351107}
+  - {x: 14.142348, y: 0.27, z: 11.488233}
+  - {x: 14.7816725, y: 0.27, z: 10.699351}
+  - {x: 15.426684, y: 0.27, z: 9.827956}
+  - {x: 15.826788, y: 0.27, z: 8.852272}
+  - {x: 16.381052, y: 0.27, z: 8.017913}
+  - {x: 16.906994, y: 0.27, z: 7.0031056}
+  - {x: 17.222675, y: 0.27, z: 5.9382586}
+  - {x: 17.399403, y: 0.27, z: 4.6041183}
+  - {x: 17.838032, y: 0.27, z: 3.6949115}
+  - {x: 18.050241, y: 0.27, z: 2.4641786}
+  - {x: 18.263369, y: 0.27, z: 1.1188198}
+  - {x: 18.290098, y: 0.27, z: -0.13262302}
+  - {x: 18.218899, y: 0.27, z: -1.622503}
+  - {x: 17.932905, y: 0.27, z: -3.1269596}
+  - {x: 17.68081, y: 0.27, z: -4.6384315}
+  - {x: 17.23166, y: 0.27, z: -5.9409833}
+  - {x: 16.906994, y: 0.27, z: -7.0031056}
+  - {x: 16.363516, y: 0.27, z: -8.031151}
+  - {x: 15.232181, y: 0.27, z: -9.643915}
+  - {x: 14.783308, y: 0.27, z: -10.697073}
+  - {x: 14.15946, y: 0.27, z: -11.498891}
+  - {x: 13.119808, y: 0.27, z: -12.419166}
+  - {x: 12.351107, y: 0.27, z: -13.183552}
+  - {x: 11.488233, y: 0.27, z: -14.142348}
+  - {x: 10.699351, y: 0.27, z: -14.7816725}
+  - {x: 9.827956, y: 0.27, z: -15.426684}
+  - {x: 8.852272, y: 0.27, z: -15.826788}
+  - {x: 8.017913, y: 0.27, z: -16.381052}
+  - {x: 7.0031056, y: 0.27, z: -16.906994}
+  - {x: 5.9382586, y: 0.27, z: -17.222675}
+  - {x: 4.6041183, y: 0.27, z: -17.399403}
+  - {x: 3.6949115, y: 0.27, z: -17.838032}
+  - {x: 2.4641786, y: 0.27, z: -18.050241}
+  - {x: 1.1188198, y: 0.27, z: -18.263369}
+  - {x: -0.13262302, y: 0.27, z: -18.290098}
+  - {x: -1.622503, y: 0.27, z: -18.218899}
+  - {x: -3.1269596, y: 0.27, z: -17.932905}
+  - {x: -4.6384315, y: 0.27, z: -17.68081}
+  - {x: -5.9409833, y: 0.27, z: -17.23166}
+  - {x: -7.0031056, y: 0.27, z: -16.906994}
+  - {x: -8.031151, y: 0.27, z: -16.363516}
+  - {x: -9.643915, y: 0.27, z: -15.232181}
+  - {x: -10.697073, y: 0.27, z: -14.783308}
+  - {x: -11.498891, y: 0.27, z: -14.15946}
+  - {x: -12.419166, y: 0.27, z: -13.119808}
+  - {x: -13.183552, y: 0.27, z: -12.351107}
+  - {x: -14.142348, y: 0.27, z: -11.488233}
+  - {x: -14.831495, y: 0.34899306, z: -10.629824}
+  - {x: -15.199704, y: 0.5496103, z: -9.625165}
+  - {x: -15.826788, y: 0.70677125, z: -8.852272}
+  - {x: -16.297457, y: 0.7439583, z: -8.037016}
+  label: PARKHAUS CURB
+--- !u!1 &4131120810902972737
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2238392481998314159}
+  - component: {fileID: 5305696829635732787}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_10
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2238392481998314159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4131120810902972737}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5305696829635732787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4131120810902972737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 14.272787, y: 10.485278, z: 10.110332}
+  - {x: 13.432496, y: 10.764792, z: 11.506073}
+  - {x: 12.4274025, y: 10.8325, z: 12.4274025}
+  - {x: 11.599114, y: 10.900208, z: 13.100471}
+  - {x: 10.7607, y: 10.967917, z: 13.830372}
+  - {x: 9.722478, y: 11.035625, z: 14.550718}
+  - {x: 8.747768, y: 11.125903, z: 15.151584}
+  - {x: 7.858948, y: 11.171042, z: 15.72026}
+  - {x: 6.656766, y: 11.26132, z: 16.289816}
+  - {x: 5.7216225, y: 11.306458, z: 16.855356}
+  - {x: 4.894619, y: 11.101598, z: 16.792894}
+  label: PARKHAUS CURB
+--- !u!1 &4291371611394831259
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1063838941201684075}
+  - component: {fileID: 2834377936307022445}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_13
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1063838941201684075
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4291371611394831259}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2834377936307022445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4291371611394831259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -9.889152, y: 12.254375, z: 14.8001585}
+  - {x: -8.760156, y: 12.209237, z: 15.144774}
+  - {x: -7.8756976, y: 12.141528, z: 15.727032}
+  - {x: -7.215569, y: 12.096389, z: 16.152367}
+  label: PARKHAUS CURB
+--- !u!1 &4294034043416635102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3331754531044724347}
+  - component: {fileID: 8459597603265864151}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3331754531044724347
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294034043416635102}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8459597603265864151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4294034043416635102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 15.426684, y: 19.77, z: -9.827956}
+  - {x: 15.958625, y: 19.77, z: -8.307465}
+  - {x: 17.024168, y: 19.5825, z: -6.6917834}
+  - {x: 17.425383, y: 19.5825, z: -5.564022}
+  label: PARKHAUS CURB
+--- !u!1 &4355220152553677106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7190430880295453167}
+  - component: {fileID: 4036876635053189098}
+  m_Layer: 0
+  m_Name: Solid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7190430880295453167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355220152553677106}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7053062757278896630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &4036876635053189098
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355220152553677106}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 46efd684d4c1dcf47abd696b48843d0a, type: 2}
+--- !u!1 &4717641516062841367
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3398354880250690299}
+  - component: {fileID: 2349599798502235575}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3398354880250690299
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4717641516062841367}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2349599798502235575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4717641516062841367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 2.378092, y: 5.0095835, z: 17.638683}
+  - {x: 1.090052, y: 4.849861, z: 17.464315}
+  - {x: -0.38151824, y: 4.9175696, z: 17.48751}
+  - {x: -2.3912241, y: 5.302986, z: 17.34072}
+  label: PARKHAUS CURB
+--- !u!1 &5086574511466375759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6887711310024263942}
+  m_Layer: 0
+  m_Name: Parkhaus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6887711310024263942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5086574511466375759}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7053062757278896630}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5168124766125151234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2460372430950480243}
+  - component: {fileID: 4052817712850545405}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_9
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2460372430950480243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5168124766125151234}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4052817712850545405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5168124766125151234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 5.564022, y: 19.5825, z: 17.425383}
+  - {x: 6.8358073, y: 19.77, z: 16.649588}
+  - {x: 8.044398, y: 19.77, z: 16.330626}
+  - {x: 9.643915, y: 19.77, z: 15.232181}
+  - {x: 10.677276, y: 19.77, z: 14.788712}
+  - {x: 11.482845, y: 19.77, z: 14.162683}
+  - {x: 12.894506, y: 19.5825, z: 12.979138}
+  - {x: 13.641335, y: 19.77, z: 12.154751}
+  - {x: 14.518365, y: 19.52, z: 11.140334}
+  - {x: 15.426684, y: 19.52, z: 9.827956}
+  - {x: 15.812811, y: 19.77, z: 8.855892}
+  - {x: 16.906996, y: 19.52, z: 7.0031066}
+  - {x: 17.289764, y: 19.5825, z: 5.986117}
+  - {x: 17.689394, y: 19.52, z: 4.680854}
+  - {x: 17.923191, y: 19.5825, z: 3.6781375}
+  - {x: 18.125376, y: 19.5825, z: 2.49803}
+  - {x: 18.262684, y: 19.52, z: 1.1398832}
+  - {x: 18.298136, y: 19.52, z: -0.05699416}
+  - {x: 17.981695, y: 19.77, z: -1.0682511}
+  - {x: 18.134151, y: 19.52, z: -2.4448926}
+  - {x: 17.935421, y: 19.52, z: -3.6256878}
+  - {x: 17.669104, y: 19.77, z: -4.6440716}
+  label: PARKHAUS CURB
+--- !u!1 &5207101044415173726
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4414369515117872526}
+  - component: {fileID: 6146796193374075905}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4414369515117872526
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5207101044415173726}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6146796193374075905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5207101044415173726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -7.3000007, y: 0.27, z: 4.4637323e-16}
+  - {x: -6.9028044, y: 0.473125, z: -1.1396575}
+  - {x: -6.704612, y: 0.67625, z: -2.4949112}
+  - {x: -6.3219852, y: 0.56166667, z: -3.6499999}
+  - {x: -5.7819023, y: 0.9809375, z: -4.4509377}
+  - {x: -4.578626, y: 1.2179166, z: -5.4051614}
+  - {x: -3.6500006, y: 1.3533334, z: -6.3219843}
+  - {x: -2.504359, y: 1.3976042, z: -6.697622}
+  - {x: -1.6157207, y: 1.691875, z: -7.115065}
+  - {x: -0.25858948, y: 1.895, z: -7.277533}
+  - {x: 1.1396575, y: 2.098125, z: -6.9028044}
+  - {x: 2.5040832, y: 2.30125, z: -6.697881}
+  - {x: 3.6500006, y: 2.4366667, z: -6.3219843}
+  - {x: 4.5790615, y: 2.673646, z: -5.4047823}
+  - {x: 5.3733816, y: 2.8090625, z: -4.646619}
+  - {x: 6.321985, y: 2.9783332, z: -3.6500003}
+  - {x: 6.704692, y: 3.2153125, z: -2.494705}
+  - {x: 6.9028044, y: 3.3845832, z: -1.1396581}
+  - {x: 7.15, y: 3.52, z: -1.3104599e-15}
+  - {x: 6.902804, y: 3.723125, z: 1.139658}
+  - {x: 6.704612, y: 3.92625, z: 2.4949112}
+  - {x: 5.972644, y: 4.1632295, z: 3.8356817}
+  - {x: 5.35973, y: 4.2986455, z: 4.701171}
+  - {x: 4.56804, y: 4.2179165, z: 5.417159}
+  - {x: 3.6500006, y: 4.6033335, z: 6.3219843}
+  - {x: 2.494705, y: 4.8403125, z: 6.704692}
+  - {x: 1.4241592, y: 4.941875, z: 7.1597314}
+  - {x: 0.4322784, y: 5.1111455, z: 6.9841847}
+  - {x: -1.1396575, y: 5.348125, z: 6.9028044}
+  - {x: -2.4949112, y: 5.55125, z: 6.704612}
+  - {x: -3.6500003, y: 5.6866665, z: 6.321985}
+  - {x: -4.612619, y: 5.9236455, z: 5.390102}
+  - {x: -5.4051614, y: 6.0929165, z: 4.578626}
+  - {x: -6.3219843, y: 6.2283335, z: 3.6500006}
+  - {x: -6.697622, y: 6.2726045, z: 2.504359}
+  - {x: -6.9091988, y: 6.6345835, z: 1.1009196}
+  - {x: -7.2745557, y: 6.8377085, z: -0.41060078}
+  - {x: -7.127938, y: 7.0069795, z: -1.5605167}
+  - {x: -6.714853, y: 7.0173955, z: -2.48094}
+  - {x: -6.151636, y: 7.3116665, z: -3.3326378}
+  - {x: -5.7892647, y: 7.4809375, z: -4.4422593}
+  - {x: -4.578626, y: 7.7179165, z: -5.4051614}
+  - {x: -3.6500003, y: 7.8533335, z: -6.321985}
+  - {x: -2.494705, y: 8.090313, z: -6.704692}
+  - {x: -1.1396581, y: 8.259583, z: -6.9028044}
+  - {x: 0.397869, y: 8.303854, z: -7.2869744}
+  - {x: 1.6567693, y: 8.415833, z: -7.1054964}
+  - {x: 2.4949112, y: 8.80125, z: -6.704612}
+  - {x: 3.8356817, y: 9.038229, z: -5.972644}
+  - {x: 4.73165, y: 9.173647, z: -5.3447533}
+  - {x: 5.3889003, y: 9.116354, z: -4.587544}
+  - {x: 6.3219843, y: 9.478333, z: -3.6500006}
+  - {x: 6.704692, y: 9.715313, z: -2.494705}
+  - {x: 7.2151556, y: 9.918438, z: -0.97554725}
+  - {x: 7.292185, y: 9.803854, z: 0.23872142}
+  - {x: 6.9028044, y: 10.223125, z: 1.1396575}
+  - {x: 6.704612, y: 10.42625, z: 2.4949112}
+  - {x: 5.9924517, y: 10.470522, z: 3.8154027}
+  - {x: 5.3936386, y: 10.798647, z: 4.5877123}
+  - {x: 4.578626, y: 10.967917, z: 5.4051614}
+  - {x: 3.6500006, y: 11.103333, z: 6.3219843}
+  - {x: 2.5028155, y: 11.340313, z: 6.6987004}
+  - {x: 1.1009196, y: 11.509583, z: 6.9091988}
+  - {x: -0.41060078, y: 11.712708, z: 7.2745557}
+  - {x: -1.6567692, y: 11.915833, z: 7.1054964}
+  - {x: -3.1900167, y: 11.902813, z: 6.526221}
+  - {x: -3.945543, y: 12.288229, z: 5.9433413}
+  - {x: -5.0776706, y: 12.491354, z: 5.077671}
+  - {x: -5.930604, y: 12.626772, z: 4.24981}
+  - {x: -6.5262203, y: 12.579897, z: 3.1900167}
+  - {x: -6.7765636, y: 13.033022, z: 1.8151404}
+  - {x: -7.277533, y: 13.27, z: 0.25858948}
+  - {x: -6.9028044, y: 13.314272, z: -1.1396577}
+  - {x: -6.704612, y: 13.67625, z: -2.4949112}
+  - {x: -5.9433413, y: 13.913229, z: -3.945543}
+  - {x: -5.1593456, y: 14.048647, z: -4.835617}
+  - {x: -4.442769, y: 14.001772, z: -5.78993}
+  - {x: -3.6500006, y: 14.353333, z: -6.3219843}
+  - {x: -2.494705, y: 14.590313, z: -6.704692}
+  - {x: -0.97554725, y: 14.793438, z: -7.2151556}
+  - {x: 0.44333977, y: 14.712708, z: -7.2854867}
+  - {x: 1.6567692, y: 15.165833, z: -7.1054964}
+  - {x: 3.174588, y: 15.402813, z: -6.5061684}
+  - {x: 4.404177, y: 15.413229, z: -5.8180647}
+  - {x: 5.0776706, y: 15.741354, z: -5.077671}
+  - {x: 5.943737, y: 15.944479, z: -3.9449487}
+  - {x: 6.6689115, y: 16.11375, z: -2.5884125}
+  - {x: 7.1054945, y: 16.316875, z: -1.6567695}
+  - {x: 6.982343, y: 16.486145, z: -0.4576469}
+  - {x: 6.9028044, y: 16.723125, z: 1.1396575}
+  - {x: 6.714853, y: 16.767395, z: 2.48094}
+  - {x: 6.321985, y: 17.061666, z: 3.6500003}
+  - {x: 5.4047823, y: 17.298645, z: 4.5790615}
+  - {x: 4.578626, y: 17.467916, z: 5.4051614}
+  - {x: 3.6500003, y: 17.603334, z: 6.321985}
+  - {x: 2.4570713, y: 17.840313, z: 6.720111}
+  - {x: 1.1396581, y: 18.009584, z: 6.9028044}
+  - {x: 0.18470676, y: 18.145, z: 7.198238}
+  - {x: -1.1396577, y: 18.18927, z: 6.9028044}
+  - {x: -2.499195, y: 18.55125, z: 6.7014604}
+  - {x: -3.945543, y: 18.78823, z: 5.9433413}
+  - {x: -4.835617, y: 18.923645, z: 5.1593456}
+  - {x: -5.78993, y: 18.87677, z: 4.442769}
+  - {x: -6.3219843, y: 19.228334, z: 3.6500006}
+  - {x: -6.704692, y: 19.465313, z: 2.494705}
+  - {x: -7.206525, y: 19.60073, z: 1.0077155}
+  - {x: -7.290764, y: 19.58771, z: -0.2821253}
+  - {x: -6.9028044, y: 19.973125, z: -1.1396575}
+  - {x: -6.704612, y: 20.17625, z: -2.4949112}
+  - {x: -5.943429, y: 20.28823, z: -3.930257}
+  - {x: -5.3251553, y: 20.298645, z: -4.9875517}
+  - {x: -4.4422584, y: 20.75177, z: -5.7892647}
+  - {x: -3.2980113, y: 20.921041, z: -6.170142}
+  - {x: -2.327786, y: 21.090313, z: -6.7684174}
+  - {x: -1.1396577, y: 21.259584, z: -6.9028044}
+  - {x: 0.41060078, y: 21.46271, z: -7.2745557}
+  - {x: 1.6567692, y: 21.665834, z: -7.1054964}
+  - {x: 3.1159422, y: 21.710106, z: -6.520981}
+  - {x: 3.6499999, y: 21.686666, z: -6.3219852}
+  label: PARKHAUS CURB
+--- !u!1 &5376523613057121252
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9142640610686484722}
+  - component: {fileID: 3910519998993019855}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9142640610686484722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5376523613057121252}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3910519998993019855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5376523613057121252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -16.311096, y: 19.315685, z: 8.091013}
+  - {x: -15.732703, y: 19.491539, z: 9.290048}
+  - {x: -15.164373, y: 19.612663, z: 10.132509}
+  - {x: -14.576494, y: 19.543167, z: 11.059217}
+  - {x: -13.7196865, y: 19.52, z: 12.107649}
+  - {x: -12.979138, y: 19.5825, z: 12.894506}
+  - {x: -12.154751, y: 19.77, z: 13.641335}
+  - {x: -11.140334, y: 19.52, z: 14.518365}
+  - {x: -9.827956, y: 19.52, z: 15.426684}
+  - {x: -8.855892, y: 19.77, z: 15.812811}
+  - {x: -7.0031066, y: 19.52, z: 16.906996}
+  - {x: -5.986117, y: 19.5825, z: 17.289764}
+  - {x: -4.680854, y: 19.52, z: 17.689394}
+  - {x: -3.6781375, y: 19.5825, z: 17.923191}
+  - {x: -2.49803, y: 19.5825, z: 18.125376}
+  - {x: -1.1398832, y: 19.52, z: 18.262684}
+  - {x: 0.05699416, y: 19.52, z: 18.298136}
+  - {x: 1.0682511, y: 19.77, z: 17.981695}
+  - {x: 2.4448926, y: 19.52, z: 18.134151}
+  - {x: 3.6256878, y: 19.52, z: 17.935421}
+  - {x: 4.6440716, y: 19.77, z: 17.669104}
+  label: PARKHAUS CURB
+--- !u!1 &5508830181971273395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2259668407933616120}
+  - component: {fileID: 825753192495868228}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_28
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2259668407933616120
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5508830181971273395}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &825753192495868228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5508830181971273395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -5.2728457, y: 21.07903, z: -16.730381}
+  - {x: -3.3356445, y: 21.214445, z: -17.26111}
+  - {x: -2.378092, y: 21.259584, z: -17.638683}
+  - {x: -1.6406454, y: 21.304722, z: -17.664745}
+  label: PARKHAUS CURB
+--- !u!1 &5558992991661084601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7899119093276949267}
+  - component: {fileID: 2888760597281883977}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_17
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7899119093276949267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5558992991661084601}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2888760597281883977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5558992991661084601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 8.7963085, y: 15.459237, z: -15.126647}
+  - {x: 9.72248, y: 15.254375, z: -14.550719}
+  - {x: 10.790868, y: 15.572083, z: -14.153998}
+  - {x: 11.506073, y: 15.639792, z: -13.432496}
+  - {x: 12.4274025, y: 15.7075, z: -12.4274025}
+  - {x: 13.100471, y: 15.775208, z: -11.599114}
+  - {x: 13.830372, y: 15.842917, z: -10.7607}
+  - {x: 14.550718, y: 15.910625, z: -9.722478}
+  - {x: 15.151584, y: 16.000902, z: -8.747768}
+  - {x: 15.72026, y: 16.046041, z: -7.858948}
+  - {x: 16.24443, y: 16.11375, z: -6.682778}
+  - {x: 16.855356, y: 16.18146, z: -5.7216225}
+  - {x: 16.792894, y: 15.976598, z: -4.894619}
+  label: PARKHAUS CURB
+--- !u!1 &5563080306548415515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4167047014404909850}
+  - component: {fileID: 1327744389127070958}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4167047014404909850
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5563080306548415515}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1327744389127070958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5563080306548415515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 17.425383, y: 19.5825, z: -5.564022}
+  - {x: 16.649588, y: 19.77, z: -6.8358073}
+  - {x: 16.330626, y: 19.77, z: -8.044398}
+  - {x: 15.232181, y: 19.77, z: -9.643915}
+  - {x: 14.788712, y: 19.77, z: -10.677276}
+  - {x: 14.162683, y: 19.77, z: -11.482845}
+  - {x: 12.979138, y: 19.5825, z: -12.894506}
+  - {x: 12.154751, y: 19.77, z: -13.641335}
+  - {x: 11.140334, y: 19.52, z: -14.518365}
+  - {x: 9.827956, y: 19.52, z: -15.426684}
+  - {x: 8.855892, y: 19.77, z: -15.812811}
+  - {x: 7.0031066, y: 19.52, z: -16.906996}
+  - {x: 5.986117, y: 19.5825, z: -17.289764}
+  - {x: 4.680854, y: 19.52, z: -17.689394}
+  - {x: 3.6781375, y: 19.5825, z: -17.923191}
+  - {x: 2.49803, y: 19.5825, z: -18.125376}
+  - {x: 1.1398832, y: 19.52, z: -18.262684}
+  - {x: -0.05699416, y: 19.52, z: -18.298136}
+  - {x: -1.0682511, y: 19.77, z: -17.981695}
+  - {x: -2.4448926, y: 19.52, z: -18.134151}
+  - {x: -3.6256878, y: 19.52, z: -17.935421}
+  - {x: -4.6440716, y: 19.77, z: -17.669104}
+  label: PARKHAUS CURB
+--- !u!1 &5583446018642288628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8453472982679171392}
+  - component: {fileID: 302513576177844403}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_32
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8453472982679171392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583446018642288628}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &302513576177844403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583446018642288628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.75389, y: 25.796041, z: 7.8755345}
+  - {x: -15.151584, y: 25.750904, z: 8.747768}
+  - {x: -14.550718, y: 25.660625, z: 9.722478}
+  - {x: -14.153997, y: 25.615486, z: 10.790868}
+  - {x: -13.41998, y: 25.54778, z: 11.477174}
+  - {x: -12.445081, y: 25.4575, z: 12.445081}
+  - {x: -11.6392765, y: 25.412361, z: 13.078073}
+  - {x: -10.758908, y: 25.344654, z: 13.83506}
+  - {x: -9.72248, y: 25.254375, z: 14.550719}
+  - {x: -8.74777, y: 25.209236, z: 15.151582}
+  - {x: -7.856546, y: 25.14153, z: 15.714461}
+  - {x: -6.6373525, y: 25.05125, z: 16.273764}
+  - {x: -5.7216225, y: 24.983541, z: 16.855356}
+  - {x: -4.5117574, y: 24.915834, z: 17.002821}
+  - {x: -3.342881, y: 24.848125, z: 17.247393}
+  - {x: -2.378092, y: 24.802986, z: 17.638683}
+  label: PARKHAUS CURB
+--- !u!1 &5895497023002996106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4377447266809041665}
+  - component: {fileID: 7510593613837686441}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4377447266809041665
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5895497023002996106}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7510593613837686441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5895497023002996106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 6.8862224, y: 9.816875, z: -1.2400911}
+  - {x: 7.199917, y: 9.77, z: -0.1633357}
+  - {x: 7.2155085, y: 10.189272, z: 0.9505578}
+  label: PARKHAUS CURB
+--- !u!1 &5987900481940349788
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2984897941494294095}
+  - component: {fileID: 7841308384416340395}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_8
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2984897941494294095
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987900481940349788}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7841308384416340395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987900481940349788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 7.2155085, y: 16.68927, z: 0.9505578}
+  - {x: 6.499725, y: 17.027813, z: 3.1696289}
+  - {x: 6.3219852, y: 16.811666, z: 3.6499999}
+  label: PARKHAUS CURB
+--- !u!1 &6014730678591027580
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3360812320326225903}
+  - component: {fileID: 3048769944783790128}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_13
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3360812320326225903
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6014730678591027580}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3048769944783790128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6014730678591027580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -16.311096, y: 25.815685, z: 8.091013}
+  - {x: -15.807545, y: 25.870417, z: 9.215483}
+  - {x: -15.213859, y: 25.901997, z: 10.165575}
+  - {x: -14.500442, y: 26.27, z: 11.028614}
+  - {x: -13.676085, y: 26.27, z: 11.8014345}
+  - {x: -12.8875065, y: 26.27, z: 12.910631}
+  - {x: -12.152155, y: 26.27, z: 13.655181}
+  - {x: -11.048805, y: 26.27, z: 14.488558}
+  - {x: -10.160191, y: 26.27, z: 15.125851}
+  - {x: -9.277335, y: 26.27, z: 15.738646}
+  - {x: -8.274753, y: 26.27, z: 16.032774}
+  - {x: -7.3815203, y: 26.27, z: 16.621592}
+  - {x: -5.9382586, y: 26.27, z: 17.222675}
+  - {x: -4.6041183, y: 26.27, z: 17.399403}
+  - {x: -3.6949115, y: 26.27, z: 17.838032}
+  - {x: -2.4641786, y: 26.27, z: 18.050241}
+  - {x: -1.1188198, y: 26.27, z: 18.263369}
+  - {x: 0.13262302, y: 26.27, z: 18.290098}
+  - {x: 1.622503, y: 26.27, z: 18.218899}
+  - {x: 3.1269596, y: 26.27, z: 17.932905}
+  - {x: 4.6384315, y: 26.27, z: 17.68081}
+  - {x: 5.9409833, y: 26.27, z: 17.23166}
+  - {x: 7.0031056, y: 26.27, z: 16.906994}
+  - {x: 8.031151, y: 26.27, z: 16.363516}
+  - {x: 9.643915, y: 26.27, z: 15.232181}
+  - {x: 10.697073, y: 26.27, z: 14.783308}
+  - {x: 11.498891, y: 26.27, z: 14.15946}
+  - {x: 12.419166, y: 26.27, z: 13.119808}
+  - {x: 13.183552, y: 26.27, z: 12.351107}
+  - {x: 14.142348, y: 26.27, z: 11.488233}
+  - {x: 14.7816725, y: 26.27, z: 10.699351}
+  - {x: 15.426684, y: 26.27, z: 9.827956}
+  - {x: 15.826788, y: 26.27, z: 8.852272}
+  - {x: 16.381052, y: 26.27, z: 8.017913}
+  - {x: 16.906994, y: 26.27, z: 7.0031056}
+  - {x: 17.222675, y: 26.27, z: 5.9382586}
+  - {x: 17.399403, y: 26.27, z: 4.6041183}
+  - {x: 17.838032, y: 26.27, z: 3.6949115}
+  - {x: 18.050241, y: 26.27, z: 2.4641786}
+  - {x: 18.263369, y: 26.27, z: 1.1188198}
+  - {x: 18.290098, y: 26.27, z: -0.13262302}
+  - {x: 18.218899, y: 26.27, z: -1.622503}
+  - {x: 17.932905, y: 26.27, z: -3.1269596}
+  - {x: 17.68081, y: 26.27, z: -4.6384315}
+  - {x: 17.23166, y: 26.27, z: -5.9409833}
+  - {x: 16.906994, y: 26.27, z: -7.0031056}
+  - {x: 16.363516, y: 26.27, z: -8.031151}
+  - {x: 15.232181, y: 26.27, z: -9.643915}
+  - {x: 14.783308, y: 26.27, z: -10.697073}
+  - {x: 14.15946, y: 26.27, z: -11.498891}
+  - {x: 13.119808, y: 26.27, z: -12.419166}
+  - {x: 12.351107, y: 26.27, z: -13.183552}
+  - {x: 11.488233, y: 26.27, z: -14.142348}
+  - {x: 10.699351, y: 26.27, z: -14.7816725}
+  - {x: 9.827956, y: 26.27, z: -15.426684}
+  - {x: 8.852272, y: 26.27, z: -15.826788}
+  - {x: 8.017913, y: 26.27, z: -16.381052}
+  - {x: 7.0031056, y: 26.27, z: -16.906994}
+  - {x: 5.9382586, y: 26.27, z: -17.222675}
+  - {x: 4.6041183, y: 26.27, z: -17.399403}
+  - {x: 3.6949115, y: 26.27, z: -17.838032}
+  - {x: 2.4641786, y: 26.27, z: -18.050241}
+  - {x: 1.1188198, y: 26.27, z: -18.263369}
+  - {x: -0.13262302, y: 26.27, z: -18.290098}
+  - {x: -1.622503, y: 26.27, z: -18.218899}
+  - {x: -3.1269596, y: 26.27, z: -17.932905}
+  - {x: -4.6384315, y: 26.27, z: -17.68081}
+  - {x: -5.9409833, y: 26.27, z: -17.23166}
+  - {x: -7.0031056, y: 26.27, z: -16.906994}
+  - {x: -8.031151, y: 26.27, z: -16.363516}
+  - {x: -9.643915, y: 26.27, z: -15.232181}
+  - {x: -10.697073, y: 26.27, z: -14.783308}
+  - {x: -11.498891, y: 26.27, z: -14.15946}
+  - {x: -12.419166, y: 26.27, z: -13.119808}
+  - {x: -13.183552, y: 26.27, z: -12.351107}
+  - {x: -14.142348, y: 26.27, z: -11.488233}
+  - {x: -14.7816725, y: 26.27, z: -10.699351}
+  - {x: -15.426684, y: 26.27, z: -9.827956}
+  - {x: -15.826788, y: 26.27, z: -8.852272}
+  - {x: -16.381052, y: 26.27, z: -8.017913}
+  - {x: -16.906994, y: 26.27, z: -7.0031056}
+  - {x: -17.222675, y: 26.27, z: -5.9382586}
+  - {x: -17.399403, y: 26.27, z: -4.6041183}
+  - {x: -17.838032, y: 26.27, z: -3.6949115}
+  - {x: -18.050241, y: 26.27, z: -2.4641786}
+  - {x: -18.263369, y: 26.27, z: -1.1188198}
+  - {x: -18.300001, y: 26.27, z: 1.1183384e-15}
+  label: PARKHAUS CURB
+--- !u!1 &6198841628744617915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6789333156746005664}
+  - component: {fileID: 4497258534343999342}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_14
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6789333156746005664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6198841628744617915}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4497258534343999342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6198841628744617915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.731277, y: 13.766528, z: -7.864838}
+  - {x: -15.151582, y: 13.834237, z: -8.74777}
+  - {x: -14.550718, y: 13.879375, z: -9.722478}
+  - {x: -14.153998, y: 13.947083, z: -10.790868}
+  - {x: -13.430129, y: 14.014792, z: -11.487317}
+  - {x: -12.445081, y: 14.0825, z: -12.445081}
+  - {x: -11.6082, y: 14.150208, z: -13.091961}
+  - {x: -10.695479, y: 13.967917, z: -13.849089}
+  - {x: -9.889152, y: 14.285625, z: -14.8001585}
+  - {x: -8.747768, y: 14.375903, z: -15.151584}
+  - {x: -7.858948, y: 14.421042, z: -15.72026}
+  - {x: -6.634578, y: 14.51132, z: -16.268135}
+  - {x: -5.7216225, y: 14.556458, z: -16.855356}
+  - {x: -4.53595, y: 14.646737, z: -16.988361}
+  - {x: -3.3412068, y: 14.714445, z: -17.241135}
+  - {x: -1.8093526, y: 14.615486, z: -17.397055}
+  - {x: -0.12789945, y: 14.895, z: -17.77359}
+  - {x: 1.0491753, y: 14.962708, z: -17.465652}
+  label: PARKHAUS CURB
+--- !u!1 &6445990726508045059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8558890490603216993}
+  - component: {fileID: 2073716285484292121}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_31
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8558890490603216993
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6445990726508045059}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2073716285484292121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6445990726508045059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 2.378092, y: 24.509584, z: 17.638683}
+  - {x: 1.0319161, y: 24.599861, z: 17.721775}
+  - {x: 1.7129181e-14, y: 24.395, z: 17.5}
+  - {x: -0.38151824, y: 24.500904, z: 17.48751}
+  label: PARKHAUS CURB
+--- !u!1 &6823871901403653316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1439568263373029536}
+  - component: {fileID: 2065983466995455825}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1439568263373029536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6823871901403653316}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2065983466995455825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6823871901403653316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -16.29843, y: 13.743958, z: -8.06316}
+  - {x: -15.730211, y: 13.669584, z: -9.2736}
+  - {x: -15.121673, y: 13.488312, z: -10.121893}
+  - {x: -14.142348, y: 13.27, z: -11.488233}
+  - {x: -13.183552, y: 13.27, z: -12.351107}
+  - {x: -12.419166, y: 13.27, z: -13.119808}
+  - {x: -11.498891, y: 13.27, z: -14.15946}
+  - {x: -10.697073, y: 13.27, z: -14.783308}
+  - {x: -9.827956, y: 13.27, z: -15.426684}
+  - {x: -8.841273, y: 13.27, z: -15.811418}
+  - {x: -7.3882885, y: 13.27, z: -16.643847}
+  - {x: -5.9409833, y: 13.27, z: -17.23166}
+  - {x: -4.6384315, y: 13.27, z: -17.680815}
+  - {x: -3.1269596, y: 13.27, z: -17.932905}
+  - {x: -1.8708687, y: 13.27, z: -18.078556}
+  - {x: -0.17440835, y: 13.27, z: -18.027624}
+  - {x: 1.0715213, y: 13.27, z: -18.01492}
+  - {x: 2.4641788, y: 13.27, z: -18.050243}
+  - {x: 3.6949115, y: 13.27, z: -17.838032}
+  - {x: 4.6041183, y: 13.27, z: -17.399403}
+  - {x: 5.9382586, y: 13.27, z: -17.222675}
+  - {x: 7.0031056, y: 13.27, z: -16.906994}
+  - {x: 8.017913, y: 13.27, z: -16.381052}
+  - {x: 8.852272, y: 13.27, z: -15.826788}
+  - {x: 9.827956, y: 13.27, z: -15.426684}
+  - {x: 10.699351, y: 13.27, z: -14.7816725}
+  - {x: 11.488233, y: 13.27, z: -14.142348}
+  - {x: 12.351107, y: 13.27, z: -13.183552}
+  - {x: 13.119808, y: 13.27, z: -12.419166}
+  - {x: 14.15946, y: 13.27, z: -11.498891}
+  - {x: 14.783308, y: 13.27, z: -10.697073}
+  - {x: 15.426684, y: 13.27, z: -9.827956}
+  - {x: 15.811418, y: 13.27, z: -8.841273}
+  - {x: 16.643847, y: 13.27, z: -7.3882885}
+  - {x: 17.23166, y: 13.27, z: -5.9409833}
+  - {x: 17.680815, y: 13.27, z: -4.6384315}
+  - {x: 17.932905, y: 13.27, z: -3.1269596}
+  - {x: 18.078556, y: 13.27, z: -1.8708687}
+  - {x: 18.027624, y: 13.27, z: -0.17440835}
+  - {x: 18.01492, y: 13.27, z: 1.0715213}
+  - {x: 18.050243, y: 13.27, z: 2.4641788}
+  - {x: 17.838032, y: 13.27, z: 3.6949115}
+  - {x: 17.399403, y: 13.27, z: 4.6041183}
+  - {x: 17.222675, y: 13.27, z: 5.9382586}
+  - {x: 16.906994, y: 13.27, z: 7.0031056}
+  - {x: 16.381052, y: 13.27, z: 8.017913}
+  - {x: 15.826788, y: 13.27, z: 8.852272}
+  - {x: 15.426684, y: 13.27, z: 9.827956}
+  - {x: 14.7816725, y: 13.27, z: 10.699351}
+  - {x: 14.142348, y: 13.27, z: 11.488233}
+  - {x: 13.183552, y: 13.27, z: 12.351107}
+  - {x: 12.419166, y: 13.27, z: 13.119808}
+  - {x: 11.498891, y: 13.27, z: 14.15946}
+  - {x: 10.697073, y: 13.27, z: 14.783308}
+  - {x: 9.827956, y: 13.27, z: 15.426684}
+  - {x: 8.841273, y: 13.27, z: 15.811418}
+  - {x: 7.3882885, y: 13.27, z: 16.643847}
+  - {x: 5.9409833, y: 13.27, z: 17.23166}
+  - {x: 4.6384315, y: 13.27, z: 17.680815}
+  - {x: 3.1269596, y: 13.27, z: 17.932905}
+  - {x: 1.8708687, y: 13.27, z: 18.078556}
+  - {x: 0.17440835, y: 13.27, z: 18.027624}
+  - {x: -1.0715213, y: 13.27, z: 18.01492}
+  - {x: -2.4641788, y: 13.27, z: 18.050243}
+  - {x: -3.6949115, y: 13.27, z: 17.838032}
+  - {x: -4.6041183, y: 13.27, z: 17.399403}
+  - {x: -5.9382586, y: 13.27, z: 17.222675}
+  - {x: -7.0031056, y: 13.27, z: 16.906994}
+  - {x: -8.017913, y: 13.27, z: 16.381052}
+  - {x: -8.852272, y: 13.27, z: 15.826788}
+  - {x: -9.827956, y: 13.27, z: 15.426684}
+  - {x: -10.699351, y: 13.27, z: 14.7816725}
+  - {x: -11.488233, y: 13.27, z: 14.142348}
+  - {x: -12.351107, y: 13.27, z: 13.183552}
+  - {x: -13.119808, y: 13.27, z: 12.419166}
+  - {x: -14.15946, y: 13.27, z: 11.498891}
+  - {x: -14.833128, y: 13.191332, z: 10.627545}
+  - {x: -15.732703, y: 12.991541, z: 9.290048}
+  - {x: -16.224602, y: 12.572133, z: 8.445922}
+  label: PARKHAUS CURB
+--- !u!1 &6979602173049286831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3627727641577700258}
+  - component: {fileID: 5655202559930937708}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3627727641577700258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6979602173049286831}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5655202559930937708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6979602173049286831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -6.9892526, y: 13.27, z: 0.2785677}
+  - {x: -7.2336736, y: 13.314272, z: -0.9523311}
+  - {x: -6.768911, y: 13.290833, z: -1.779869}
+  label: PARKHAUS CURB
+--- !u!1 &7002239270470591029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8006266542388146308}
+  - component: {fileID: 5914802284753922090}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_12
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8006266542388146308
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002239270470591029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5914802284753922090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002239270470591029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 1.061616, y: 11.599862, z: 17.465244}
+  - {x: 2.378092, y: 11.509583, z: 17.638683}
+  - {x: 3.3356445, y: 11.464445, z: 17.26111}
+  - {x: 3.9717069, y: 11.169306, z: 17.033722}
+  label: PARKHAUS CURB
+--- !u!1 &7107741887340944287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7053062757278896630}
+  m_Layer: 0
+  m_Name: Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7053062757278896630
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7107741887340944287}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.18, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7311108997890965852}
+  - {fileID: 6191381461518244843}
+  - {fileID: 3896207139032047671}
+  - {fileID: 5448259946574684637}
+  - {fileID: 8792649361131170274}
+  - {fileID: 7190430880295453167}
+  - {fileID: 7294883748120218980}
+  m_Father: {fileID: 6887711310024263942}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7124364318047522409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3411180942542596423}
+  - component: {fileID: 7783134810747004848}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_9
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3411180942542596423
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7124364318047522409}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7783134810747004848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7124364318047522409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 17.521225, y: 9.839445, z: -3.0895274}
+  - {x: 17.397055, y: 9.740486, z: -1.8093526}
+  - {x: 17.48751, y: 9.747431, z: -0.38151821}
+  - {x: 17.7439, y: 10.087708, z: 1.034823}
+  - {x: 17.638683, y: 10.177987, z: 2.378092}
+  label: PARKHAUS CURB
+--- !u!1 &7240997595999945176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3201409630184253896}
+  - component: {fileID: 5103399639871907309}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_23
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3201409630184253896
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240997595999945176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5103399639871907309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240997595999945176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -2.380803, y: 18.302986, z: 17.346998}
+  - {x: -3.8787692, y: 18.20403, z: 17.055393}
+  - {x: -5.259905, y: 18.460972, z: 16.682085}
+  label: PARKHAUS CURB
+--- !u!1 &7265997158564340848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1397674896405027237}
+  - component: {fileID: 7763729538346810818}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_19
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1397674896405027237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7265997158564340848}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7763729538346810818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7265997158564340848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 17.465244, y: 16.474861, z: -1.061616}
+  - {x: 17.351263, y: 16.384584, z: -2.38054}
+  - {x: 17.01205, y: 16.10507, z: -4.064645}
+  label: PARKHAUS CURB
+--- !u!1 &7279305577132856050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5898956321544105365}
+  - component: {fileID: 8370705939127018822}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_26
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5898956321544105365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7279305577132856050}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8370705939127018822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7279305577132856050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -14.550719, y: 20.129375, z: -9.72248}
+  - {x: -14.153998, y: 20.447084, z: -10.790868}
+  - {x: -13.432496, y: 20.514791, z: -11.506073}
+  - {x: -12.635311, y: 20.30993, z: -12.095763}
+  label: PARKHAUS CURB
+--- !u!1 &7303479289771508490
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7294883748120218980}
+  m_Layer: 0
+  m_Name: Rails
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7294883748120218980
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7303479289771508490}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4414369515117872526}
+  - {fileID: 6547701037467028681}
+  - {fileID: 7848465075837067041}
+  - {fileID: 3177289962934390251}
+  - {fileID: 4377447266809041665}
+  - {fileID: 6577480995948057666}
+  - {fileID: 3627727641577700258}
+  - {fileID: 9129214563943594413}
+  - {fileID: 2984897941494294095}
+  - {fileID: 1750656586327320192}
+  - {fileID: 572653142578180574}
+  - {fileID: 4435713076918811110}
+  - {fileID: 333106948229930323}
+  - {fileID: 1293517338043499166}
+  - {fileID: 1667176506486890959}
+  - {fileID: 7080836583317366213}
+  - {fileID: 9218237309981914929}
+  - {fileID: 3398354880250690299}
+  - {fileID: 2488014769575851522}
+  - {fileID: 4406925813343403943}
+  - {fileID: 300496692741639438}
+  - {fileID: 7569166259111345789}
+  - {fileID: 3411180942542596423}
+  - {fileID: 2238392481998314159}
+  - {fileID: 4395782988315929848}
+  - {fileID: 8006266542388146308}
+  - {fileID: 1063838941201684075}
+  - {fileID: 6789333156746005664}
+  - {fileID: 917194721578080459}
+  - {fileID: 2617473394656185493}
+  - {fileID: 7899119093276949267}
+  - {fileID: 4772471546370635028}
+  - {fileID: 1397674896405027237}
+  - {fileID: 1604548214069288830}
+  - {fileID: 1610687460829885207}
+  - {fileID: 7067407961723082160}
+  - {fileID: 3201409630184253896}
+  - {fileID: 1087178670691624895}
+  - {fileID: 1167160475495471577}
+  - {fileID: 5898956321544105365}
+  - {fileID: 8549420857181171326}
+  - {fileID: 2259668407933616120}
+  - {fileID: 304918399253775905}
+  - {fileID: 6037214809638951036}
+  - {fileID: 8558890490603216993}
+  - {fileID: 8453472982679171392}
+  - {fileID: 7300231810459901547}
+  - {fileID: 708947010348924344}
+  - {fileID: 1439568263373029536}
+  - {fileID: 707275733136085884}
+  - {fileID: 7350585633970939733}
+  - {fileID: 3331754531044724347}
+  - {fileID: 4167047014404909850}
+  - {fileID: 259316543674161932}
+  - {fileID: 6014980381515283217}
+  - {fileID: 2460372430950480243}
+  - {fileID: 8955927381432896566}
+  - {fileID: 9142640610686484722}
+  - {fileID: 3041642689219055403}
+  - {fileID: 3360812320326225903}
+  - {fileID: 1345925930798824133}
+  - {fileID: 5955807595594936566}
+  - {fileID: 9105510562164600345}
+  - {fileID: 3801069424231200390}
+  - {fileID: 502397816571905170}
+  - {fileID: 7049920428879184864}
+  - {fileID: 8232955082739828456}
+  - {fileID: 2252038077988504841}
+  m_Father: {fileID: 7053062757278896630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7362810944712919570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7067407961723082160}
+  - component: {fileID: 4057092072685460223}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_22
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7067407961723082160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7362810944712919570}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4057092072685460223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7362810944712919570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -2.378092, y: 18.302986, z: 17.638683}
+  - {x: -3.3378077, y: 18.348125, z: 17.269196}
+  - {x: -4.529333, y: 18.165834, z: 16.903702}
+  - {x: -5.7216225, y: 18.483541, z: 16.855356}
+  - {x: -6.6373525, y: 18.55125, z: 16.273764}
+  - {x: -7.856546, y: 18.64153, z: 15.714461}
+  - {x: -8.74777, y: 18.709236, z: 15.151582}
+  - {x: -9.722478, y: 18.754375, z: 14.550718}
+  - {x: -10.790868, y: 18.822084, z: 14.153998}
+  - {x: -11.487317, y: 18.889791, z: 13.430129}
+  - {x: -12.445081, y: 18.9575, z: 12.445081}
+  - {x: -13.070216, y: 18.919306, z: 11.63142}
+  - {x: -13.823477, y: 19.092916, z: 10.78473}
+  - {x: -14.550719, y: 19.160625, z: 9.72248}
+  - {x: -15.151584, y: 19.250904, z: 8.747768}
+  - {x: -15.75389, y: 19.296041, z: 7.8755345}
+  label: PARKHAUS CURB
+--- !u!1 &7603179631565054216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3896207139032047671}
+  - component: {fileID: 860525459943792847}
+  - component: {fileID: 2218053154630093153}
+  m_Layer: 0
+  m_Name: Neon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3896207139032047671
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7603179631565054216}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7053062757278896630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &860525459943792847
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7603179631565054216}
+  m_Mesh: {fileID: 4300000, guid: 4ae09c983f03bb44ab6f42023bdbd636, type: 2}
+--- !u!23 &2218053154630093153
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7603179631565054216}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 088b40269206a82458f1ec199cf82fd5, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7773966299593237717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7049920428879184864}
+  - component: {fileID: 6082226124676531323}
+  m_Layer: 10
+  m_Name: Grind_Rail_Roof_Outer_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7049920428879184864
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773966299593237717}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6082226124676531323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773966299593237717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 31.862534, y: 27.045, z: 31.86258}
+  - {x: 30.528265, y: 27.045, z: 31.90001}
+  - {x: 28.93205, y: 27.045, z: 31.900007}
+  - {x: 27.73483, y: 27.045, z: 31.90001}
+  - {x: 26.138605, y: 27.045, z: 31.900005}
+  - {x: 24.941406, y: 27.045, z: 31.9}
+  - {x: 23.345154, y: 27.045, z: 31.900007}
+  - {x: 22.147972, y: 27.045, z: 31.90001}
+  - {x: 20.551704, y: 27.045, z: 31.9}
+  - {x: 19.354542, y: 27.045, z: 31.90001}
+  - {x: 17.758286, y: 27.045, z: 31.900005}
+  - {x: 16.561096, y: 27.045, z: 31.900002}
+  - {x: 14.964843, y: 27.045, z: 31.90001}
+  - {x: 13.767649, y: 27.045, z: 31.900005}
+  - {x: 12.171399, y: 27.045, z: 31.9}
+  - {x: 10.974215, y: 27.045, z: 31.900005}
+  - {x: 9.377971, y: 27.045, z: 31.900005}
+  - {x: 8.180783, y: 27.045, z: 31.900005}
+  - {x: 6.5845304, y: 27.045, z: 31.900013}
+  - {x: 5.3873444, y: 27.045, z: 31.90001}
+  - {x: 3.791096, y: 27.045, z: 31.900003}
+  - {x: 2.5939064, y: 27.045, z: 31.900003}
+  - {x: 0.997656, y: 27.045, z: 31.900003}
+  - {x: -0.39906308, y: 27.045, z: 31.900002}
+  - {x: -1.7957813, y: 27.045, z: 31.900005}
+  - {x: -3.1924996, y: 27.045, z: 31.9}
+  - {x: -4.589218, y: 27.045, z: 31.900003}
+  - {x: -5.985936, y: 27.045, z: 31.9}
+  - {x: -7.3826566, y: 27.045, z: 31.90001}
+  - {x: -8.779375, y: 27.045, z: 31.9}
+  - {x: -10.176092, y: 27.045, z: 31.900007}
+  - {x: -11.572814, y: 27.045, z: 31.900002}
+  - {x: -12.969535, y: 27.045, z: 31.900003}
+  - {x: -14.366247, y: 27.045, z: 31.9}
+  - {x: -15.762969, y: 27.045, z: 31.900007}
+  - {x: -17.159689, y: 27.045, z: 31.899998}
+  - {x: -18.55641, y: 27.045, z: 31.90001}
+  - {x: -19.953125, y: 27.045, z: 31.9}
+  - {x: -21.349833, y: 27.045, z: 31.900002}
+  - {x: -22.746565, y: 27.045, z: 31.900002}
+  - {x: -24.14327, y: 27.045, z: 31.900002}
+  - {x: -25.539993, y: 27.045, z: 31.9}
+  - {x: -26.93671, y: 27.045, z: 31.900007}
+  - {x: -28.333437, y: 27.045, z: 31.899998}
+  - {x: -29.73016, y: 27.045, z: 31.900003}
+  - {x: -31.12688, y: 27.045, z: 31.900002}
+  - {x: -31.899998, y: 27.045, z: 31.12688}
+  - {x: -31.899998, y: 27.045, z: 29.73016}
+  - {x: -31.9, y: 27.045, z: 28.333437}
+  - {x: -31.899998, y: 27.045, z: 26.93671}
+  - {x: -31.900002, y: 27.045, z: 25.539993}
+  - {x: -31.9, y: 27.045, z: 24.14327}
+  - {x: -31.900002, y: 27.045, z: 22.746565}
+  - {x: -31.899998, y: 27.045, z: 21.349833}
+  - {x: -31.899994, y: 27.045, z: 19.953125}
+  - {x: -31.900002, y: 27.045, z: 18.55641}
+  - {x: -31.900002, y: 27.045, z: 17.159689}
+  - {x: -31.900003, y: 27.045, z: 15.762969}
+  - {x: -31.900002, y: 27.045, z: 14.366247}
+  - {x: -31.899996, y: 27.045, z: 12.969535}
+  - {x: -31.9, y: 27.045, z: 11.572814}
+  - {x: -31.9, y: 27.045, z: 10.176092}
+  - {x: -31.900002, y: 27.045, z: 8.779375}
+  - {x: -31.900003, y: 27.045, z: 7.3826566}
+  - {x: -31.900003, y: 27.045, z: 5.985936}
+  - {x: -31.899998, y: 27.045, z: 4.589218}
+  - {x: -31.899998, y: 27.045, z: 3.1924996}
+  - {x: -31.899998, y: 27.045, z: 1.7957813}
+  - {x: -31.899994, y: 27.045, z: 0.19953154}
+  - {x: -31.900002, y: 27.045, z: -0.997656}
+  - {x: -31.9, y: 27.045, z: -2.5939064}
+  - {x: -31.899998, y: 27.045, z: -3.791096}
+  - {x: -31.900003, y: 27.045, z: -5.3873444}
+  - {x: -31.9, y: 27.045, z: -6.5845304}
+  - {x: -31.89999, y: 27.045, z: -8.180783}
+  - {x: -31.900002, y: 27.045, z: -9.377971}
+  - {x: -31.899998, y: 27.045, z: -10.974215}
+  - {x: -31.899998, y: 27.045, z: -12.171399}
+  - {x: -31.900002, y: 27.045, z: -13.767649}
+  - {x: -31.900002, y: 27.045, z: -14.964843}
+  - {x: -31.899998, y: 27.045, z: -16.561096}
+  - {x: -31.900002, y: 27.045, z: -17.758286}
+  - {x: -31.900002, y: 27.045, z: -19.354542}
+  - {x: -31.899996, y: 27.045, z: -20.551704}
+  - {x: -31.900002, y: 27.045, z: -22.147972}
+  - {x: -31.9, y: 27.045, z: -23.345154}
+  - {x: -31.899994, y: 27.045, z: -24.941406}
+  - {x: -31.900003, y: 27.045, z: -26.138605}
+  - {x: -31.900002, y: 27.045, z: -27.73483}
+  - {x: -31.9, y: 27.045, z: -28.93205}
+  - {x: -31.900002, y: 27.045, z: -30.528265}
+  - {x: -31.86258, y: 27.045, z: -31.862534}
+  label: PARKHAUS RAIL
+--- !u!1 &7787897552068896411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7080836583317366213}
+  - component: {fileID: 17442370494877340}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7080836583317366213
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7787897552068896411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &17442370494877340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7787897552068896411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -9.889152, y: 5.754375, z: 14.8001585}
+  - {x: -8.748439, y: 5.709236, z: 15.15274}
+  - {x: -7.806944, y: 5.6189585, z: 15.735071}
+  - {x: -6.6373525, y: 5.55125, z: 16.273764}
+  - {x: -5.7216225, y: 5.4835415, z: 16.855356}
+  - {x: -4.5117574, y: 5.4158335, z: 17.002821}
+  - {x: -3.342881, y: 5.348125, z: 17.247393}
+  - {x: -2.378092, y: 5.302986, z: 17.638683}
+  - {x: -1.034823, y: 5.2127085, z: 17.7439}
+  - {x: 0.054814048, y: 5.145, z: 17.617252}
+  - {x: 1.6406454, y: 5.0547223, z: 17.664745}
+  - {x: 3.0895274, y: 4.9644446, z: 17.521225}
+  - {x: 4.53595, y: 4.896736, z: 16.988361}
+  - {x: 5.7216225, y: 4.8064585, z: 16.855356}
+  - {x: 6.634578, y: 4.7613196, z: 16.268135}
+  - {x: 7.858948, y: 4.6710415, z: 15.72026}
+  - {x: 8.747768, y: 4.6259027, z: 15.151584}
+  - {x: 9.722478, y: 4.535625, z: 14.550718}
+  - {x: 10.790868, y: 4.490486, z: 14.153997}
+  - {x: 11.578353, y: 4.1502085, z: 13.119919}
+  - {x: 12.445081, y: 4.3325, z: 12.445081}
+  - {x: 13.1008, y: 4.287361, z: 11.617041}
+  - {x: 13.823955, y: 4.2196527, z: 10.756407}
+  - {x: 14.550718, y: 4.129375, z: 9.722478}
+  - {x: 15.151582, y: 4.084236, z: 8.74777}
+  - {x: 15.714461, y: 4.0165277, z: 7.856546}
+  - {x: 16.273764, y: 3.92625, z: 6.6373525}
+  - {x: 16.855356, y: 3.8585417, z: 5.7216225}
+  - {x: 17.002821, y: 3.7908332, z: 4.5117574}
+  - {x: 17.172625, y: 3.473125, z: 3.3602774}
+  - {x: 17.346998, y: 3.6779861, z: 2.380803}
+  - {x: 17.466696, y: 3.4818056, z: 1.017382}
+  - {x: 17.573591, y: 3.4974306, z: -0.12789945}
+  - {x: 17.664745, y: 3.4297223, z: -1.6406454}
+  - {x: 17.521225, y: 3.3394444, z: -3.0895274}
+  - {x: 16.988361, y: 3.2717361, z: -4.53595}
+  - {x: 16.855356, y: 3.1814582, z: -5.7216225}
+  - {x: 16.268135, y: 3.1363194, z: -6.634578}
+  - {x: 15.669568, y: 2.7960417, z: -7.788144}
+  - {x: 15.437771, y: 3.0009027, z: -8.763638}
+  - {x: 14.550719, y: 2.910625, z: -9.72248}
+  - {x: 14.153997, y: 2.8654861, z: -10.790868}
+  - {x: 13.41998, y: 2.7977777, z: -11.477174}
+  - {x: 12.4274025, y: 2.7075, z: -12.4274025}
+  - {x: 11.622215, y: 2.6623611, z: -13.089788}
+  - {x: 10.756407, y: 2.5946527, z: -13.823955}
+  - {x: 9.722478, y: 2.504375, z: -14.550718}
+  - {x: 8.74777, y: 2.4592361, z: -15.151582}
+  - {x: 7.8834286, y: 2.3915277, z: -15.718888}
+  - {x: 6.6349516, y: 2.30125, z: -16.298025}
+  - {x: 5.7216225, y: 2.2335417, z: -16.855356}
+  - {x: 4.894619, y: 2.0217361, z: -16.792894}
+  label: PARKHAUS CURB
+--- !u!1 &7880392118398257510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1667176506486890959}
+  - component: {fileID: 2082780691052465475}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1667176506486890959
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880392118398257510}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2082780691052465475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7880392118398257510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -14.217201, y: 0.6745139, z: -10.187902}
+  - {x: -13.430129, y: 1.0147917, z: -11.487317}
+  - {x: -12.4274025, y: 1.0825, z: -12.4274025}
+  - {x: -11.599114, y: 1.1502084, z: -13.100471}
+  - {x: -10.7607, y: 1.2179166, z: -13.830372}
+  - {x: -9.722478, y: 1.285625, z: -14.550718}
+  - {x: -8.747768, y: 1.3759028, z: -15.151584}
+  - {x: -7.7842813, y: 1.4210416, z: -15.78496}
+  - {x: -6.656766, y: 1.5113194, z: -16.289816}
+  - {x: -5.676227, y: 1.3064584, z: -16.552067}
+  - {x: -4.529333, y: 1.3741666, z: -16.903702}
+  - {x: -3.3412068, y: 1.7144444, z: -17.241135}
+  - {x: -1.7471285, y: 1.8047222, z: -17.41992}
+  - {x: -0.12789945, y: 1.895, z: -17.77359}
+  - {x: 1.061616, y: 1.9627084, z: -17.465242}
+  - {x: 2.3912241, y: 2.0529861, z: -17.34072}
+  - {x: 3.9087121, y: 2.1432638, z: -17.121716}
+  - {x: 5.259905, y: 1.9609722, z: -16.682085}
+  label: PARKHAUS CURB
+--- !u!1 &8191353410585011554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1750656586327320192}
+  - component: {fileID: 5929180542231097559}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_9
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1750656586327320192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8191353410585011554}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5929180542231097559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8191353410585011554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -6.8873653, y: 19.60073, z: 1.2331648}
+  - {x: -6.991144, y: 19.58771, z: -0.27053112}
+  - {x: -7.2155085, y: 19.93927, z: -0.9505578}
+  label: PARKHAUS CURB
+--- !u!1 &8205690344860558997
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7848465075837067041}
+  - component: {fileID: 4611367400576727004}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7848465075837067041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8205690344860558997}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4611367400576727004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8205690344860558997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -7.1054945, y: 6.316875, z: 1.6567695}
+  - {x: -6.9892526, y: 6.77, z: 0.2785677}
+  - {x: -7.2155085, y: 6.9392705, z: -0.9505578}
+  label: PARKHAUS CURB
+--- !u!1 &8353210511923521854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6014980381515283217}
+  - component: {fileID: 6653852880071062045}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_8
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6014980381515283217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353210511923521854}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6653852880071062045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353210511923521854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 9.827956, y: 19.77, z: 15.426684}
+  - {x: 8.307465, y: 19.77, z: 15.958625}
+  - {x: 6.6917834, y: 19.5825, z: 17.024168}
+  - {x: 5.564022, y: 19.5825, z: 17.425383}
+  label: PARKHAUS CURB
+--- !u!1 &8430912229214842025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9129214563943594413}
+  - component: {fileID: 805942530616021022}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9129214563943594413
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430912229214842025}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &805942530616021022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8430912229214842025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -1.2400911, y: 14.691875, z: -6.8862224}
+  - {x: 0.42512032, y: 14.712708, z: -6.986083}
+  - {x: 0.9505578, y: 15.064272, z: -7.2155085}
+  label: PARKHAUS CURB
+--- !u!1 &8479668431852279322
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 708947010348924344}
+  - component: {fileID: 2843722389779720768}
+  m_Layer: 10
+  m_Name: Grind_Curb_Ring_Inner_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &708947010348924344
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479668431852279322}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2843722389779720768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479668431852279322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.958625, y: 6.320283, z: 8.307465}
+  - {x: -15.713127, y: 6.4915395, z: 9.3056}
+  - {x: -15.1277075, y: 6.6646757, z: 10.174465}
+  - {x: -14.500442, y: 6.77, z: 11.028614}
+  - {x: -13.676085, y: 6.77, z: 11.8014345}
+  - {x: -12.8875065, y: 6.77, z: 12.910631}
+  - {x: -12.152155, y: 6.77, z: 13.655181}
+  - {x: -11.048804, y: 6.77, z: 14.488558}
+  - {x: -10.160192, y: 6.77, z: 15.125846}
+  - {x: -9.277335, y: 6.77, z: 15.738646}
+  - {x: -8.274753, y: 6.77, z: 16.032774}
+  - {x: -7.3815203, y: 6.77, z: 16.621592}
+  - {x: -5.938257, y: 6.77, z: 17.222675}
+  - {x: -4.6041183, y: 6.77, z: 17.399403}
+  - {x: -3.6949115, y: 6.77, z: 17.838032}
+  - {x: -2.4641788, y: 6.77, z: 18.050243}
+  - {x: -1.11882, y: 6.77, z: 18.263372}
+  - {x: 0.13262302, y: 6.77, z: 18.290098}
+  - {x: 1.622503, y: 6.77, z: 18.218899}
+  - {x: 3.1269596, y: 6.77, z: 17.932905}
+  - {x: 4.6384315, y: 6.77, z: 17.68081}
+  - {x: 5.9409833, y: 6.77, z: 17.23166}
+  - {x: 7.0031056, y: 6.77, z: 16.906994}
+  - {x: 8.031152, y: 6.77, z: 16.363518}
+  - {x: 9.643915, y: 6.77, z: 15.232181}
+  - {x: 10.697073, y: 6.77, z: 14.783308}
+  - {x: 11.498891, y: 6.77, z: 14.15946}
+  - {x: 12.419166, y: 6.77, z: 13.119808}
+  - {x: 13.183552, y: 6.77, z: 12.351107}
+  - {x: 14.142348, y: 6.77, z: 11.488233}
+  - {x: 14.7816725, y: 6.77, z: 10.699351}
+  - {x: 15.426684, y: 6.77, z: 9.827956}
+  - {x: 15.826788, y: 6.77, z: 8.852272}
+  - {x: 16.381052, y: 6.77, z: 8.017913}
+  - {x: 16.906994, y: 6.77, z: 7.0031056}
+  - {x: 17.222675, y: 6.77, z: 5.938257}
+  - {x: 17.399403, y: 6.77, z: 4.6041183}
+  - {x: 17.838032, y: 6.77, z: 3.6949115}
+  - {x: 18.050243, y: 6.77, z: 2.4641788}
+  - {x: 18.263372, y: 6.77, z: 1.11882}
+  - {x: 18.290098, y: 6.77, z: -0.13262302}
+  - {x: 18.218899, y: 6.77, z: -1.622503}
+  - {x: 17.932905, y: 6.77, z: -3.1269596}
+  - {x: 17.68081, y: 6.77, z: -4.6384315}
+  - {x: 17.23166, y: 6.77, z: -5.9409833}
+  - {x: 16.906994, y: 6.77, z: -7.0031056}
+  - {x: 16.363518, y: 6.77, z: -8.031152}
+  - {x: 15.232181, y: 6.77, z: -9.643915}
+  - {x: 14.783308, y: 6.77, z: -10.697073}
+  - {x: 14.15946, y: 6.77, z: -11.498891}
+  - {x: 13.119808, y: 6.77, z: -12.419166}
+  - {x: 12.351107, y: 6.77, z: -13.183552}
+  - {x: 11.488233, y: 6.77, z: -14.142348}
+  - {x: 10.699351, y: 6.77, z: -14.7816725}
+  - {x: 9.827956, y: 6.77, z: -15.426684}
+  - {x: 8.852272, y: 6.77, z: -15.826788}
+  - {x: 8.017913, y: 6.77, z: -16.381052}
+  - {x: 7.0031056, y: 6.77, z: -16.906994}
+  - {x: 5.938257, y: 6.77, z: -17.222675}
+  - {x: 4.6041183, y: 6.77, z: -17.399403}
+  - {x: 3.6949115, y: 6.77, z: -17.838032}
+  - {x: 2.4641788, y: 6.77, z: -18.050243}
+  - {x: 1.11882, y: 6.77, z: -18.263372}
+  - {x: -0.13262302, y: 6.77, z: -18.290098}
+  - {x: -1.622503, y: 6.77, z: -18.218899}
+  - {x: -3.1269596, y: 6.77, z: -17.932905}
+  - {x: -4.6384315, y: 6.77, z: -17.68081}
+  - {x: -5.9409833, y: 6.77, z: -17.23166}
+  - {x: -7.0031056, y: 6.77, z: -16.906994}
+  - {x: -8.031152, y: 6.77, z: -16.363518}
+  - {x: -9.643915, y: 6.77, z: -15.232181}
+  - {x: -10.697073, y: 6.77, z: -14.783308}
+  - {x: -11.498891, y: 6.77, z: -14.15946}
+  - {x: -12.419166, y: 6.77, z: -13.119808}
+  - {x: -13.183552, y: 6.77, z: -12.351107}
+  - {x: -14.142348, y: 6.77, z: -11.488233}
+  - {x: -14.831495, y: 6.848993, z: -10.629824}
+  - {x: -15.277454, y: 7.0496106, z: -9.500132}
+  - {x: -16.036434, y: 6.9437256, z: -8.79796}
+  label: PARKHAUS CURB
+--- !u!1 &8720036595358005546
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4435713076918811110}
+  - component: {fileID: 2661867046625379684}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Inner_11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4435713076918811110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8720036595358005546}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2661867046625379684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8720036595358005546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: 3.1248767, y: 21.652813, z: -6.2626853}
+  - {x: 4.4422593, y: 22.105938, z: -5.7892647}
+  - {x: 5.4051614, y: 22.342916, z: -4.578626}
+  - {x: 6.0694084, y: 22.44448, z: -3.7722743}
+  - {x: 6.617511, y: 22.397606, z: -2.7049081}
+  - {x: 7.105494, y: 22.816875, z: -1.656769}
+  - {x: 6.982343, y: 22.986145, z: -0.4576469}
+  - {x: 6.9625635, y: 23.121563, z: 0.68575263}
+  - {x: 6.7596717, y: 23.074688, z: 1.8112484}
+  - {x: 6.5061684, y: 23.527813, z: 3.174588}
+  - {x: 5.7892647, y: 23.730938, z: 4.4422593}
+  - {x: 4.5751133, y: 23.809063, z: 5.3905063}
+  - {x: 3.8048582, y: 24.103334, z: 5.9803553}
+  - {x: 2.494705, y: 24.340313, z: 6.704692}
+  - {x: 1.1396581, y: 24.509584, z: 6.9028044}
+  - {x: 0.17051528, y: 24.486145, z: 7.208704}
+  - {x: -1.1396575, y: 24.848125, z: 6.9028044}
+  - {x: -2.4949112, y: 25.05125, z: 6.704612}
+  - {x: -3.930257, y: 25.16323, z: 5.943429}
+  - {x: -5.0883484, y: 25.491356, z: 5.078118}
+  - {x: -5.972939, y: 25.728334, z: 3.835235}
+  - {x: -6.6707983, y: 25.897606, z: 2.5814886}
+  - {x: -7.105494, y: 26.066875, z: 1.6567695}
+  - {x: -6.9869447, y: 26.27, z: 0.3465246}
+  - {x: -6.9028044, y: 26.27, z: -1.1396575}
+  - {x: -6.733581, y: 26.27, z: -2.4353588}
+  label: PARKHAUS CURB
+--- !u!1 &9054442713748674005
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4395782988315929848}
+  - component: {fileID: 5449092677175613424}
+  m_Layer: 10
+  m_Name: Grind_Curb_Helix_Outer_11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4395782988315929848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9054442713748674005}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7294883748120218980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5449092677175613424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9054442713748674005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0e7abf21dcd364588281e3b55721e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DriftSkate.GrindRail
+  points:
+  - {x: -15.73507, y: 12.546042, z: 7.8069434}
+  - {x: -15.18927, y: 12.584236, z: 8.681421}
+  - {x: -14.550719, y: 12.660625, z: 9.72248}
+  - {x: -14.153997, y: 12.615487, z: 10.790868}
+  - {x: -13.41998, y: 12.547778, z: 11.477174}
+  - {x: -12.4274025, y: 12.4575, z: 12.4274025}
+  - {x: -11.622215, y: 12.412362, z: 13.089788}
+  - {x: -10.756407, y: 12.344653, z: 13.823955}
+  - {x: -9.722478, y: 12.254375, z: 14.550718}
+  - {x: -8.7760315, y: 12.186667, z: 15.456331}
+  - {x: -7.7881446, y: 11.891528, z: 15.669568}
+  - {x: -6.645923, y: 11.80125, z: 16.187101}
+  - {x: -5.7216225, y: 11.983542, z: 16.855356}
+  - {x: -4.5117574, y: 11.915833, z: 17.002821}
+  - {x: -3.342881, y: 11.848125, z: 17.247393}
+  - {x: -2.378092, y: 11.802987, z: 17.638683}
+  - {x: -1.034823, y: 11.712708, z: 17.7439}
+  - {x: 0.04263315, y: 11.645, z: 17.591196}
+  - {x: 1.6406454, y: 11.554723, z: 17.664745}
+  - {x: 3.0895274, y: 11.464445, z: 17.521225}
+  - {x: 4.5380387, y: 11.396737, z: 17.0151}
+  - {x: 5.259905, y: 11.162361, z: 16.682085}
+  label: PARKHAUS CURB
+--- !u!1 &9103669653491913959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7311108997890965852}
+  - component: {fileID: 446885025265438493}
+  - component: {fileID: 5041044049187235289}
+  m_Layer: 0
+  m_Name: Body
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7311108997890965852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103669653491913959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7053062757278896630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &446885025265438493
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103669653491913959}
+  m_Mesh: {fileID: 4300000, guid: d307082eede0ce449aa275fb1913c8c0, type: 2}
+--- !u!23 &5041044049187235289
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103669653491913959}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 7335131ecabb63a49b370d57f416068f, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
