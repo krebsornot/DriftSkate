@@ -27,6 +27,8 @@ namespace DriftSkate
         public float pushPhase = -1f;
         [Range(0, 1)] public float brake;
         [Range(0, 1)] public float airborne;
+        /// <summary>Wallride: das Board steht schraeg an der Wand, die Fuesse bleiben trotzdem drauf (kein Flip).</summary>
+        public bool onWall;
         [Range(0, 1)] public float manual;
         [Range(0, 1)] public float grind;
         [Range(0, 1)] public float bail;
@@ -207,7 +209,9 @@ namespace DriftSkate
             // Bei Flip-Tricks loesen sich die Fuesse vom Board und schweben ueber der Standposition
             float boardTilt = Vector3.Angle(board.up, stance.up);
             float boardYaw = Vector3.Angle(Vector3.ProjectOnPlane(board.forward, stance.up), stance.forward);
-            bool free = boardTilt > 35f || (airborne > 0.5f && boardYaw > 25f);
+            // (beim Wallride kippt das Board staerker als der Koerper; frueher lag der Rest mit 34 Grad knapp unter
+            // der Grenze und die Fuesse hingen erst nach ca. einer Sekunde wieder am Board)
+            bool free = !onWall && (boardTilt > 35f || (airborne > 0.5f && boardYaw > 25f));
             _feetFree = Mathf.MoveTowards(_feetFree, free && bail < 0.5f ? 1f : 0f, dt * 12f);
 
             Vector3 up = Vector3.Slerp(board.up, stance.up, _feetFree).normalized;

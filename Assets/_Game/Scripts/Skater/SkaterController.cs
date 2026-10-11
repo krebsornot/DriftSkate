@@ -1808,6 +1808,7 @@ namespace DriftSkate
                 rig.pushPhase = isLocal && s == SkaterState.Riding ? _pushPhase : -1f;
                 rig.brake = isLocal ? _brake : 0f;
                 rig.airborne = Mathf.MoveTowards(rig.airborne, wallRide ? 0.45f : air ? 1f : 0f, dt * 5f);
+                rig.onWall = wallRide;
                 rig.manual = Mathf.MoveTowards(rig.manual, isLocal && Manualing ? 1f : 0f, dt * 6f);
                 rig.grind = Mathf.MoveTowards(rig.grind, s == SkaterState.Grinding ? 1f : 0f, dt * 6f);
                 rig.bail = _bailAnim;
