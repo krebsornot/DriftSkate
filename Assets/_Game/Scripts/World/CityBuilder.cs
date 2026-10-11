@@ -115,6 +115,10 @@ namespace DriftSkate
             _roadWhite.Build(root, "RoadMarkingsWhite", Palette.White, "city_road_white");
             _roadYellow.Build(root, "RoadMarkingsYellow", Palette.Yellow, "city_road_yellow", 0.3f);
             _foam.Build(root, "Foam", Palette.White, "city_foam", 0.4f);
+            // Drift-Parkhaus statt des grossen Hauses in Block_03 (Prefab aus Resources, sonst bleibt das Haus)
+            ParkhausSite.Apply(root);
+            // Baustelle mit drehendem Kran statt des orangen Hauses gegenueber (Block_04)
+            BaustelleSite.Apply(root);
 
             foreach (var t in root.GetComponentsInChildren<Transform>(true))
             {
@@ -197,7 +201,7 @@ namespace DriftSkate
             Vector3 center = groundCenter + Vector3.up * (baseY + h * 0.5f);
             Surface wall = _detail.NextDouble() < 0.35 ? Surface.Brick : Surface.Stucco;
             Shapes.Box(parent, center, new Vector3(sx, h, sz), col, 0.5f, collider: true, name: "Building", surface: wall);
-            Shapes.Box(parent, center + Vector3.up * (h * 0.5f + 0.25f), new Vector3(sx + 0.6f, 0.5f, sz + 0.6f), Palette.Shade(col, 0.75f), 0.4f, name: "Roof", surface: Surface.Roof);
+            Shapes.Box(parent, center + Vector3.up * (h * 0.5f + 0.25f), new Vector3(sx + 0.6f, 0.5f, sz + 0.6f), Palette.Shade(col, 0.75f), 0.4f, collider: true, name: "Roof", surface: Surface.Roof);
 
             for (float y = 4.5f; y < h - 2f; y += 3.6f)
             {
@@ -222,17 +226,17 @@ namespace DriftSkate
 
             Vector3 roofTop = center + Vector3.up * (h * 0.5f + 0.5f);
             if (_rng.NextDouble() < 0.5)
-                Shapes.Part(PrimitiveType.Cylinder, parent, roofTop + new Vector3(R(-3, 3), 2.2f, R(-3, 3)), new Vector3(3f, 1.7f, 3f), Palette.Hex("A9744F"), 0.4f, name: "WaterTank");
+                Shapes.Part(PrimitiveType.Cylinder, parent, roofTop + new Vector3(R(-3, 3), 2.2f, R(-3, 3)), new Vector3(3f, 1.7f, 3f), Palette.Hex("A9744F"), 0.4f, keepCollider: true, name: "WaterTank");
             for (int i = 0; i < RI(1, 4); i++)
-                Shapes.Box(parent, roofTop + new Vector3(R(-sx * 0.35f, sx * 0.35f), 0.6f, R(-sz * 0.35f, sz * 0.35f)), new Vector3(2f, 1.2f, 1.6f), Palette.Concrete, 0.3f, name: "AC");
+                Shapes.Box(parent, roofTop + new Vector3(R(-sx * 0.35f, sx * 0.35f), 0.6f, R(-sz * 0.35f, sz * 0.35f)), new Vector3(2f, 1.2f, 1.6f), Palette.Concrete, 0.3f, collider: true, name: "AC");
             if (_rng.NextDouble() < 0.35)
             {
                 Color b = Pick(new[] { Palette.Pink, Palette.Cyan, Palette.Yellow, Palette.Lime });
                 Vector3 bp = roofTop + Vector3.up * 5f;
                 float bw = Mathf.Min(14f, faceLen * 0.8f);
-                Shapes.Box(parent, bp + street * 0.1f, Abs(along * bw + street * 0.4f + Vector3.up * 6f), b, 0.6f, emission: 0.7f, name: "Billboard");
+                Shapes.Box(parent, bp + street * 0.1f, Abs(along * bw + street * 0.4f + Vector3.up * 6f), b, 0.6f, collider: true, emission: 0.7f, name: "Billboard");
                 for (int s = -1; s <= 1; s += 2)
-                    Shapes.Box(parent, bp - Vector3.up * 3.75f + along * (s * bw * 0.3f), new Vector3(0.4f, 3.5f, 0.4f), Palette.Metal, 0.2f, name: "BillboardPole");
+                    Shapes.Box(parent, bp - Vector3.up * 3.75f + along * (s * bw * 0.3f), new Vector3(0.4f, 3.5f, 0.4f), Palette.Metal, 0.2f, collider: true, name: "BillboardPole");
             }
         }
 
@@ -355,22 +359,16 @@ namespace DriftSkate
             Floor(block, c, Palette.Concrete, Surface.PlazaTiles);
             Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 0.07f, 0), new Vector3(30f, 0.01f, 30f), Palette.Pink, 0f, name: "PlazaCircle");
             Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 0.08f, 0), new Vector3(26f, 0.01f, 26f), Palette.Concrete, 0f, name: "PlazaCircleInner", surface: Surface.PlazaTiles);
-            // Brunnen
-            var basin = Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 0.35f, 0), new Vector3(12f, 0.35f, 12f), Palette.White, 0.5f, keepCollider: false, name: "FountainBasin", surface: Surface.Concrete);
-            var mc = basin.AddComponent<MeshCollider>();
-            mc.sharedMesh = basin.GetComponent<MeshFilter>().sharedMesh;
-            Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 0.66f, 0), new Vector3(10.6f, 0.02f, 10.6f), Palette.Cyan, 0f, emission: 0.4f, name: "Water", surface: Surface.Water);
-            Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 2f, 0), new Vector3(1.4f, 2f, 1.4f), Palette.Yellow, 0.5f, keepCollider: true, name: "FountainPillar");
-            FountainTiers(block, c);
-
-            // Rund-Grind auf dem Brunnenrand
-            var pts = new List<Vector3>();
-            for (int i = 0; i <= 24; i++)
+            // Herz-Denkmal (Fynns Modell, DriftSkate → Herz-Denkmal) mit Rund-Grind; ohne gebautes Prefab der alte Brunnen
+            var monumentPrefab = Resources.Load<GameObject>(HeartMonumentPrefab);
+            GameObject monument = null;
+            if (monumentPrefab != null)
             {
-                float a = i / 24f * Mathf.PI * 2f;
-                pts.Add(c + new Vector3(Mathf.Cos(a) * 5.85f, 0.72f, Mathf.Sin(a) * 5.85f));
+                monument = Object.Instantiate(monumentPrefab, block);
+                monument.name = monumentPrefab.name;
+                monument.transform.SetPositionAndRotation(c, Quaternion.identity);
             }
-            CreateRailPath(pts, "FOUNTAIN GRIND");
+            else BuildFountain(block, c);
 
             // Kicker zum Brunnen und Rails
             for (int i = 0; i < 4; i++)
@@ -397,7 +395,40 @@ namespace DriftSkate
             dz.size = new Vector3(56f, 5f, 56f);
             dz.multiplier = 1.3f;
 
-            CreateTagSpot(block, c + new Vector3(0, 3.4f, 0.75f), Vector3.forward, standalone: false, size: new Vector2(1.6f, 1.6f));
+            var tag = CreateTagSpot(block, c + new Vector3(0, 3.4f, 0.75f), Vector3.forward, standalone: false, size: new Vector2(1.6f, 1.6f));
+            if (monument != null) MoveTagToMonument(tag, monument.transform);
+        }
+
+        /// <summary>Resources-Pfad des Herz-Denkmals auf dem Brunnenplatz.</summary>
+        public const string HeartMonumentPrefab = "Monuments/HeartMonument";
+
+        /// <summary>Graffiti-Stelle auf die Rueckseite des Herzens setzen (Kasten-Collider des Denkmals = Herz).</summary>
+        public static void MoveTagToMonument(Transform tag, Transform monument)
+        {
+            var box = monument.GetComponent<BoxCollider>();
+            if (box == null) return;
+            var local = box.center + new Vector3(0f, 0f, -(box.size.z * 0.5f + 0.04f));
+            tag.SetPositionAndRotation(monument.TransformPoint(local), monument.rotation * Quaternion.LookRotation(Vector3.back));
+        }
+
+        /// <summary>Alter Brunnen (Becken, Wasser, Schalen) mit Rund-Grind auf dem Rand, falls das Denkmal-Prefab fehlt.</summary>
+        void BuildFountain(Transform block, Vector3 c)
+        {
+            var basin = Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 0.35f, 0), new Vector3(12f, 0.35f, 12f), Palette.White, 0.5f, keepCollider: false, name: "FountainBasin", surface: Surface.Concrete);
+            var mc = basin.AddComponent<MeshCollider>();
+            mc.sharedMesh = basin.GetComponent<MeshFilter>().sharedMesh;
+            Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 0.66f, 0), new Vector3(10.6f, 0.02f, 10.6f), Palette.Cyan, 0f, emission: 0.4f, name: "Water", surface: Surface.Water);
+            Shapes.Part(PrimitiveType.Cylinder, block, c + new Vector3(0, 2f, 0), new Vector3(1.4f, 2f, 1.4f), Palette.Yellow, 0.5f, keepCollider: true, name: "FountainPillar");
+            FountainTiers(block, c);
+
+            // Rund-Grind auf dem Brunnenrand (geschlossener Ring, man kann endlos herum grinden)
+            var pts = new List<Vector3>();
+            for (int i = 0; i <= 48; i++)
+            {
+                float a = (i % 48) / 48f * Mathf.PI * 2f;
+                pts.Add(c + new Vector3(Mathf.Cos(a) * 5.85f, 0.72f, Mathf.Sin(a) * 5.85f));
+            }
+            CreateRailPath(pts, "FOUNTAIN GRIND");
         }
 
         // ------------------------------------------------------------------ Skatepark
@@ -738,7 +769,8 @@ namespace DriftSkate
             Color steel = Palette.Hex("E2475B"), deck = Palette.Hex("B9B3C9");
             Vector3 mid = outward * (start + length * 0.5f);
             Shapes.Box(bridge, mid + Vector3.up * deckY, Abs(outward * length + along * 22f + Vector3.up * 2.2f), deck, 0.4f, name: "Deck", surface: Surface.Concrete);
-            // Auffahrt: beginnt buendig an der Kaikante (hinter der Absperrung) und steigt bis zur Deck-Oberkante
+            // Auffahrt: beginnt buendig an der Kaikante (hinter der Absperrung) und steigt bis zur Deck-Oberkante.
+            // Mit 26 % zu steil: RoadGates blendet sie beim Laden aus und baut eine lange, sanfte Rampe (Deck wird gekuerzt).
             float quayEdge = Half + 4f, deckTop = deckY + 1.1f;
             Vector3 topFrom = outward * quayEdge, topTo = outward * start + Vector3.up * deckTop;
             Quaternion slope = Quaternion.LookRotation(topTo - topFrom);
@@ -969,7 +1001,7 @@ namespace DriftSkate
             return 0f;
         }
 
-        void CreateTagSpot(Transform parent, Vector3 center, Vector3 normal, bool standalone = false, Vector2? size = null)
+        Transform CreateTagSpot(Transform parent, Vector3 center, Vector3 normal, bool standalone = false, Vector2? size = null)
         {
             Vector2 s = size ?? new Vector2(4f, 3f);
             var go = new GameObject($"TagSpot_{_tagCount++:00}");
@@ -994,6 +1026,7 @@ namespace DriftSkate
             surface.GetComponent<Renderer>().enabled = false;
             spot.frame = frame.GetComponent<Renderer>();
             spot.surface = surface.GetComponent<Renderer>();
+            return go.transform;
         }
     }
 }

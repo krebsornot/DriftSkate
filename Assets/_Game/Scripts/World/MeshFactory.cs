@@ -159,6 +159,48 @@ namespace DriftSkate
             return mesh;
         }
 
+        /// <summary>
+        /// Hoehe einer sanften Rampe an der Stelle s (0..length): flach anrollen, gerade steigen, oben weich auslaufen.
+        /// Die beiden Uebergaenge sind Parabelboegen der Laenge 'ease', dazwischen ist die Steigung konstant
+        /// (rise / (length - ease)); die Kurve ist ohne Knick.
+        /// </summary>
+        public static float RampProfile(float s, float length, float rise, float ease)
+        {
+            ease = Mathf.Clamp(ease, 0.01f, length * 0.5f);
+            float g = rise / (length - ease); // maximale Steigung auf dem geraden Stueck
+            s = Mathf.Clamp(s, 0f, length);
+            if (s < ease) return g * s * s / (2f * ease);
+            if (s > length - ease) { float r = length - s; return rise - g * r * r / (2f * ease); }
+            return g * (s - ease * 0.5f);
+        }
+
+        /// <summary>
+        /// Platte mit dem Profil aus RampProfile: laeuft von z = 0 (Fahrflaeche auf Hoehe lift) bis z = length (lift + rise),
+        /// Breite width um x = 0, 'thickness' dick unter der Fahrflaeche. Anders als die anderen Meshes nicht zentriert:
+        /// der Ursprung liegt am Anfang der Fahrflaeche, so laesst sich die Platte direkt an eine Kante setzen.
+        /// </summary>
+        public static Mesh RampSlab(float width, float length, float rise, float ease, float thickness, float lift, float step = 3f)
+        {
+            string key = $"rampslab_{width:0.##}_{length:0.##}_{rise:0.##}_{ease:0.##}_{thickness:0.##}_{lift:0.##}";
+            if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+            int n = Mathf.Max(2, Mathf.CeilToInt(length / step));
+            float x = width * 0.5f;
+            var b = new Builder();
+            Vector3 Top(int i, float sx) { float z = length * i / n; return new Vector3(sx, lift + RampProfile(z, length, rise, ease), z); }
+            Vector3 Bot(int i, float sx) => Top(i, sx) - Vector3.up * thickness;
+            for (int i = 0; i < n; i++)
+            {
+                b.Quad(Top(i, -x), Top(i, x), Top(i + 1, x), Top(i + 1, -x), Vector3.up);
+                b.Quad(Bot(i, -x), Bot(i, x), Bot(i + 1, x), Bot(i + 1, -x), Vector3.down);
+                b.Quad(Top(i, x), Bot(i, x), Bot(i + 1, x), Top(i + 1, x), Vector3.right);
+                b.Quad(Top(i, -x), Bot(i, -x), Bot(i + 1, -x), Top(i + 1, -x), Vector3.left);
+            }
+            b.Quad(Top(0, -x), Top(0, x), Bot(0, x), Bot(0, -x), Vector3.back);
+            b.Quad(Top(n, -x), Top(n, x), Bot(n, x), Bot(n, -x), Vector3.forward);
+            return Store(key, b.Build(key));
+        }
+
         /// <summary>Viele Quader in ein Mesh zusammenfassen (fuer Details ohne Outline, z. B. Fenster, Markierungen).</summary>
         public class BoxBatch
         {
