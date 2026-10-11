@@ -86,7 +86,7 @@ Material slots: "HeadWear" (beanie and pompom, game color pink), "Accent" (small
 crew color), "HairDark" (hair strands).
 ```
 
-### 4. Kopfhoerer (`head_phones`, 30.000)
+### 4. Kopfhoerer (`head_phones`, 30.000) – eingebaut (DJ-Version)
 ```
 Style: stylized cel-shaded street fashion in the spirit of early-2000s Dreamcast graffiti-skater games
 (chunky, exaggerated, bold silhouettes), but original design, no logos or brand names.
@@ -98,10 +98,36 @@ Watertight where possible, no zero-area faces, no duplicated double-sided triang
 Head-worn piece only (no head, no face). Fits a stylized head centered at (0, 0, 1.68), about 0.24 m wide,
 0.27 m deep, crown at z 1.82. Origin at (0, 0, 1.56) (neck/head joint).
 
-Large over-ear DJ headphones on top of short spiky dark hair: thick padded headband, chunky round ear cups
-with a visible outer ring, small swivel joints, coiled cable hanging from the left cup down to about chin
-height. Material slots: "HeadWear" (headband and cups, game color cyan), "Accent" (outer ring on each cup,
-crew color), "Eyes" (black ear pads and cable), "HairDark" (hair).
+Oversized futuristic street DJ headphones over short messy spiky dark hair. Thick padded headband with a
+split double-bar design and a small raised fin on top, chunky angular ear cups (rounded hexagon shape)
+with a glowing ring around the outside of each cup, a short antenna-like stub on the left cup, small
+mechanical hinge pieces with visible screws where the band meets the cups, a coiled cable from the left
+cup hanging down to about collarbone height and ending in a chunky plug. The headphones sit slightly
+tilted, as if pushed back a bit on the head.
+Material slots: "HeadWear" (headband and cup shells, recolored in game, default cyan),
+"Accent" (glowing cup rings, fin stripe and plug tip, crew color), "Ink" (ear pads, hinges, cable,
+near black), "HairDark" (hair).
+```
+
+### 4b. Bucket Hat (`head_bucket`, 20.000, neu) – eingebaut
+```
+Style: stylized cel-shaded street fashion in the spirit of early-2000s Dreamcast graffiti-skater games
+(chunky, exaggerated, bold silhouettes), but original design, no logos or brand names.
+Clean low-to-mid poly game asset (under 4k triangles), smooth shading, no textures, flat solid colors only,
+every color on its own named material slot as listed. Real-world scale in meters, Z up, character faces -Y.
+Fits a stylized 1.80 m tall skater character in A-pose (arms hanging down ~20 degrees outward).
+Watertight where possible, no zero-area faces, no duplicated double-sided triangles.
+
+Head-worn piece only (no head, no face). Fits a stylized head centered at (0, 0, 1.68), about 0.24 m wide,
+0.27 m deep, crown at z 1.82. Origin at (0, 0, 1.56) (neck/head joint).
+
+Slouchy 90s streetwear bucket hat, worn low so the brim shades the eyes a little but the eyes stay
+visible. Soft round crown with a slight dent on top, wide downward-sloping floppy brim with a thick
+rolled edge and visible stitched rings modeled as shallow grooves, two small metal air vents on the
+sides, a thin cord hanging loosely under the chin with a chunky toggle stopper. A few strands of messy
+dark hair poke out at the sides and the back of the neck.
+Material slots: "HeadWear" (crown and brim, recolored in game), "Accent" (stitched band around the crown
+and the cord toggle, crew color), "Ink" (air vents and cord, near black), "HairDark" (hair).
 ```
 
 ---
@@ -303,10 +329,10 @@ Material slots: "Shoes" (upper, game color yellow), "Sole" (sole and toe bumper,
 
 ## Danach (Einbau)
 
-**Jacken, Hosen, Schuhe (fertig eingerichtet):**
+**Alle Slots (fertig eingerichtet):**
 1. GLB als `Art/Outfits/<katalog-id>.glb` ablegen (z. B. `jacket_lime.glb`, `pants_cargo.glb`).
 2. Slot und Id in `OUTFIT_MODELS` in `Tools/Blender/build_skater.py` eintragen, z. B. `("Pants", "pants_cargo")`
-   (Slots: `Jacket`, `Pants`, `Shoes`).
+   (Slots: `Head`, `Jacket`, `Pants`, `Shoes`). Ganz neue Teile hinten in `Catalog.Outfits` anhaengen.
 3. Figur neu exportieren:
    `blender --background --factory-startup --python Tools/Blender/build_skater.py -- Assets/_Game/Resources/Characters/Skater.fbx Logs/skater_preview.png`
    (legt pro Teil auch Vorschaubilder von vorn und hinten an).
@@ -318,4 +344,4 @@ Das Skript gewichtet die Teile automatisch nach den naechsten Koerperpunkten. `S
 Schuhe haengen starr am Fuss-Knochen (linker Schuh bei +X). Material `JacketTrim` wird bei Schuhen zu `Ink`
 (dunkle Sohle/Schnuersenkel statt Jackenfarbe), siehe `MATERIAL_REMAP`.
 
-**Kopf:** noch nicht eingerichtet, geht nach demselben Muster.
+Kopf-Teile haengen starr am Kopf-Knochen. Ist das Modell um den Ursprung gebaut, hebt das Skript es um 1,56 m an.

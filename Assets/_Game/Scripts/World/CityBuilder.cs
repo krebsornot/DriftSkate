@@ -119,10 +119,12 @@ namespace DriftSkate
             ParkhausSite.Apply(root);
             // Baustelle mit drehendem Kran statt des orangen Hauses gegenueber (Block_04)
             BaustelleSite.Apply(root);
+            // Hubschrauber-Landeplatz auf dem grossen Dach suedlich vom Herz-Denkmal (Block_12)
+            HelipadSite.Apply(root);
 
             foreach (var t in root.GetComponentsInChildren<Transform>(true))
             {
-                if (t.GetComponentInParent<Rigidbody>() == null && t.GetComponentInParent<TagSpot>() == null)
+                if (t.GetComponentInParent<Rigidbody>() == null && t.GetComponentInParent<TagSpot>() == null && t.GetComponentInParent<RotorSpin>() == null)
                     t.gameObject.isStatic = true;
             }
         }

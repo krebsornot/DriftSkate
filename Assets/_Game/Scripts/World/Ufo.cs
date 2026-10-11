@@ -8,6 +8,8 @@ namespace DriftSkate
     /// und Bremsen). Der Lichtring dreht sich, pink und cyan blinken im Wechsel, der Kern pulsiert.
     /// Position und Ablauf sind eine reine Funktion der gemeinsamen Uhr (online Server-Zeit), es wird nichts
     /// uebertragen; den Nacht-Himmel gibt online der Host vor (WeatherSystem).
+    /// Wer in den Traktorstrahl faehrt (Auto oder Board), wird 50 m hochgeschleudert und behaelt dabei sein Tempo:
+    /// geradeaus rein heisst im hohen Bogen geradeaus weiter. Das prueft jeder Rechner fuer seinen eigenen Spieler.
     /// Aufbau (Meshes, Materialien, Pivots) kommt aus dem Editor: DriftSkate → UFO.
     /// </summary>
     public class Ufo : MonoBehaviour
@@ -32,6 +34,10 @@ namespace DriftSkate
         public Renderer ringPink, ringCyan, core;
         public float scale = 1.5f;
 
+        [Header("Traktorstrahl")]
+        public float liftHeight = 50f;    // so hoch ueber den Einstiegspunkt fliegt man
+        public float beamRadius = 5.5f;   // Radius am Boden, in dem der Strahl packt
+
         float _warp;            // 0 = weg, 1 = da
         Vector3 _tilt;          // geglaettete Beschleunigung (fuer die Neigung)
         float _beamGlow;
@@ -40,11 +46,18 @@ namespace DriftSkate
         Vector3 _crane;
         bool _hasCrane;
         AudioSource _audio;
+        float _beamOn;
+        Vector3 _beamGround;
+        bool _liftedThisPass;   // pro Einfahrt nur einmal (faellt man zurueck in den Strahl, geht es nicht wieder hoch)
 
         float Period => hoverTime + travelTime;
         public float TourLength => Period * Mathf.Max(1, tour.Length);
 
         public bool Visible => _warp > 0f;
+        /// <summary>Strahl an (packt Spieler) und wo er am Boden ankommt; Lifts zaehlt das Hochschleudern (fuer Tests).</summary>
+        public bool BeamActive => _beamOn > 0.5f;
+        public Vector3 BeamGround => _beamGround;
+        public int Lifts { get; private set; }
 
         bool Night
         {
@@ -118,6 +131,7 @@ namespace DriftSkate
             float target = Night ? 1f : 0f;
             _warp = Mathf.MoveTowards(_warp, target, dt / 1.6f);
             Pose(SharedClock.Time, dt, false);
+            CheckLift();
 
             if (_audio != null)
             {
@@ -220,8 +234,61 @@ namespace DriftSkate
             UpdateBeam(p, beamOn, t);
         }
 
+        // ------------------------------------------------------------------ Traktorstrahl: hochschleudern
+
+        /// <summary>Ist der eigene Spieler im Strahl (am Boden darunter)? Dann einmal hochschleudern.</summary>
+        void CheckLift()
+        {
+            var p = PlayerAvatar.Local;
+            if (p == null) return;
+            bool car = p.Mode == PlayerMode.Driving;
+            if (!car && (p.skater.State == SkaterState.Hidden || p.skater.State == SkaterState.Hitched)) return;
+            Vector3 pos = car ? p.car.transform.position : p.skater.transform.position;
+            float flat = new Vector2(pos.x - _beamGround.x, pos.z - _beamGround.z).magnitude;
+            bool inside = _beamOn > 0.5f && flat < beamRadius && pos.y < transform.position.y - 6f && pos.y < _beamGround.y + 4f;
+            if (!inside)
+            {
+                if (flat > beamRadius + 1f || _beamOn <= 0.5f) _liftedThisPass = false;
+                return;
+            }
+            if (_liftedThisPass) return;
+            if (Lift(p, car)) { _liftedThisPass = true; Lifts++; }
+        }
+
+        /// <summary>Senkrecht so schnell, dass der hoechste Punkt liftHeight ueber dem Start liegt; waagerecht bleibt das Tempo.</summary>
+        bool Lift(PlayerAvatar p, bool car)
+        {
+            if (car)
+            {
+                var rb = p.car.Body;
+                if (rb == null) return false;
+                Vector3 flatV = Vector3.ProjectOnPlane(rb.linearVelocity, Vector3.up);
+                float g = Physics.gravity.magnitude, vy = Mathf.Sqrt(2f * g * liftHeight);
+                // Luftwiderstand (Kraft k * v²) wie beim Hydranten ausgleichen, sonst kommt das Auto nicht ganz hoch
+                float k = p.car.setup.drag, m = rb.mass;
+                if (k > 0f && m > 0f) vy = Mathf.Sqrt(m * g / k * (Mathf.Exp(2f * k * liftHeight / m) - 1f));
+                rb.linearVelocity = flatV + Vector3.up * vy;
+                rb.angularVelocity = Vector3.zero;
+                p.combo?.AddAction("ENTFUEHRT", 500f);
+            }
+            else
+            {
+                var s = p.skater;
+                var rb = s.GetComponent<Rigidbody>();
+                // im Grind ist der Koerper kinematisch: dann Tempo aus Fahrtrichtung und Grind-Tempo
+                Vector3 flatV = rb != null && !rb.isKinematic ? Vector3.ProjectOnPlane(rb.linearVelocity, Vector3.up)
+                                                               : Quaternion.Euler(0f, s.Heading, 0f) * Vector3.forward * s.Speed;
+                float vy = Mathf.Sqrt(2f * SkaterController.GravityAccel * liftHeight);
+                if (!s.Geyser(flatV + Vector3.up * vy, "ENTFUEHRT", 500f)) return false;
+            }
+            BurstPop.Show("ENTFUEHRT!", Palette.Lime, new Vector2(0f, 220f), 200f, 1.4f);
+            return true;
+        }
+
         void UpdateBeam(Vector3 p, float on, float t)
         {
+            _beamOn = on;
+            _beamGround = new Vector3(p.x, 0f, p.z);
             if (beam == null) return;
             bool active = on > 0.01f;
             if (beam.gameObject.activeSelf != active) beam.gameObject.SetActive(active);
@@ -237,6 +304,7 @@ namespace DriftSkate
                 dist = hit.distance;
                 ground = hit.point;
             }
+            _beamGround = ground;
             // Strahl-Mesh ist im Visual-Raum 1 lang (nach unten), das Visual ist skaliert
             float s = Mathf.Max(0.01f, beam.parent.lossyScale.x);
             beam.localScale = new Vector3(1f, dist / Mathf.Max(0.01f, beam.parent.lossyScale.y), 1f);

@@ -223,7 +223,7 @@ namespace DriftSkate.EditorTools
                 new[] { "head_hair", "jacket_blue", "pants_cargo", "shoes_red" },
                 new[] { "head_phones", "jacket_lime", "pants_purple", "shoes_yellow" },
                 new[] { "head_beanie_p", "jacket_white", "pants_denim", "shoes_red" },
-                new[] { "head_cap_y", "jacket_blue", "pants_purple", "shoes_white" },
+                new[] { "head_bucket", "jacket_blue", "pants_purple", "shoes_white" },
             };
             for (int i = 0; i < poses.Length; i++)
             {

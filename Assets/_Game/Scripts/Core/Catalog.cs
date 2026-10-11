@@ -172,6 +172,9 @@ namespace DriftSkate
             new OutfitDef { id = "shoes_white", name = "Sneaker Weiss", slot = OutfitSlot.Shoes, price = 0, color = Palette.White },
             new OutfitDef { id = "shoes_red", name = "Sneaker Rot", slot = OutfitSlot.Shoes, price = 7000, color = Palette.Red },
             new OutfitDef { id = "shoes_yellow", name = "Skate-Schuh Gelb", slot = OutfitSlot.Shoes, price = 11000, color = Palette.Yellow },
+
+            // Neue Teile nur hinten anhaengen: online wird der Listen-Index uebertragen (PlayerAvatar.PackOutfit)
+            new OutfitDef { id = "head_bucket", name = "Bucket Hat", slot = OutfitSlot.Head, price = 20000, color = Palette.Hex("F2A13B"), variant = 1 },
         };
 
         public static readonly List<GarageDef> Garages = new List<GarageDef>

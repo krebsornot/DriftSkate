@@ -13,7 +13,7 @@ namespace DriftSkate
             public Color head, jacket, pants, shoes, crew;
             public int headVariant;
             /// <summary>Katalog-Ids: hat die Figur ein eigenes Mesh "Jacket_&lt;id&gt;" (bzw. Pants_, Shoes_), wird das gezeigt, sonst "&lt;Slot&gt;_Default".</summary>
-            public string jacketId, pantsId, shoesId;
+            public string headId, jacketId, pantsId, shoesId;
 
             public static Outfit FromProfile(PlayerProfile p)
             {
@@ -32,7 +32,7 @@ namespace DriftSkate
                     if (def == null) continue;
                     switch (def.slot)
                     {
-                        case OutfitSlot.Head: o.head = def.color; o.headVariant = def.variant; break;
+                        case OutfitSlot.Head: o.head = def.color; o.headVariant = def.variant; o.headId = def.id; break;
                         case OutfitSlot.Jacket: o.jacket = def.color; o.jacketId = def.id; break;
                         case OutfitSlot.Pants: o.pants = def.color; o.pantsId = def.id; break;
                         case OutfitSlot.Shoes: o.shoes = def.color; o.shoesId = def.id; break;
@@ -136,10 +136,14 @@ namespace DriftSkate
             string[] shown = { "Jacket_" + o.jacketId, "Pants_" + o.pantsId, "Shoes_" + o.shoesId };
             for (int i = 0; i < slots.Length; i++)
                 if (System.Array.FindIndex(smrs, r => r.name == shown[i]) < 0) shown[i] = slots[i] + "Default";
+            // Kopf: eigenes Modell "Head_<id>" statt der alten Varianten, falls vorhanden
+            string headMesh = "Head_" + o.headId;
+            bool headModel = System.Array.FindIndex(smrs, r => r.name == headMesh) >= 0;
             foreach (var smr in smrs)
             {
                 int v = System.Array.IndexOf(variants, smr.name);
-                if (v >= 0) smr.gameObject.SetActive(v == o.headVariant);
+                if (v >= 0) smr.gameObject.SetActive(!headModel && v == o.headVariant);
+                else if (smr.name.StartsWith("Head_")) smr.gameObject.SetActive(smr.name == headMesh);
                 for (int i = 0; i < slots.Length; i++)
                     if (smr.name.StartsWith(slots[i])) smr.gameObject.SetActive(smr.name == shown[i]);
                 var mats = smr.sharedMaterials;

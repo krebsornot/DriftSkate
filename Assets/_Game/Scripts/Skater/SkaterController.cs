@@ -264,7 +264,7 @@ namespace DriftSkate
         }
 
         /// <summary>Von der Wasserfontaene eines Hydranten hochgeschleudert werden (vom Board, vom Grind oder schon in der Luft).</summary>
-        public bool Geyser(Vector3 velocity)
+        public bool Geyser(Vector3 velocity, string action = "GEYSER", float points = 300f)
         {
             if (!isLocal || (State != SkaterState.Riding && State != SkaterState.Air && State != SkaterState.Grinding)) return false;
             _rail = null;
@@ -283,7 +283,7 @@ namespace DriftSkate
             _doubleJumpUsed = false;
             _airTime = 0f;
             Manualing = false;
-            combo?.AddAction("GEYSER", 300f);
+            combo?.AddAction(action, points);
             return true;
         }
 

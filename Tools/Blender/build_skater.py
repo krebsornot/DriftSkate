@@ -368,7 +368,10 @@ body.name = "Body"
 
 garments = []
 OUTFIT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Art", "Outfits"))
-OUTFIT_MODELS = [("Jacket", "jacket_white"), ("Jacket", "jacket_orange"), ("Pants", "pants_purple"), ("Shoes", "shoes_white")]
+OUTFIT_MODELS = [("Jacket", "jacket_white"), ("Jacket", "jacket_orange"), ("Pants", "pants_purple"), ("Shoes", "shoes_white"),
+                 ("Head", "head_phones"), ("Head", "head_bucket")]
+# Kopf-Teile koennen um den Hals-Ansatz (0, 0, 1,56) gebaut sein (siehe Prompts), alles andere in Weltkoordinaten
+SLOT_OFFSET = {"Head": Vector((0, 0, 1.56))}
 # Material-Namen aus den Modellen, die im Spiel etwas anderes bedeuten sollen (Schuhe: dunkle Sohle/Schnuersenkel
 # nicht in Jackenfarbe, sondern Tinte)
 MATERIAL_REMAP = {"Shoes": {"JacketTrim": "Ink"}}
@@ -401,6 +404,12 @@ def weights_rigid_feet(o):
     groups = {side: o.vertex_groups.new(name="Foot_" + side) for side in ("L", "R")}
     for v in o.data.vertices:
         groups["L" if v.co.x > 0 else "R"].add([v.index], 1.0, 'REPLACE')
+    return 0
+
+
+def weights_rigid_head(o):
+    g = o.vertex_groups.new(name="Head")
+    g.add(list(range(len(o.data.vertices))), 1.0, 'REPLACE')
     return 0
 
 
@@ -456,9 +465,14 @@ for slot_name, jid in OUTFIT_MODELS:
         print("DRIFTSKATE fehlt:", path)
         continue
     g = import_garment(path, MATERIAL_REMAP.get(slot_name))
+    # nur verschieben, wenn das Modell wirklich um den Ursprung gebaut ist (manche bringen die Hoehe schon mit)
+    if slot_name in SLOT_OFFSET and max(v.co.z for v in g.data.vertices) < 1.0:
+        for v in g.data.vertices:
+            v.co = v.co + SLOT_OFFSET[slot_name]
     lo = [min(v.co[i] for v in g.data.vertices) for i in range(3)]
     hi = [max(v.co[i] for v in g.data.vertices) for i in range(3)]
-    loose = weights_rigid_feet(g) if slot_name == "Shoes" else weights_from_body(g)
+    loose = (weights_rigid_feet(g) if slot_name == "Shoes" else weights_rigid_head(g) if slot_name == "Head"
+             else weights_from_body(g))
     garment(slot_name + "_" + jid, [g])
     print("DRIFTSKATE garment", jid, "verts", len(g.data.vertices), "bounds", [round(x, 3) for x in lo], [round(x, 3) for x in hi], "unweighted", loose)
 
@@ -567,6 +581,8 @@ if OUT_PNG:
     for g in garments:
         for other in garments:
             other.hide_render = other is not g
+        for v in head_variants:
+            v.hide_render = g.name.startswith("Head_") or v.name != "Head_Cap"
         for view, loc, rz in (("front", (1.35, -2.35, 1.35), 30), ("back", (-1.35, 2.35, 1.35), 210)):
             cam.location = loc
             cam.rotation_euler = (math.radians(82), 0, math.radians(rz))
