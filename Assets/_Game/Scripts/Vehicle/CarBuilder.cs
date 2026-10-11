@@ -29,6 +29,8 @@ namespace DriftSkate
         /// <summary>Raketen-Booster (Resources, gebaut mit DriftSkate → Autos → Raketen-Booster bauen).</summary>
         public const string RocketRoofPrefab = "CarParts/RocketRoof", RocketRearPrefab = "CarParts/RocketRear";
         const float RocketRoofScale = 1.3f;
+        /// <summary>Dach-Rakete im Modell (unskaliert): von der Duese bis zur Nase, halbe Breite mit Flossen, tiefster Punkt des Rumpfs.</summary>
+        const float RocketRoofBack = -0.52f, RocketRoofFront = 0.74f, RocketRoofHalfWidth = 0.2f, RocketRoofBottom = 0.04f;
 
         public static Result Build(Transform root, CarDef def, Color paint, Color crew, Texture graffiti, VehicleController vc, CarDesign design = null)
         {
@@ -484,11 +486,21 @@ namespace DriftSkate
             int booster = d.parts[CarDesign.Booster];
             if (booster == 1)
             {
-                // hoechste Stelle des Dachs suchen
-                float bestT = 0f, bestY = float.MinValue;
-                for (float t = -0.35f; t <= 0.25f; t += 0.02f)
-                    if (body.TopY(t) > bestY) { bestY = body.TopY(t); bestT = t; }
-                Rocket(v, RocketRoofPrefab, new Vector3(0f, body.TopSurfaceY(bestT, 0f) - 0.01f, bestT * L), RocketRoofScale);
+                // Mitte der flachen Dachflaeche (alles bis 5 cm unter der hoechsten Stelle), nicht der hoechste Punkt:
+                // der liegt oft hinten, dann hing die Rakete uebers Heck
+                float bestY = float.MinValue;
+                for (float t = -0.35f; t <= 0.25f; t += 0.01f) bestY = Mathf.Max(bestY, body.TopY(t));
+                float tMin = 1f, tMax = -1f;
+                for (float t = -0.35f; t <= 0.25f; t += 0.01f)
+                    if (body.TopY(t) > bestY - 0.05f) { tMin = Mathf.Min(tMin, t); tMax = Mathf.Max(tMax, t); }
+                float bestT = (tMin + tMax) * 0.5f;
+                // Das Dach ist gewoelbt: ueber die ganze Laenge und Breite der Rakete messen und sie so hoch setzen,
+                // dass Nase und Duese nicht ins Dach oder in die Scheiben tauchen (frueher steckte sie halb drin)
+                float zc = bestT * L, y = float.MinValue;
+                for (float dz = RocketRoofBack; dz <= RocketRoofFront; dz += 0.05f)
+                    for (float dx = -RocketRoofHalfWidth; dx <= RocketRoofHalfWidth; dx += RocketRoofHalfWidth)
+                        y = Mathf.Max(y, body.TopSurfaceY((zc + dz * RocketRoofScale) / L, dx * RocketRoofScale) - RocketRoofBottom * RocketRoofScale);
+                Rocket(v, RocketRoofPrefab, new Vector3(0f, y + 0.01f, zc), RocketRoofScale);
             }
             else if (booster == 2)
             {
