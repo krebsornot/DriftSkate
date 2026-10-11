@@ -30,6 +30,7 @@ Die Szene `City.unity` kann man auch direkt starten. Dann läuft automatisch ein
 | Kupplung (Clutch-Kick) | Shift links | X |
 | Schalten (bei Handschaltung) | E / Q | RB / LB |
 | Aussteigen (im Stand) / Bail-Out (in Fahrt) | F | Y |
+| Raketen-Booster (Teil BOOSTER, Tank reicht 4 s) | X | B |
 | Auto zurücksetzen | R | Select |
 | **Board:** Fahren | W A S D | linker Stick |
 | Ollie | Leertaste halten + loslassen | A |

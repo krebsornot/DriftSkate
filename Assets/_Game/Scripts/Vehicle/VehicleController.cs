@@ -37,6 +37,14 @@ namespace DriftSkate
         public int Gear { get; private set; } = 1;
         public float EngineRpm { get; private set; } = 900f;
         public float SteerAngle { get; set; }
+        /// <summary>Raketen-Booster: Tankinhalt (1 = voll, reicht BoostTime Sekunden) und ob gerade geboostet wird.</summary>
+        public float BoostFuel { get; private set; } = 1f;
+        public bool Boosting { get; private set; }
+        public const float BoostTime = 4f, BoostRecharge = 8f, BoostRechargeDelay = 1f;
+        /// <summary>Ab diesem Tempo laesst der Schub nach, bei BoostFadeEnd ist er weg (km/h).</summary>
+        const float BoostFadeStart = 140f, BoostFadeEnd = 200f;
+        float _boostIdle;
+        bool _boostNeedsRelease;
         public float Throttle { get; private set; }
         public float BodySlip { get; private set; }
         public float ForwardSpeed { get; private set; }
@@ -136,6 +144,7 @@ namespace DriftSkate
             }
 
             HandleGears(inp, fwdSpeed, dt);
+            UpdateBooster(inp, dt);
 
             float throttle = inp.throttle, brake = inp.brake;
             if (setup.autoGearbox && Gear == -1)
@@ -163,6 +172,29 @@ namespace DriftSkate
             float rush = HotdogPower.CarRush;
             if (rush > 0f && hasDriver && Grounded && fwdSpeed > -0.5f && Gear >= 0 && HotdogPower.IsMine(this))
                 _rb.AddForce(t.forward * rush * setup.mass);
+        }
+
+        /// <summary>Raketen-Booster: Schub nach vorn (auch in der Luft), solange die Taste gehalten wird und Tank da ist.</summary>
+        void UpdateBooster(VehicleInput inp, float dt)
+        {
+            if (setup.boosterThrust <= 0f) { Boosting = false; BoostFuel = 1f; return; }
+            // Tank leer: erst loslassen, dann wieder zuenden (und nur, wenn etwas im Tank ist)
+            if (!inp.boost) _boostNeedsRelease = false;
+            bool want = inp.boost && hasDriver && !_boostNeedsRelease && (Boosting ? BoostFuel > 0f : BoostFuel > 0.12f);
+            Boosting = want;
+            if (Boosting)
+            {
+                BoostFuel = Mathf.Max(0f, BoostFuel - dt / BoostTime);
+                if (BoostFuel <= 0f) _boostNeedsRelease = true;
+                _boostIdle = 0f;
+                float fade = 1f - Mathf.InverseLerp(BoostFadeStart, BoostFadeEnd, SpeedKmh);
+                _rb.AddForce(transform.forward * setup.boosterThrust * fade, ForceMode.Acceleration);
+            }
+            else
+            {
+                _boostIdle += dt;
+                if (_boostIdle > BoostRechargeDelay) BoostFuel = Mathf.Min(1f, BoostFuel + dt / BoostRecharge);
+            }
         }
 
         void HandleGears(VehicleInput inp, float fwdSpeed, float dt)
@@ -495,8 +527,9 @@ namespace DriftSkate
         }
 
         /// <summary>Fuer entfernte Spieler: Zustandswerte aus dem Netzwerk.</summary>
-        public void SetRemoteState(float steer, float rpm, float throttle, bool smoking)
+        public void SetRemoteState(float steer, float rpm, float throttle, bool smoking, bool boosting = false)
         {
+            Boosting = boosting;
             SteerAngle = steer;
             EngineRpm = rpm;
             Throttle = throttle;

@@ -94,5 +94,124 @@ namespace DriftSkate.EditorTools
             }
             AssetDatabase.SaveAssets();
         }
-    }
+    
+        // ------------------------------------------------------------------ Raketen-Booster
+
+        /// <summary>
+        /// Raketen-Booster (Art/CarParts/rocket_booster.glb fuers Dach, rocket_booster_hinten.glb fuers Heck):
+        /// Rumpf ueber die Paletten-Textur, die Flammen (aus dem Dach-Modell, auch fuers Heck) als eigenes leuchtendes Teil
+        /// "Flame" mit Drehpunkt an der Duese; BoosterFlame blendet sie beim Boosten ein und laesst sie flackern.
+        /// </summary>
+        [MenuItem("DriftSkate/Autos/Raketen-Booster bauen")]
+        public static void BuildBoosters()
+        {
+            GlbBake.EnsureFolders(Root + "/Source", Root + "/Meshes", Root + "/Materials", Root + "/Textures", "Assets/_Game/Resources/CarParts");
+            var roof = Import("Art/CarParts/rocket_booster.glb");
+            var rear = Import("Art/CarParts/rocket_booster_hinten.glb");
+            var flameColors = GlbBake.ReadColors(Root + "/Source/rocket_booster.glb");
+
+            var roofInst = Object.Instantiate(roof);
+            var rearInst = Object.Instantiate(rear);
+            try
+            {
+                // Flammen aus dem Dach-Modell: Raum relativ zum Duesenende (Ursprung = Flammenansatz, Flamme zeigt nach -Z)
+                var palette = new List<Color>();
+                var flame = new GlbBake.MeshBuilder();
+                Matrix4x4 roofRoot = roofInst.transform.worldToLocalMatrix;
+                Vector3 roofAnchor = Vector3.zero;
+                foreach (var mf in roofInst.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    if (!GlbBake.CleanName(mf.name).StartsWith("Flame_")) continue;
+                    roofAnchor = roofRoot.MultiplyPoint3x4(mf.transform.position);
+                }
+                foreach (var mf in roofInst.GetComponentsInChildren<MeshFilter>(true))
+                {
+                    if (!GlbBake.CleanName(mf.name).StartsWith("Flame_")) continue;
+                    var mr = mf.GetComponent<MeshRenderer>();
+                    for (int sub = 0; sub < mf.sharedMesh.subMeshCount; sub++)
+                    {
+                        string mat = GlbBake.CleanName(mr.sharedMaterials[Mathf.Min(sub, mr.sharedMaterials.Length - 1)].name);
+                        if (!flameColors.TryGetValue(mat, out var col)) col = Color.cyan;
+                        flame.Add(mf.sharedMesh, sub, GlbBake.PaletteUv(Index(palette, col), 4),
+                                  Matrix4x4.Translate(-roofAnchor) * roofRoot * mf.transform.localToWorldMatrix);
+                    }
+                }
+                var flameMesh = GlbBake.SaveMesh(flame.ToMesh("RocketFlame"), Root + "/Meshes/RocketFlame.asset");
+                var flameTex = GlbBake.Palette(Root + "/Textures/RocketFlame_Palette.png", palette.ToArray(), 4);
+                var flameMat = GlbBake.ToonMat(Root + "/Materials/RocketFlame.mat", Color.white, flameTex, 0f, 2.6f, rim: 0f);
+
+                BakeRocket(roofInst, "RocketRoof", CarBuilder.RocketRoofPrefab, roofAnchor, flameMesh, flameMat);
+                // Heck: Flamme am Ende der Duese (Mitte der Duesenoeffnung)
+                Vector3 rearAnchor = Vector3.zero;
+                Matrix4x4 rearRoot = rearInst.transform.worldToLocalMatrix;
+                foreach (var mr in rearInst.GetComponentsInChildren<MeshRenderer>(true))
+                    if (GlbBake.CleanName(mr.name) == "NozzleLip")
+                    {
+                        var c = rearRoot.MultiplyPoint3x4(mr.bounds.center);
+                        float minZ = rearRoot.MultiplyPoint3x4(mr.bounds.min).z, maxZ = rearRoot.MultiplyPoint3x4(mr.bounds.max).z;
+                        rearAnchor = new Vector3(c.x, c.y, Mathf.Min(minZ, maxZ) + 0.01f);
+                    }
+                BakeRocket(rearInst, "RocketRear", CarBuilder.RocketRearPrefab, rearAnchor, flameMesh, flameMat);
+            }
+            finally
+            {
+                Object.DestroyImmediate(roofInst);
+                Object.DestroyImmediate(rearInst);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
+        static GameObject Import(string source)
+        {
+            if (!File.Exists(source)) throw new Exception("Modell fehlt: " + source);
+            string path = Root + "/Source/" + Path.GetFileName(source);
+            File.Copy(source, path, true);
+            AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+            var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (go == null) throw new Exception("GLB konnte nicht importiert werden: " + path);
+            return go;
+        }
+
+        static int Index(List<Color> palette, Color c)
+        {
+            int i = palette.FindIndex(x => Mathf.Abs(x.r - c.r) + Mathf.Abs(x.g - c.g) + Mathf.Abs(x.b - c.b) < 0.01f);
+            if (i >= 0) return i;
+            palette.Add(c);
+            return palette.Count - 1;
+        }
+
+        static void BakeRocket(GameObject inst, string name, string resourcePath, Vector3 flameAnchor, Mesh flameMesh, Material flameMat)
+        {
+            string glb = Root + "/Source/" + (name == "RocketRoof" ? "rocket_booster.glb" : "rocket_booster_hinten.glb");
+            var colors = GlbBake.ReadColors(glb);
+            var palette = new List<Color>();
+            var body = new GlbBake.MeshBuilder();
+            Matrix4x4 toRoot = inst.transform.worldToLocalMatrix;
+            foreach (var mf in inst.GetComponentsInChildren<MeshFilter>(true))
+            {
+                var mr = mf.GetComponent<MeshRenderer>();
+                if (mr == null || mf.sharedMesh == null || GlbBake.CleanName(mf.name).StartsWith("Flame_")) continue;
+                for (int sub = 0; sub < mf.sharedMesh.subMeshCount; sub++)
+                {
+                    string mat = GlbBake.CleanName(mr.sharedMaterials[Mathf.Min(sub, mr.sharedMaterials.Length - 1)].name);
+                    if (!colors.TryGetValue(mat, out var col)) col = Color.white;
+                    body.Add(mf.sharedMesh, sub, GlbBake.PaletteUv(Index(palette, col), 4), toRoot * mf.transform.localToWorldMatrix);
+                }
+            }
+            var root = new GameObject(name);
+            try
+            {
+                var tex = GlbBake.Palette(Root + "/Textures/" + name + "_Palette.png", palette.ToArray(), 4);
+                var mat = GlbBake.ToonMat(Root + "/Materials/" + name + ".mat", Color.white, tex, 0.15f, rim: 0.3f);
+                GlbBake.Part(root.transform, "Body", GlbBake.SaveMesh(body.ToMesh(name + "_Body"), Root + "/Meshes/" + name + "_Body.asset"), mat, true);
+                var pivot = new GameObject("Flame").transform;
+                pivot.SetParent(root.transform, false);
+                pivot.localPosition = flameAnchor;
+                GlbBake.Part(pivot, "FlameMesh", flameMesh, flameMat, false);
+                PrefabUtility.SaveAsPrefabAsset(root, "Assets/_Game/Resources/" + resourcePath + ".prefab");
+                Debug.Log($"[Booster] {name} gebaut ({palette.Count} Farben, Flamme bei {flameAnchor})");
+            }
+            finally { Object.DestroyImmediate(root); }
+        }
+}
 }

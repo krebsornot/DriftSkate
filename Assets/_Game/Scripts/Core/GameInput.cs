@@ -30,6 +30,7 @@ namespace DriftSkate
         public static InputAction UseItem { get; private set; }
         public static InputAction Eat { get; private set; }
         public static InputAction ResetCar { get; private set; }
+        public static InputAction Boost { get; private set; }
         public static InputAction LookStick { get; private set; }
         public static InputAction LookMouse { get; private set; }
         public static InputAction CameraView { get; private set; }
@@ -76,6 +77,7 @@ namespace DriftSkate
             Eat = Button("Eat", "<Keyboard>/h", "<Gamepad>/leftStickPress");     // Hotdog essen (HotdogPower)
 
             ResetCar = Button("Reset", "<Keyboard>/r", "<Gamepad>/select");
+            Boost = Button("Boost", "<Keyboard>/x", "<Gamepad>/buttonEast"); // Raketen-Booster im Auto
             Pause = Button("Pause", "<Keyboard>/escape", "<Gamepad>/start");
             NextSong = Button("NextSong", "<Keyboard>/m", "<Gamepad>/dpad/right");
             AdminPanel = Button("AdminPanel", "<Keyboard>/f1");

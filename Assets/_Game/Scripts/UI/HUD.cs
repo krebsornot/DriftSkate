@@ -25,7 +25,7 @@ namespace DriftSkate
 
         RectTransform _speedo;
         Text _speed, _gear, _angle;
-        Image _rpmFill;
+        Image _rpmFill, _boostBg, _boostFill;
 
         RectTransform _balance;
         RectTransform _balanceMarker;
@@ -143,6 +143,12 @@ namespace DriftSkate
             _rpmFill.rectTransform.offsetMin = new Vector2(3, 3);
             _rpmFill.rectTransform.offsetMax = new Vector2(0, -3);
             _angle = UIFactory.LabelAt(_speedo, "", 30, Palette.Yellow, Vector2.zero, Vector2.zero, new Vector2(0, 176), new Vector2(380, 40), TextAnchor.MiddleRight);
+            // Raketen-Booster: Tank-Leiste (nur mit Booster sichtbar)
+            _boostBg = UIFactory.Panel(_speedo, "BoostBg", Palette.Ink, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(10, -24), new Vector2(360, 18), 3f, false);
+            _boostFill = UIFactory.Panel(_boostBg.transform, "Boost", Palette.Cyan, Vector2.zero, new Vector2(0, 1), new Vector2(0, 0.5f), Vector2.zero, Vector2.zero, 0f, false);
+            _boostFill.rectTransform.offsetMin = new Vector2(3, 3);
+            _boostFill.rectTransform.offsetMax = new Vector2(0, -3);
+            UIFactory.LabelAt(_boostBg.transform, "BOOST", 16, Palette.White, new Vector2(0, 0.5f), new Vector2(0, 0.5f), new Vector2(8, 0), new Vector2(80, 18), TextAnchor.MiddleLeft);
 
             // Balance und Ollie unten mittig
             _balance = UIFactory.Rect(root, "Balance", new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 200), new Vector2(420, 34));
@@ -485,6 +491,13 @@ namespace DriftSkate
                 float rpm = Mathf.InverseLerp(0f, car.setup.maxRpm, car.EngineRpm);
                 _rpmFill.rectTransform.anchorMax = new Vector2(rpm, 1f);
                 _rpmFill.color = rpm > 0.92f ? Palette.Red : Palette.Yellow;
+                bool booster = car.setup.boosterThrust > 0f;
+                _boostBg.gameObject.SetActive(booster);
+                if (booster)
+                {
+                    _boostFill.rectTransform.anchorMax = new Vector2(car.BoostFuel, 1f);
+                    _boostFill.color = car.Boosting ? Palette.Pink : car.BoostFuel > 0.12f ? Palette.Cyan : Palette.Shade(Palette.Cyan, 0.5f);
+                }
                 var scorer = _avatar.driftScorer;
                 _angle.text = scorer.IsDrifting
                     ? Mathf.RoundToInt(scorer.CurrentAngle) + "°" + (scorer.CurrentZone != null ? "  ZONE x" + scorer.CurrentZone.multiplier.ToString("0.0") : "") +

@@ -28,12 +28,12 @@ namespace DriftSkate
     [Serializable]
     public class CarDesign
     {
-        public const int Rims = 0, Lip = 1, Skirts = 2, Fenders = 3, Wing = 4, Hood = 5, Exhaust = 6, PopUps = 7, Turbo = 8, PartCount = 9;
+        public const int Rims = 0, Lip = 1, Skirts = 2, Fenders = 3, Wing = 4, Hood = 5, Exhaust = 6, PopUps = 7, Turbo = 8, Booster = 9, PartCount = 10;
         /// <summary>So viele Teile stehen vorn in Encode(); spaetere (Turbo) kommen ganz hinten dran, damit alte Daten lesbar bleiben.</summary>
         const int LegacyParts = 8;
         public const int MaxLayers = 24;
 
-        public static readonly string[] PartNames = { "FELGEN", "FRONTLIPPE", "SCHWELLER", "VERBREITERUNG", "HECKFLUEGEL", "MOTORHAUBE", "AUSPUFF", "POP-UPS", "TURBO" };
+        public static readonly string[] PartNames = { "FELGEN", "FRONTLIPPE", "SCHWELLER", "VERBREITERUNG", "HECKFLUEGEL", "MOTORHAUBE", "AUSPUFF", "POP-UPS", "TURBO", "BOOSTER" };
         public static readonly string[][] PartOptions =
         {
             new[] { "SECHS-SPEICHE", "MESH", "DEEP DISH", "FUENF-SPEICHE", "STAHLFELGE" },
@@ -45,6 +45,7 @@ namespace DriftSkate
             new[] { "SERIE", "DOSE", "DOPPELROHR" },
             new[] { "ZU", "AUF" },
             new[] { "NEIN", "AUFBAU" },
+            new[] { "NEIN", "DACH", "HECK" },
         };
 
         /// <summary>
@@ -54,6 +55,8 @@ namespace DriftSkate
         public static bool TurboUnlocked(PlayerProfile p) => true;
 
         public bool HasTurbo => parts != null && parts.Length > Turbo && parts[Turbo] == 1;
+        /// <summary>Raketen-Booster (Dach oder Heck): Boost-Taste gibt bis zu 4 s Schub, laedt dann wieder auf.</summary>
+        public bool HasBooster => parts != null && parts.Length > Booster && parts[Booster] > 0;
 
         public List<WrapLayer> wrap = new List<WrapLayer>();
         public int[] parts = new int[PartCount];

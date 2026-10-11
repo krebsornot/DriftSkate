@@ -6,7 +6,7 @@ namespace DriftSkate
     public struct VehicleInput
     {
         public float steer, throttle, brake;
-        public bool handbrake, clutch;
+        public bool handbrake, clutch, boost;
     }
 
     /// <summary>Alle physikalischen Werte eines Autos, berechnet aus Auto-Daten + Tuning.</summary>
@@ -24,6 +24,8 @@ namespace DriftSkate
         public float maxSteer = 48f, steerSpeed = 340f;
         /// <summary>Schaltzeit-Faktor und Zusatz-Drehmoment (Aufbau-Turbo): untenrum viel, zur Abregeldrehzahl hin weniger.</summary>
         public float shiftTime = 1f, lowEndBoost = 0f, topEndBoost = 0f;
+        /// <summary>Raketen-Booster: Schub in m/s² (0 = keiner).</summary>
+        public float boosterThrust = 0f;
 
         public float peakTorque = 360f, idleRpm = 900f, maxRpm = 7500f;
         public float[] gears = { 3.3f, 2.1f, 1.5f, 1.15f, 0.92f, 0.78f };
@@ -94,6 +96,7 @@ namespace DriftSkate
                 s.lowEndBoost = 0.3f;
                 s.topEndBoost = 0.1f;
             }
+            if (design != null && design.HasBooster && !def.IsModel) s.boosterThrust = 5.5f;
             return s;
         }
     }

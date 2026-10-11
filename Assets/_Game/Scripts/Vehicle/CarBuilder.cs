@@ -26,6 +26,9 @@ namespace DriftSkate
         /// <summary>Aufbau-Turbo (Resources, gebaut mit DriftSkate → Autos → Turbo bauen).</summary>
         public const string TurboPrefab = "CarParts/TurboHood";
         const float TurboScale = 1.4f, TurboFromFront = 0.95f;
+        /// <summary>Raketen-Booster (Resources, gebaut mit DriftSkate → Autos → Raketen-Booster bauen).</summary>
+        public const string RocketRoofPrefab = "CarParts/RocketRoof", RocketRearPrefab = "CarParts/RocketRear";
+        const float RocketRoofScale = 1.3f;
 
         public static Result Build(Transform root, CarDef def, Color paint, Color crew, Texture graffiti, VehicleController vc, CarDesign design = null)
         {
@@ -477,6 +480,24 @@ namespace DriftSkate
                 }
             }
 
+            // Raketen-Booster: eine grosse Rakete laengs auf dem Dach oder zwei kleine hinten an der Stossstange
+            int booster = d.parts[CarDesign.Booster];
+            if (booster == 1)
+            {
+                // hoechste Stelle des Dachs suchen
+                float bestT = 0f, bestY = float.MinValue;
+                for (float t = -0.35f; t <= 0.25f; t += 0.02f)
+                    if (body.TopY(t) > bestY) { bestY = body.TopY(t); bestT = t; }
+                Rocket(v, RocketRoofPrefab, new Vector3(0f, body.TopSurfaceY(bestT, 0f) - 0.01f, bestT * L), RocketRoofScale);
+            }
+            else if (booster == 2)
+            {
+                float tailBot = body.BottomY(-0.49f), lampY = body.TopY(-0.49f) - 0.11f;
+                float y = tailBot + (lampY - tailBot) * 0.5f;
+                for (int side = -1; side <= 1; side += 2)
+                    Rocket(v, RocketRearPrefab, new Vector3(side * W * 0.27f, y, -0.5f * L + 0.03f), 1f);
+            }
+
             // Heckfluegel
             int wing = d.parts[CarDesign.Wing];
             if (wing > 0)
@@ -515,6 +536,18 @@ namespace DriftSkate
             if (ex == 0) Pipe(v, new Vector3(W * 0.3f, ey, ez), 0.07f);
             else if (ex == 1) Pipe(v, new Vector3(W * 0.3f, ey + 0.01f, ez - 0.03f), 0.13f);
             else { Pipe(v, new Vector3(W * 0.3f, ey, ez), 0.085f); Pipe(v, new Vector3(-W * 0.3f, ey, ez), 0.085f); }
+        }
+
+        static void Rocket(Transform v, string path, Vector3 pos, float scale)
+        {
+            var prefab = Resources.Load<GameObject>(path);
+            if (prefab == null) return;
+            var r = Object.Instantiate(prefab, v, false);
+            r.name = "Rocket";
+            r.transform.localPosition = pos;
+            r.transform.localScale = Vector3.one * scale;
+            var flame = r.transform.Find("Flame");
+            if (flame != null) flame.gameObject.AddComponent<BoosterFlame>();
         }
 
         static float FenderX(CarBody body, float z, float y)

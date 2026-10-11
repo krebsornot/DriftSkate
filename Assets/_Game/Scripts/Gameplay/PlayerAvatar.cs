@@ -45,6 +45,7 @@ namespace DriftSkate
         readonly NetworkVariable<float> _rpm = new NetworkVariable<float>(900f, R, W);
         readonly NetworkVariable<float> _throttle = new NetworkVariable<float>(0f, R, W);
         readonly NetworkVariable<bool> _smoke = new NetworkVariable<bool>(false, R, W);
+        readonly NetworkVariable<bool> _boost = new NetworkVariable<bool>(false, R, W); // Raketen-Booster brennt
         readonly NetworkVariable<byte> _skaterState = new NetworkVariable<byte>(0, R, W);
         readonly NetworkVariable<bool> _wings = new NetworkVariable<bool>(false, R, W); // Engelsfluegel am Ruecken (Easter Egg)
         readonly NetworkVariable<int> _hitch = new NetworkVariable<int>(-1, R, W); // Skitchen: Auto + Haltepunkt (Hitchable.Encode), -1 = frei
@@ -233,6 +234,7 @@ namespace DriftSkate
             _rpm.Value = car.EngineRpm;
             _throttle.Value = car.Throttle;
             _smoke.Value = car.SmokeAmount(2) > 0.35f || car.SmokeAmount(3) > 0.35f;
+            _boost.Value = car.Boosting;
             _skaterState.Value = (byte)((byte)skater.State | (skater.Fakie ? FakieBit : 0));
             var hitched = skater.HitchTarget;
             _hitch.Value = hitched != null ? hitched.Encode(skater.HitchAnchor) : -1;
@@ -265,7 +267,8 @@ namespace DriftSkate
                 throttle = GameInput.ThrottleValue,
                 brake = GameInput.BrakeValue,
                 handbrake = GameInput.Held(GameInput.Handbrake),
-                clutch = GameInput.Held(GameInput.Clutch)
+                clutch = GameInput.Held(GameInput.Clutch),
+                boost = GameInput.Held(GameInput.Boost)
             };
             if (GameInput.Pressed(GameInput.ShiftUp)) car.QueueShift(1);
             if (GameInput.Pressed(GameInput.ShiftDown)) car.QueueShift(-1);
@@ -377,7 +380,7 @@ namespace DriftSkate
 
         void UpdateRemote()
         {
-            car.SetRemoteState(_steer.Value, _rpm.Value, _throttle.Value, _smoke.Value);
+            car.SetRemoteState(_steer.Value, _rpm.Value, _throttle.Value, _smoke.Value, _boost.Value);
             car.hasDriver = Mode == PlayerMode.Driving;
             skater.RemoteState = (SkaterState)(_skaterState.Value & ~FakieBit);
             skater.RemoteFakie = (_skaterState.Value & FakieBit) != 0;
