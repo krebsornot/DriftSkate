@@ -7,8 +7,9 @@
 import bpy
 import bmesh
 import math
+import os
 import sys
-from mathutils import Vector, Matrix
+from mathutils import Vector, Matrix, kdtree
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 OUT_FBX = argv[0] if len(argv) > 0 else "Skater.fbx"
@@ -30,7 +31,7 @@ COLORS = {
     "Skin": (0.91, 0.70, 0.56, 1), "Jacket": (0.2, 0.35, 1.0, 1), "JacketTrim": (0.95, 0.95, 0.95, 1),
     "Pants": (0.18, 0.24, 0.43, 1), "Shoes": (0.96, 0.95, 0.92, 1), "Sole": (0.98, 0.98, 0.98, 1),
     "HeadWear": (0.16, 0.12, 0.1, 1), "HairDark": (0.12, 0.09, 0.08, 1), "Eyes": (0.06, 0.05, 0.08, 1),
-    "EyeWhite": (1, 1, 1, 1), "Accent": (1.0, 0.24, 0.55, 1),
+    "EyeWhite": (1, 1, 1, 1), "Accent": (1.0, 0.24, 0.55, 1), "Ink": (0.05, 0.05, 0.08, 1),
 }
 
 
@@ -345,10 +346,121 @@ for s, side in ((1, "L"), (-1, "R")):
         rigid(box("Lace", (sx, -0.095 - i * 0.035, 0.118 - i * 0.006), (0.07, 0.012, 0.008), "Sole"), "Foot_" + side)
     rigid(box("Stripe", (sx + 0.06 * s, -0.04, 0.075), (0.006, 0.14, 0.028), "Accent", rot=(0.25, 0, 0)), "Foot_" + side)
 
+# Details der Standard-Jacke (Kragen, Kapuze, Reissverschluss, Buendchen) bleiben ein eigenes Mesh: sie werden
+# ausgeblendet, wenn eine Jacke mit eigenem Modell getragen wird.
+JACKET_DETAILS = ("Collar", "Hood", "Zipper", "Cuff")
+jacket_default = [o for o in rigid_parts if o.name.split(".")[0] in JACKET_DETAILS]
+# dasselbe fuer die Standard-Schuhe
+SHOE_DETAILS = ("Shoe", "Sole", "Lace", "Stripe")
+shoes_default = [o for o in rigid_parts if o.name.split(".")[0] in SHOE_DETAILS]
+rigid_parts = [o for o in rigid_parts if o not in jacket_default and o not in shoes_default]
+
 # In den Koerper einfuegen (ein Mesh = ein SkinnedMeshRenderer)
 select_only(body, *rigid_parts, active=body)
 bpy.ops.object.join()
 body.name = "Body"
+
+# ---------------------------------------------------------------- Kleidung mit eigenem Modell (eigene Meshes, ein-/ausblendbar)
+# <Slot>_<Katalog-Id> (Jacket_, Pants_, Shoes_) aus Art/Outfits/<id>.glb (z. B. von Claude 3D Design, Prompts in Art/Prompts/kosmetik_prompts.md).
+# Die Gewichte kommen von den naechsten Koerperpunkten, so biegt sich die Kleidung genau wie der Koerper darunter.
+# In Unity schaltet SkaterBuilder pro Slot das passende Mesh ein, sonst "<Slot>_Default" (falls vorhanden)
+# bzw. die Kleidung, die schon im Koerper steckt.
+
+garments = []
+OUTFIT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Art", "Outfits"))
+OUTFIT_MODELS = [("Jacket", "jacket_white"), ("Jacket", "jacket_orange"), ("Pants", "pants_purple"), ("Shoes", "shoes_white")]
+# Material-Namen aus den Modellen, die im Spiel etwas anderes bedeuten sollen (Schuhe: dunkle Sohle/Schnuersenkel
+# nicht in Jackenfarbe, sondern Tinte)
+MATERIAL_REMAP = {"Shoes": {"JacketTrim": "Ink"}}
+
+
+def garment(name, parts):
+    select_only(*parts, active=parts[0])
+    if len(parts) > 1:
+        bpy.ops.object.join()
+    o = bpy.context.active_object
+    o.name = name
+    o.parent = arm
+    o.matrix_parent_inverse = arm.matrix_world.inverted()
+    mod = o.modifiers.new("Armature", 'ARMATURE')
+    mod.object = arm
+    garments.append(o)
+    return o
+
+
+body_tree = kdtree.KDTree(len(body.data.vertices))
+for v in body.data.vertices:
+    body_tree.insert(v.co, v.index)
+body_tree.balance()
+body_groups = {g.index: g.name for g in body.vertex_groups}
+BONE_NAMES = {b.name for b in arm.data.bones}
+
+
+def weights_rigid_feet(o):
+    # Schuhe starr an den Fuss: linker Fuss liegt bei +X
+    groups = {side: o.vertex_groups.new(name="Foot_" + side) for side in ("L", "R")}
+    for v in o.data.vertices:
+        groups["L" if v.co.x > 0 else "R"].add([v.index], 1.0, 'REPLACE')
+    return 0
+
+
+def weights_from_body(o, k=6):
+    groups = {}
+    for v in o.data.vertices:
+        acc = {}
+        for co, idx, dist in body_tree.find_n(v.co, k):
+            w = 1.0 / (dist + 0.005)
+            for g in body.data.vertices[idx].groups:
+                name = body_groups[g.group]
+                if name in BONE_NAMES and g.weight > 0.0:
+                    acc[name] = acc.get(name, 0.0) + g.weight * w
+        best = sorted(acc.items(), key=lambda kv: -kv[1])[:4]
+        total = sum(w for _, w in best)
+        for name, w in best:
+            if name not in groups:
+                groups[name] = o.vertex_groups.new(name=name)
+            groups[name].add([v.index], w / total, 'REPLACE')
+    return sum(1 for v in o.data.vertices if len(v.groups) == 0)
+
+
+def import_garment(path, remap=None):
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=path)
+    new = [o for o in bpy.data.objects if o not in before]
+    meshes = [o for o in new if o.type == 'MESH']
+    for o in meshes:
+        mw = o.matrix_world.copy()
+        o.parent = None
+        o.matrix_world = mw
+    for o in new:
+        if o.type != 'MESH':
+            bpy.data.objects.remove(o, do_unlink=True)
+    select_only(*meshes, active=meshes[0])
+    if len(meshes) > 1:
+        bpy.ops.object.join()
+    o = bpy.context.active_object
+    apply_transform(o)
+    # Material-Namen auf die gemeinsamen Materialien legen (Import haengt sonst ".001" an)
+    for i, m in enumerate(o.data.materials):
+        if m is not None:
+            name = m.name.split(".")[0]
+            o.data.materials[i] = mat((remap or {}).get(name, name))
+    return o
+
+
+garment("Jacket_Default", jacket_default)
+garment("Shoes_Default", shoes_default)
+for slot_name, jid in OUTFIT_MODELS:
+    path = os.path.join(OUTFIT_DIR, jid + ".glb")
+    if not os.path.exists(path):
+        print("DRIFTSKATE fehlt:", path)
+        continue
+    g = import_garment(path, MATERIAL_REMAP.get(slot_name))
+    lo = [min(v.co[i] for v in g.data.vertices) for i in range(3)]
+    hi = [max(v.co[i] for v in g.data.vertices) for i in range(3)]
+    loose = weights_rigid_feet(g) if slot_name == "Shoes" else weights_from_body(g)
+    garment(slot_name + "_" + jid, [g])
+    print("DRIFTSKATE garment", jid, "verts", len(g.data.vertices), "bounds", [round(x, 3) for x in lo], [round(x, 3) for x in hi], "unweighted", loose)
 
 # ---------------------------------------------------------------- Kopf-Varianten (eigene Meshes, ein-/ausblendbar)
 
@@ -416,7 +528,7 @@ print("DRIFTSKATE body verts:", len(body.data.vertices), "variants:", [v.name fo
 
 # ---------------------------------------------------------------- Export
 
-select_only(arm, body, *head_variants, active=arm)
+select_only(arm, body, *head_variants, *garments, active=arm)
 bpy.ops.export_scene.fbx(
     filepath=OUT_FBX, use_selection=True, object_types={'ARMATURE', 'MESH'},
     apply_scale_options='FBX_SCALE_ALL', axis_forward='-Z', axis_up='Y', bake_space_transform=False,
@@ -450,3 +562,13 @@ if OUT_PNG:
     scene.render.filepath = OUT_PNG
     bpy.ops.render.render(write_still=True)
     print("DRIFTSKATE preview", OUT_PNG)
+    # je Kleidungs-Modell ein Bild von vorn und eins von hinten
+    base, ext = os.path.splitext(OUT_PNG)
+    for g in garments:
+        for other in garments:
+            other.hide_render = other is not g
+        for view, loc, rz in (("front", (1.35, -2.35, 1.35), 30), ("back", (-1.35, 2.35, 1.35), 210)):
+            cam.location = loc
+            cam.rotation_euler = (math.radians(82), 0, math.radians(rz))
+            scene.render.filepath = base + "_" + g.name + "_" + view + ext
+            bpy.ops.render.render(write_still=True)

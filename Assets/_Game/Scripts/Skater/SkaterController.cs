@@ -198,6 +198,9 @@ namespace DriftSkate
 
         // Sturz / Bail-Out
         float _bailTimer;
+        // Ins Wasser gefallen: treibt auf der Oberflaeche (WaterSurface), dann zurueck auf den letzten festen Boden
+        bool _swimming;
+        float _wakeTimer;
         bool _bailOutLanding, _landPromptHit, _ollieLock, _manualLock, _steerLock, _revertLock;
         /// <summary>
         /// Grab (K / RB) ist in der Luft Grab, am Boden Revert. Ein Grab-Druck kurz vor der Landung kommt oft erst nach
@@ -384,6 +387,7 @@ namespace DriftSkate
             float dt = Time.fixedDeltaTime;
             if (State == SkaterState.Walking || State == SkaterState.Riding) CarryOnMovingGround();
             _climbGrabCooldown = Mathf.Max(0f, _climbGrabCooldown - dt);
+            CheckWater();
             switch (State)
             {
                 case SkaterState.Riding: StepRiding(dt); break;
@@ -611,7 +615,7 @@ namespace DriftSkate
             if (_grindHeld && TryStartGrind()) return;
 
             _safeTimer += dt;
-            if (_safeTimer > 1f) { _safeTimer = 0f; _lastSafePos = _rb.position; }
+            if (_safeTimer > 1f) { _safeTimer = 0f; if (_rb.position.y > WaterSurface.Level + 1f) _lastSafePos = _rb.position; } // nicht im Wasser merken
         }
 
         void Pop(Vector3 normal, float popSpeed)
@@ -723,7 +727,7 @@ namespace DriftSkate
             }
 
             _safeTimer += dt;
-            if (_safeTimer > 1f) { _safeTimer = 0f; _lastSafePos = _rb.position; }
+            if (_safeTimer > 1f) { _safeTimer = 0f; if (_rb.position.y > WaterSurface.Level + 1f) _lastSafePos = _rb.position; } // nicht im Wasser merken
 
             // Gegen eine Leiter laufen: greifen (nicht oben am Ausstieg, dort mit F / Y)
             if (_move.y > 0.5f && _climbGrabCooldown <= 0f)
@@ -1666,10 +1670,44 @@ namespace DriftSkate
             BailedEvent?.Invoke(reason);
         }
 
+        /// <summary>Unter dem Wasserspiegel: Platscher, Sturz, ein paar Sekunden treiben (StepBailed), dann zurueck.</summary>
+        void CheckWater()
+        {
+            if (_swimming || WaterSurface.Instance == null || _rb.isKinematic) return;
+            if (State == SkaterState.Hidden || State == SkaterState.Hitched || State == SkaterState.Climbing || State == SkaterState.Grinding) return;
+            Vector3 p = _rb.position;
+            if (p.y > WaterSurface.Level + 1f) return;
+            float wl = WaterSurface.HeightAt(p);
+            if (p.y >= wl - 0.25f) return;
+            float strength = Mathf.Clamp01(-_rb.linearVelocity.y / 8f + 0.3f);
+            if (State != SkaterState.Bailed) Bail("BADEN GEGANGEN");
+            _swimming = true;
+            _bailTimer = Mathf.Max(_bailTimer, 2.6f);
+            WaterSurface.Splash(p, strength, false);
+        }
+
         void StepBailed(float dt)
         {
             _bailTimer -= dt;
             Vector3 v = _rb.linearVelocity;
+            if (_swimming)
+            {
+                // Treiben: zur Oberflaeche federn (schaukelt mit den Wellen), seitlich ausrollen, Kielwasser
+                Vector3 p = _rb.position;
+                float wl = WaterSurface.HeightAt(p) - 0.15f;
+                v.y += ((wl - p.y) * 10f - v.y * 4f) * dt;
+                v.x *= 1f - 2.5f * dt;
+                v.z *= 1f - 2.5f * dt;
+                _rb.linearVelocity = v;
+                _wakeTimer -= dt;
+                if (_wakeTimer <= 0f) { _wakeTimer = 0.25f; WaterSurface.Wake(p, 1.5f, 0.25f); }
+                if (_bailTimer <= 0f)
+                {
+                    _swimming = false;
+                    Place(_lastSafePos + Vector3.up * 0.5f, Heading);
+                }
+                return;
+            }
             if (ProbeGround(out RaycastHit hit, 0.1f))
             {
                 v = Vector3.MoveTowards(Vector3.ProjectOnPlane(v, hit.normal), Vector3.zero, 12f * dt);

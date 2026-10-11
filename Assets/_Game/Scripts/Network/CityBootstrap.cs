@@ -31,6 +31,8 @@ namespace DriftSkate
             var weather = new GameObject("Weather");
             weather.AddComponent<WeatherSystem>();
             weather.AddComponent<PlanarReflection>();
+            // Wasser rund um die Stadt: Wellen, Kraeuselungen, Auftrieb, Bootsrampe am West-Kai
+            WaterSurface.Spawn();
             // Hydranten zum Umfahren (Wasserfontaene schleudert aufs Dach)
             FireHydrant.Setup();
             // Stoner-NPCs mit Sofa am Platz (nur Deko, auf jedem Rechner gleich)

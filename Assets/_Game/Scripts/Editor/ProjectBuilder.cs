@@ -247,6 +247,7 @@ namespace DriftSkate.EditorTools
 
             var trail = new Material(fxShader) { name = "TrailMat" };
             PersistAsset(trail, Root + "/Resources/TrailMat.mat");
+            WaterAssets.CreateMaterials();
         }
 
         static Texture2D CreateSmokeTexture()

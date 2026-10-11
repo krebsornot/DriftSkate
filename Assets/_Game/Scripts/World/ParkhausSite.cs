@@ -35,6 +35,7 @@ namespace DriftSkate
                 || (Mathf.Abs(Mathf.Abs(p.x - c.x) - Gate) < GateHalf && p.z - c.z > 0f && p.z - c.z < Half + 5f);
 
             var (removed, cut) = CityPlots.Clear(cityRoot, block, Inside, area);
+            CityPlots.SinkSidewalk(block, new Rect(c.x - Half - Margin, c.z - Half - Margin, 2f * (Half + Margin), 2f * (Half + Margin)));
 
             var inst = Object.Instantiate(prefab, block);
             inst.name = prefab.name;

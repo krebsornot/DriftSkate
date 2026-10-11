@@ -12,6 +12,8 @@ namespace DriftSkate
         {
             public Color head, jacket, pants, shoes, crew;
             public int headVariant;
+            /// <summary>Katalog-Ids: hat die Figur ein eigenes Mesh "Jacket_&lt;id&gt;" (bzw. Pants_, Shoes_), wird das gezeigt, sonst "&lt;Slot&gt;_Default".</summary>
+            public string jacketId, pantsId, shoesId;
 
             public static Outfit FromProfile(PlayerProfile p)
             {
@@ -31,9 +33,9 @@ namespace DriftSkate
                     switch (def.slot)
                     {
                         case OutfitSlot.Head: o.head = def.color; o.headVariant = def.variant; break;
-                        case OutfitSlot.Jacket: o.jacket = def.color; break;
-                        case OutfitSlot.Pants: o.pants = def.color; break;
-                        case OutfitSlot.Shoes: o.shoes = def.color; break;
+                        case OutfitSlot.Jacket: o.jacket = def.color; o.jacketId = def.id; break;
+                        case OutfitSlot.Pants: o.pants = def.color; o.pantsId = def.id; break;
+                        case OutfitSlot.Shoes: o.shoes = def.color; o.shoesId = def.id; break;
                     }
                 }
                 return o;
@@ -129,10 +131,17 @@ namespace DriftSkate
             model.name = "Model";
 
             string[] variants = { "Head_Hair", "Head_Cap", "Head_Beanie", "Head_Phones" };
-            foreach (var smr in model.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+            var smrs = model.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            string[] slots = { "Jacket_", "Pants_", "Shoes_" };
+            string[] shown = { "Jacket_" + o.jacketId, "Pants_" + o.pantsId, "Shoes_" + o.shoesId };
+            for (int i = 0; i < slots.Length; i++)
+                if (System.Array.FindIndex(smrs, r => r.name == shown[i]) < 0) shown[i] = slots[i] + "Default";
+            foreach (var smr in smrs)
             {
                 int v = System.Array.IndexOf(variants, smr.name);
                 if (v >= 0) smr.gameObject.SetActive(v == o.headVariant);
+                for (int i = 0; i < slots.Length; i++)
+                    if (smr.name.StartsWith(slots[i])) smr.gameObject.SetActive(smr.name == shown[i]);
                 var mats = smr.sharedMaterials;
                 for (int i = 0; i < mats.Length; i++) mats[i] = CharacterMaterial(mats[i] != null ? mats[i].name : "", o);
                 smr.sharedMaterials = mats;
@@ -200,6 +209,7 @@ namespace DriftSkate
             if (name.StartsWith("HairDark")) return ToonMaterials.Get(Palette.Hex("2A1E1A"), line, false);
             if (name.StartsWith("EyeWhite")) return ToonMaterials.Get(Palette.White, 0f, false, 0.5f);
             if (name.StartsWith("Eyes")) return ToonMaterials.Get(Palette.Ink, 0f, false);
+            if (name.StartsWith("Ink")) return ToonMaterials.Get(Palette.Ink, line, false);
             return ToonMaterials.Get(Palette.Concrete, line, false);
         }
 

@@ -53,6 +53,7 @@ namespace DriftSkate
                 tag.transform.SetPositionAndRotation(c + TagLocal, Quaternion.LookRotation(Vector3.left));
                 tag.transform.localScale = Vector3.one * 0.75f;
             });
+            CityPlots.SinkSidewalk(block, new Rect(c.x - West, c.z - HalfZ, West + East, 2f * HalfZ));
 
             var inst = Object.Instantiate(prefab, block);
             inst.name = prefab.name;

@@ -52,6 +52,60 @@ namespace DriftSkate
             return (kill.Count, cut);
         }
 
+        const string SidewalkPiece = "SidewalkCut";
+
+        /// <summary>
+        /// Der Gehweg-Quader des Blocks (Oberkante 0,18 m) liegt genau auf Hoehe des Bodens der neuen Modelle, das flimmert
+        /// (Z-Fighting). Darum wird sein Bild durch Streifen um das Grundstueck ersetzt, unter dem Grundstueck liegt ein
+        /// um 'sink' abgesenktes Stueck (falls das Modell den Boden nicht ganz abdeckt, entsteht dort kein Loch).
+        /// Der Collider des Gehwegs bleibt unveraendert. Mehrfach ausfuehren ist harmlos.
+        /// </summary>
+        public static int SinkSidewalk(Transform block, Rect plot, float sink = 0.06f)
+        {
+            var old = new List<GameObject>();
+            foreach (Transform t in block) if (t.name == SidewalkPiece) old.Add(t.gameObject);
+            foreach (var g in old) { g.SetActive(false); Shapes.DestroySafe(g); }
+
+            int built = 0;
+            foreach (Transform t in block)
+            {
+                if (t.name != "Sidewalk") continue;
+                var r = t.GetComponent<MeshRenderer>();
+                if (r == null) continue;
+                var b = new Bounds(t.position, t.lossyScale); // Einheitswuerfel, Renderer kann schon aus sein
+                var walk = Rect.MinMaxRect(b.min.x, b.min.z, b.max.x, b.max.z);
+                float x0 = Mathf.Max(plot.xMin, walk.xMin), x1 = Mathf.Min(plot.xMax, walk.xMax);
+                float z0 = Mathf.Max(plot.yMin, walk.yMin), z1 = Mathf.Min(plot.yMax, walk.yMax);
+                if (x0 >= x1 || z0 >= z1) continue;
+
+                void Piece(float ax, float az, float bx, float bz, float top)
+                {
+                    if (bx - ax < 0.01f || bz - az < 0.01f) return;
+                    var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    go.name = SidewalkPiece;
+                    Shapes.RemoveCollider(go);
+                    go.transform.SetParent(block, false);
+                    go.transform.position = new Vector3((ax + bx) * 0.5f, (b.min.y + top) * 0.5f, (az + bz) * 0.5f);
+                    go.transform.localScale = new Vector3(bx - ax, top - b.min.y, bz - az);
+                    var pr = go.GetComponent<MeshRenderer>();
+                    pr.sharedMaterials = r.sharedMaterials;
+                    pr.shadowCastingMode = r.shadowCastingMode;
+                    pr.receiveShadows = r.receiveShadows;
+                    go.layer = t.gameObject.layer;
+                    go.isStatic = t.gameObject.isStatic;
+                    built++;
+                }
+                float y = b.max.y;
+                Piece(walk.xMin, walk.yMin, walk.xMax, z0, y);   // Sued
+                Piece(walk.xMin, z1, walk.xMax, walk.yMax, y);   // Nord
+                Piece(walk.xMin, z0, x0, z1, y);                 // West
+                Piece(x1, z0, walk.xMax, z1, y);                 // Ost
+                Piece(x0, z0, x1, z1, y - sink);                 // unter dem Modell, abgesenkt
+                r.enabled = false;
+            }
+            return built;
+        }
+
         /// <summary>Kopie ohne die Dreiecke, deren Mitte in 'area' liegt (Rest kompakt, Normalen/UVs bleiben).</summary>
         public static Mesh Cut(Mesh src, Bounds area, out int removed)
         {

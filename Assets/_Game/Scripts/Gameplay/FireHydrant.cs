@@ -11,6 +11,9 @@ namespace DriftSkate
     /// Wer hineinfaehrt, wird hausdachhoch geschleudert und landet auf dem naechsten Dach (die Flugbahn zielt auf einen Punkt
     /// ein Stueck hinter der Dachkante); ohne Dach in der Naehe geht es einfach gerade hoch.
     /// Nach 10 s versiegt das Wasser, nach weiteren 25 s steht der Hydrant wieder da.
+    /// Optik: Wassersaeule als Mesh mit eigenem Shader (Streifen rasen hoch, oben pilzfoermig aufgefaechert), von der
+    /// Spitze regnen gestreckte Tropfen herab, dazu feiner Nebel mit Regenbogen-Schimmer, am Boden Spritzer, Ringe und
+    /// eine wachsende Pfuetze; das Rauschen kommt aus WaterSound.
     /// Die Hydranten stehen schon in der City-Szene (CityProps); beim Laden der Stadt haengt Setup dieses Script an alle.
     /// Online: wer einen Hydranten umfaehrt, meldet es (Client -> Host -> alle), die Fontaene sprudelt bei allen.
     /// </summary>
@@ -32,8 +35,10 @@ namespace DriftSkate
         Vector3? _landing;
         readonly List<GameObject> _cap = new List<GameObject>();
         Collider _body;
-        ParticleSystem _jet, _splash;
-        Transform _core;
+        ParticleSystem _jet, _top, _splash, _mist;
+        Transform _core, _jetTop, _puddle;
+        AudioSource _rush;
+        float _ringTimer, _puddleSize, _groundY;
 
         /// <summary>Alle Hydranten der geladenen Stadt einrichten (Reihenfolge nach Position, auf allen Rechnern gleich).</summary>
         public static void Setup()
@@ -154,7 +159,9 @@ namespace DriftSkate
             _state = 2;
             _timer = RepairTime;
             if (_jet != null) _jet.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            if (_top != null) _top.Stop(true, ParticleSystemStopBehavior.StopEmitting);
             if (_splash != null) _splash.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            if (_mist != null) _mist.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }
 
         void Repair()
@@ -162,6 +169,7 @@ namespace DriftSkate
             _state = 0;
             foreach (var c in _cap) c.SetActive(true);
             if (_core != null) _core.gameObject.SetActive(false);
+            if (_puddle != null) _puddle.gameObject.SetActive(false);
         }
 
         /// <summary>Ziel: naechstes Dach (Punkt 4 m hinter der Kante); Fontaene reicht bis etwas ueber das Dach.</summary>
@@ -256,29 +264,30 @@ namespace DriftSkate
 
         void StartSpray()
         {
-            float h = _apex - transform.position.y;
-            if (_jet == null)
-            {
-                _jet = Water("HydrantJet", 120f, true);
-                _splash = Water("HydrantSplash", 60f, false);
-                var core = Shapes.Part(PrimitiveType.Cylinder, transform, Vector3.zero, Vector3.one, Palette.Hex("6FE0FF"), 0f, emission: 0.9f, name: "HydrantWaterCore");
-                core.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                _core = core.transform;
-            }
-            // Strahl: Startgeschwindigkeit so, dass die Tropfen bis zur Spitze kommen
-            float v0 = Mathf.Sqrt(2f * 9.81f * h);
-            var main = _jet.main;
-            main.startSpeed = new ParticleSystem.MinMaxCurve(v0 * 0.92f, v0);
-            main.startLifetime = 2f * v0 / 9.81f * 0.9f;
-            main.maxParticles = 1200;
+            if (_core == null) BuildEffects();
+            // Aufsteigende Tropfen: so schnell, dass sie bis zur Spitze kommen
+            float v0 = Mathf.Sqrt(2f * 9.81f * Mathf.Max(2f, _apex - transform.position.y));
+            var jm = _jet.main;
+            jm.startSpeed = new ParticleSystem.MinMaxCurve(v0 * 0.9f, v0 * 1.02f);
+            jm.startLifetime = new ParticleSystem.MinMaxCurve(2f * v0 / 9.81f * 0.8f, 2f * v0 / 9.81f * 1.05f);
             _jet.Play();
+            _top.Play();
             _splash.Play();
+            _mist.Play();
             _core.gameObject.SetActive(true);
             _core.localScale = new Vector3(0.45f, 0.01f, 0.45f);
             _core.localPosition = new Vector3(0f, 0.6f, 0f);
+            _puddle.gameObject.SetActive(true);
+            _puddleSize = 0.4f;
+            _ringTimer = 0f;
+            if (_rush == null) _rush = WaterSound.Rush(transform, 0.75f);
+            else if (!_rush.isPlaying) _rush.Play();
         }
 
-        /// <summary>Wassersaeule waechst schnell hoch und sinkt am Ende wieder zusammen.</summary>
+        /// <summary>
+        /// Wassersaeule waechst schnell hoch und sinkt am Ende wieder zusammen; Tropfen und Nebel haengen an ihrer Spitze.
+        /// Am Boden alle 0,3 s ein Ring, die Pfuetze waechst beim Sprudeln und trocknet danach.
+        /// </summary>
         void UpdateCore(float dt)
         {
             if (_core == null || !_core.gameObject.activeSelf) return;
@@ -287,49 +296,194 @@ namespace DriftSkate
             float cur = _core.localScale.y * 2f;
             cur = Mathf.MoveTowards(cur, target, (_state == 1 ? 60f : 25f) * dt);
             float wob = 1f + Mathf.Sin(Time.time * 23f) * 0.06f;
-            _core.localScale = new Vector3(0.32f * wob, Mathf.Max(0.005f, cur * 0.5f), 0.32f * wob);
+            _core.localScale = new Vector3(0.9f * wob, Mathf.Max(0.005f, cur * 0.5f), 0.9f * wob);
             _core.localPosition = new Vector3(0f, 0.6f + cur * 0.5f, 0f);
+            _jetTop.localPosition = new Vector3(0f, 0.6f + cur * 0.92f, 0f);
+            if (_rush != null) _rush.volume = Mathf.Clamp01(0.75f * Mathf.Clamp01(cur / 3f) * (SaveSystem.Profile != null ? SaveSystem.Profile.sfxVolume : 1f));
+
+            if (_state == 1)
+            {
+                _ringTimer -= dt;
+                if (_ringTimer <= 0f)
+                {
+                    _ringTimer = 0.3f;
+                    var ring = WaterFx.RingAt(transform.position + Vector3.up * (_groundY - transform.position.y + 0.04f), 3.8f, 0.9f, 0.45f);
+                    ring.color = new Color(0.85f, 0.97f, 1f, 1f);
+                }
+                _puddleSize = Mathf.MoveTowards(_puddleSize, 7f, 1.1f * dt);
+            }
+            else _puddleSize = Mathf.MoveTowards(_puddleSize, 0f, 0.35f * dt);
+            _puddle.localScale = new Vector3(_puddleSize, _puddleSize, 1f);
             if (_state == 2 && cur <= 0.01f) _core.gameObject.SetActive(false);
+            if (_puddleSize <= 0.01f) _puddle.gameObject.SetActive(false);
         }
 
-        ParticleSystem Water(string name, float rate, bool jet)
+        void BuildEffects()
+        {
+            // Boden unter dem Hydranten (Gehweg), fuer Pfuetze und Ringe
+            _groundY = transform.position.y;
+            if (Physics.Raycast(transform.position + Vector3.up * 1f, Vector3.down, out RaycastHit hit, 4f, ~LayerMask.GetMask("Skater", "Car", "Ignore Raycast", "Rail"), QueryTriggerInteraction.Ignore))
+                _groundY = hit.point.y;
+
+            // Wassersaeule: Mesh mit Geyser-Shader, Hoehe 2 (y -1..1) und Radius 0,5 wie der alte Zylinder, oben aufgefaechert
+            var core = new GameObject("HydrantWaterCore");
+            core.transform.SetParent(transform, false);
+            core.AddComponent<MeshFilter>().sharedMesh = ColumnMesh();
+            var mr = core.AddComponent<MeshRenderer>();
+            var geyserMat = Resources.Load<Material>("GeyserMat");
+            mr.sharedMaterial = geyserMat != null ? geyserMat : ToonMaterials.Get(Palette.Hex("6FE0FF"), 0f, false, 0.9f);
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            mr.receiveShadows = false;
+            _core = core.transform;
+
+            // Tropfen rasen von unten an der Saeule hoch (Tempo wird in StartSpray gesetzt) ...
+            _jet = Drops(transform, "HydrantJet", 240f, 5f, 0.35f, new Vector2(10f, 12f), new Vector2(0.14f, 0.3f), new Vector2(1.5f, 2f));
+            _jet.transform.localPosition = Vector3.up * 0.65f;
+            // ... und an der Spitze faechern sie auf, dort steigt auch der Nebel
+            _jetTop = new GameObject("HydrantJetTop").transform;
+            _jetTop.SetParent(transform, false);
+            _top = Drops(_jetTop, "HydrantTopDrops", 260f, 38f, 0.5f, new Vector2(1.5f, 4.5f), new Vector2(0.14f, 0.3f), new Vector2(1.3f, 2f));
+            _mist = Mist(_jetTop);
+            // Boden: flache Spritzer rund um den Hydranten
+            _splash = Drops(transform, "HydrantSplash", 80f, 72f, 0.35f, new Vector2(2.5f, 5.5f), new Vector2(0.08f, 0.18f), new Vector2(0.45f, 0.85f));
+            _splash.transform.localPosition = Vector3.up * 0.65f;
+
+            // Pfuetze: dunkle, leicht blaue Scheibe auf dem Gehweg
+            var puddle = new GameObject("HydrantPuddle");
+            puddle.transform.SetParent(transform, false);
+            puddle.transform.localPosition = Vector3.up * (_groundY - transform.position.y + 0.025f);
+            puddle.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            puddle.AddComponent<MeshFilter>().sharedMesh = WaterArt.Quad;
+            var pm = puddle.AddComponent<MeshRenderer>();
+            var puddleMat = WaterArt.FxMaterial("Puddle", WaterArt.Disc());
+            puddleMat.SetColor("_BaseColor", new Color(0.12f, 0.3f, 0.42f, 0.42f));
+            pm.sharedMaterial = puddleMat;
+            pm.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            _puddle = puddle.transform;
+            puddle.SetActive(false);
+        }
+
+        /// <summary>Tropfen als gestreckte Billboards (Richtung = Flugbahn), fallen mit Schwerkraft.</summary>
+        static ParticleSystem Drops(Transform parent, string name, float rate, float angle, float radius, Vector2 speed, Vector2 size, Vector2 life)
         {
             var go = new GameObject(name);
-            go.transform.SetParent(transform, false);
-            go.transform.localPosition = Vector3.up * 0.65f;
+            go.transform.SetParent(parent, false);
             var ps = go.AddComponent<ParticleSystem>();
             ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var main = ps.main;
             main.loop = true;
             main.playOnAwake = false;
             main.gravityModifier = 1f;
-            main.startColor = new Color(0.85f, 0.96f, 1f, 0.85f);
-            main.startSize = jet ? new ParticleSystem.MinMaxCurve(0.35f, 0.75f) : new ParticleSystem.MinMaxCurve(0.2f, 0.4f);
-            main.startSpeed = jet ? 10f : new ParticleSystem.MinMaxCurve(2f, 4f);
-            main.startLifetime = jet ? 2f : new ParticleSystem.MinMaxCurve(0.5f, 0.9f);
+            main.startColor = new Color(0.88f, 0.97f, 1f, 0.9f);
+            main.startSize = new ParticleSystem.MinMaxCurve(size.x, size.y);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(speed.x, speed.y);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(life.x, life.y);
             main.simulationSpace = ParticleSystemSimulationSpace.World;
-            main.maxParticles = jet ? 1200 : 200;
+            main.maxParticles = 1000;
             var em = ps.emission;
             em.rateOverTime = rate;
             var shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Cone;
-            shape.angle = jet ? 2.5f : 55f;
-            shape.radius = jet ? 0.15f : 0.3f;
+            shape.angle = angle;
+            shape.radius = radius;
             shape.rotation = new Vector3(-90f, 0f, 0f);
-            var size = ps.sizeOverLifetime;
-            size.enabled = true;
-            size.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, jet ? 0.7f : 1f, 1f, jet ? 1.6f : 0.5f));
             var col = ps.colorOverLifetime;
             col.enabled = true;
             var g = new Gradient();
-            g.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-                      new[] { new GradientAlphaKey(0.9f, 0f), new GradientAlphaKey(0.8f, 0.75f), new GradientAlphaKey(0f, 1f) });
+            g.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(0.8f, 0.94f, 1f), 1f) },
+                      new[] { new GradientAlphaKey(0.95f, 0f), new GradientAlphaKey(0.85f, 0.7f), new GradientAlphaKey(0f, 1f) });
+            col.color = g;
+            var r = go.GetComponent<ParticleSystemRenderer>();
+            r.sharedMaterial = WaterFx.DropMaterial;
+            r.renderMode = ParticleSystemRenderMode.Stretch;
+            r.lengthScale = 2.4f;
+            r.velocityScale = 0.05f;
+            r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            r.receiveShadows = false;
+            return ps;
+        }
+
+        /// <summary>Feiner Nebel an der Spitze: grosse weiche Puffs, schimmern leicht in Pink, Violett und Cyan.</summary>
+        static ParticleSystem Mist(Transform parent)
+        {
+            var go = new GameObject("HydrantMist");
+            go.transform.SetParent(parent, false);
+            var ps = go.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = ps.main;
+            main.loop = true;
+            main.playOnAwake = false;
+            main.gravityModifier = -0.02f;
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(1f, 0.78f, 0.92f, 0.2f), new Color(0.72f, 0.92f, 1f, 0.2f));
+            main.startSize = new ParticleSystem.MinMaxCurve(1.1f, 1.8f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.4f, 1.1f);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.4f, 2.2f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(0f, 6.28f);
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.maxParticles = 80;
+            var em = ps.emission;
+            em.rateOverTime = 14f;
+            var shape = ps.shape;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 55f;
+            shape.radius = 0.4f;
+            shape.rotation = new Vector3(-90f, 0f, 0f);
+            var size = ps.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 0.7f, 1f, 1.8f));
+            var col = ps.colorOverLifetime;
+            col.enabled = true;
+            var g = new Gradient();
+            g.SetKeys(new[] { new GradientColorKey(new Color(1f, 0.8f, 0.95f), 0f), new GradientColorKey(new Color(0.8f, 0.7f, 1f), 0.5f), new GradientColorKey(new Color(0.7f, 0.95f, 1f), 1f) },
+                      new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.25f), new GradientAlphaKey(0f, 1f) });
             col.color = g;
             var r = go.GetComponent<ParticleSystemRenderer>();
             r.sharedMaterial = Resources.Load<Material>("SmokeMat");
             r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             r.receiveShadows = false;
             return ps;
+        }
+
+        static Mesh _column;
+
+        /// <summary>Wassersaeule: y von -1 bis 1, unten Radius 0,5, in der Mitte schlanker, oben pilzfoermig breit. UV x = Winkel, y = Hoehe.</summary>
+        static Mesh ColumnMesh()
+        {
+            if (_column != null) return _column;
+            const int segs = 18, rings = 14;
+            var v = new List<Vector3>();
+            var n = new List<Vector3>();
+            var uv = new List<Vector2>();
+            var t = new List<int>();
+            for (int r = 0; r <= rings; r++)
+            {
+                float f = r / (float)rings;
+                float radius = 0.5f * (1f - 0.25f * Mathf.SmoothStep(0f, 1f, f / 0.35f) + 2.2f * Mathf.Pow(Mathf.SmoothStep(0f, 1f, (f - 0.7f) / 0.3f), 1.6f));
+                float y = -1f + 2f * f;
+                for (int sgm = 0; sgm <= segs; sgm++)
+                {
+                    float a = sgm / (float)segs * Mathf.PI * 2f;
+                    Vector3 dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
+                    v.Add(dir * radius + Vector3.up * y);
+                    n.Add(dir);
+                    uv.Add(new Vector2(sgm / (float)segs, f));
+                }
+            }
+            int w = segs + 1;
+            for (int r = 0; r < rings; r++)
+                for (int sgm = 0; sgm < segs; sgm++)
+                {
+                    int a = r * w + sgm, b = a + 1, c = a + w, d = c + 1;
+                    t.Add(a); t.Add(c); t.Add(b);
+                    t.Add(b); t.Add(c); t.Add(d);
+                }
+            _column = new Mesh { name = "HydrantColumn" };
+            _column.SetVertices(v);
+            _column.SetNormals(n);
+            _column.SetUVs(0, uv);
+            _column.SetTriangles(t, 0);
+            _column.RecalculateBounds();
+            return _column;
         }
 
         /// <summary>Der Deckel fliegt weg (lose Kopie, verschwindet nach ein paar Sekunden).</summary>
