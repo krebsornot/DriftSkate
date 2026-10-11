@@ -606,6 +606,7 @@ namespace DriftSkate
         void CyclePart(CarDesign d, int part, int dir)
         {
             int n = CarDesign.PartOptions[part].Length;
+            if (part == CarDesign.Turbo && !CarDesign.TurboUnlocked(P)) { d.parts[part] = 0; return; }
             d.parts[part] = (d.parts[part] + dir + n) % n;
             MarkDesign();
             RebuildPreview();

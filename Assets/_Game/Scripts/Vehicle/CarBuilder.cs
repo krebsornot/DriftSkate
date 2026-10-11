@@ -23,6 +23,9 @@ namespace DriftSkate
         static readonly Color LampLight = Palette.Hex("FFF4DA");
         static readonly Color TailRed = Palette.Hex("E8263E");
         static readonly Color Amber = Palette.Hex("FFA62B");
+        /// <summary>Aufbau-Turbo (Resources, gebaut mit DriftSkate → Autos → Turbo bauen).</summary>
+        public const string TurboPrefab = "CarParts/TurboHood";
+        const float TurboScale = 1.4f, TurboFromFront = 0.95f;
 
         public static Result Build(Transform root, CarDef def, Color paint, Color crew, Texture graffiti, VehicleController vc, CarDesign design = null)
         {
@@ -453,6 +456,24 @@ namespace DriftSkate
                         float slope = (body.TopY(t + 0.01f) - body.TopY(t - 0.01f)) / (0.02f * L);
                         vent.transform.localRotation = Quaternion.Euler(-Mathf.Atan(slope) * Mathf.Rad2Deg, 0f, 0f);
                     }
+                }
+            }
+
+            // Aufbau-Turbo mittig auf der Haube, hinter den Luefterschlitzen, folgt der Neigung der Haube
+            if (d.HasTurbo)
+            {
+                var prefab = Resources.Load<GameObject>(TurboPrefab);
+                if (prefab != null)
+                {
+                    float t = 0.5f - TurboFromFront / L;
+                    float slope = (body.TopY(t + 0.01f) - body.TopY(t - 0.01f)) / (0.02f * L);
+                    var turbo = Object.Instantiate(prefab, v, false);
+                    turbo.name = "Turbo";
+                    turbo.transform.localPosition = new Vector3(0f, body.TopSurfaceY(t, 0f) - 0.01f, t * L);
+                    turbo.transform.localRotation = Quaternion.Euler(-Mathf.Atan(slope) * Mathf.Rad2Deg, 0f, 0f);
+                    turbo.transform.localScale = Vector3.one * TurboScale;
+                    var wheel = turbo.transform.Find("Compressor");
+                    if (wheel != null) wheel.gameObject.AddComponent<TurboSpin>();
                 }
             }
 

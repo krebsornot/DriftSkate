@@ -72,6 +72,28 @@ for f in (0,30,60,90,120):
  phase=math.sin(f/120*2*math.pi)
  sit.key(f,pose({'Spine':[(X,5+phase*.6)],'Head':[(Y,-4+phase*1.5)]},seated))
 sit.write()
+# DJ am Pult der Rooftop-Bar (Unity: Gameplay/RooftopBarCrew.cs, steht 12 cm vor dem Spot): Decks 1,19 m ueber den Fuessen, 0,43-0,9 m vor ihr,
+# links und rechts ein Plattenteller. Leicht vorgebeugt, beide Haende auf den Tellern, rechts scratcht sie, Kopf nickt
+# im Takt (6 Schlaege in 4 s = 90 BPM), die Huefte wippt mit.
+DECK_Z, DECK_Y = 1.235, -0.42
+def dj_pose(nod=0., sway=0., scratch=0., fader=0., bounce=0.):
+ P=stand_base(rig,sp,J,lean=0.)
+ P=pose({'loc':(0,0,-bounce),'Spine':[(X,9),(Y,sway*.5)],'Chest':[(X,7),(Y,sway)],'Neck':[(X,-2)],'Head':[(X,nod),(Z,-sway*1.5)]},P)
+ P=arm_ik(rig,P,'L',Vector((.22+fader,DECK_Y-.02,DECK_Z)),(1.,.6,-.5),fingers=(-.25,-.95,-.15),palm=(0,0,-1))
+ P=arm_ik(rig,P,'R',Vector((-.23,DECK_Y+scratch,DECK_Z)),(-1.,.6,-.5),fingers=(.25,-.95,-.15),palm=(0,0,-1))
+ return pose(curl(.55,per={'Index':.2,'Middle':.3}),P)
+dja=Anim(rig,'DJ',120)
+for f in range(0,121,5):
+ beat=f/20.
+ ph=beat-math.floor(beat)
+ nod=7.*math.exp(-ph*5.)              # kurzes Nicken auf jedem Schlag
+ sway=2.5*math.sin(f/120*2*math.pi)    # langsames Wiegen ueber den ganzen Takt
+ bounce=.015*math.exp(-ph*5.)
+ # scratchen auf Schlag 2, 3, 5 und 6: Platte vor und zurueck
+ sc=.055*math.sin(ph*2*math.pi) if int(beat)%6 in (1,2,4,5) else 0.
+ fad=.04 if 50<=f<=70 else 0.
+ dja.key(f,dj_pose(nod,sway,sc,fad,bounce))
+dja.write()
 export_fbx(arm,[full],str(OUT))
 for track in arm.animation_data.nla_tracks: track.mute=False
 arm.data.pose_position='POSE'; set_frame_pose(arm,'Idle',0)
@@ -80,9 +102,11 @@ preview([full],str(PREVIEW/'Miru_preview.png'),(2.3,-4.2,1.95),(0,0,.91),58,(100
 preview([full],str(PREVIEW/'Miru_face.png'),(.18,-.90,1.77),(0,-.01,1.66),65,(900,900))
 set_frame_pose(arm,'Sitting',0)
 preview([full],str(PREVIEW/'Miru_sitting_blender.png'),(2.5,-3.5,1.65),(0,-.12,.70),60,(1000,1100))
+set_frame_pose(arm,'DJ',20)
+preview([full],str(PREVIEW/'Miru_dj_blender.png'),(2.3,-3.0,1.8),(0,-.3,1.0),55,(1000,1100))
 report={'character':'Miru','revision':2,'adult':True,'vertices':len(full.data.vertices),'triangles':sum(len(f.vertices)-2 for f in full.data.polygons),
  'bones':len(arm.data.bones),'unweighted_vertices':sum(not any(g.weight>.001 for g in v.groups) for v in full.data.vertices),
- 'animations':['Idle','Sitting'],'seat_height_m':.45,'source':str(SOURCE),'fbx':str(OUT)}
+ 'animations':['Idle','Sitting','DJ'],'seat_height_m':.45,'source':str(SOURCE),'fbx':str(OUT)}
 (PREVIEW/'validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 print('MIRU_VALIDATED',json.dumps(report))
 

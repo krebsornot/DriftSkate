@@ -119,8 +119,8 @@ namespace DriftSkate
             ParkhausSite.Apply(root);
             // Baustelle mit drehendem Kran statt des orangen Hauses gegenueber (Block_04)
             BaustelleSite.Apply(root);
-            // Hubschrauber-Landeplatz auf dem grossen Dach suedlich vom Herz-Denkmal (Block_12)
-            HelipadSite.Apply(root);
+            // Dach-Sets: Hubschrauber-Landeplatz (Block_12, suedlich vom Herz-Denkmal) und Rooftop-Bar (Block_40, Nordwesten)
+            RoofSets.ApplyAll(root);
 
             foreach (var t in root.GetComponentsInChildren<Transform>(true))
             {

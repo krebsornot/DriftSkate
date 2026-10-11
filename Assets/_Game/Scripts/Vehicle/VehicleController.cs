@@ -179,8 +179,8 @@ namespace DriftSkate
                     float groundRpm = speed / setup.wheelRadius * Ratio(Gear) * RadToRpm;
                     bool drifting = Mathf.Abs(BodySlip) > 20f && speed > 6f;
                     bool atLimiter = EngineRpm > setup.maxRpm * 0.97f && groundRpm > setup.maxRpm * 0.72f;
-                    if (Gear < maxGear && (groundRpm > setup.maxRpm * 0.93f || atLimiter)) { Gear++; _shiftTimer = 0.18f; }
-                    else if (!drifting && Gear > 1 && groundRpm < setup.maxRpm * 0.42f) { Gear--; _shiftTimer = 0.12f; }
+                    if (Gear < maxGear && (groundRpm > setup.maxRpm * 0.93f || atLimiter)) { Gear++; _shiftTimer = 0.18f * setup.shiftTime; }
+                    else if (!drifting && Gear > 1 && groundRpm < setup.maxRpm * 0.42f) { Gear--; _shiftTimer = 0.12f * setup.shiftTime; }
                 }
                 if (Gear > 0 && fwdSpeed < 0.8f && inp.brake > 0.5f && inp.throttle < 0.1f) Gear = -1;
                 else if (Gear == -1 && fwdSpeed > -0.8f && inp.throttle > 0.3f) Gear = 1;
@@ -189,7 +189,7 @@ namespace DriftSkate
             else if (_queuedShift != 0)
             {
                 Gear = Mathf.Clamp(Gear + _queuedShift, -1, maxGear);
-                _shiftTimer = 0.15f;
+                _shiftTimer = 0.15f * setup.shiftTime;
             }
             _queuedShift = 0;
         }
@@ -367,7 +367,9 @@ namespace DriftSkate
         {
             float x = rpm / setup.maxRpm;
             float d = (x - 0.68f) / 0.6f;
-            return setup.peakTorque * Mathf.Clamp(0.55f + 0.45f * (1f - d * d), 0.3f, 1f) * (Admin.Turbo ? 1.8f : 1f)
+            // Aufbau-Turbo: viel mehr Druck untenrum (Driften bei wenig Tempo), oben nur etwas
+            float turbo = 1f + Mathf.Lerp(setup.lowEndBoost, setup.topEndBoost, Mathf.Clamp01(x));
+            return setup.peakTorque * Mathf.Clamp(0.55f + 0.45f * (1f - d * d), 0.3f, 1f) * turbo * (Admin.Turbo ? 1.8f : 1f)
                    * (HotdogPower.Active && HotdogPower.IsMine(this) ? HotdogPower.TorqueFactor : 1f);
         }
 

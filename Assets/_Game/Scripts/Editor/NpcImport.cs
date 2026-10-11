@@ -66,7 +66,7 @@ namespace DriftSkate.EditorTools
         }
 
         bool ShouldLoop(string name) => name == "Idle" || name == "Vibe" ||
-            (assetPath.EndsWith("NPC_Miru.fbx", System.StringComparison.OrdinalIgnoreCase) && name == "Sitting");
+            (assetPath.EndsWith("NPC_Miru.fbx", System.StringComparison.OrdinalIgnoreCase) && (name == "Sitting" || name == "DJ"));
 
         /// <summary>"Jojo_Rig|Idle" -> "Idle"</summary>
         public static string ClipName(string take)

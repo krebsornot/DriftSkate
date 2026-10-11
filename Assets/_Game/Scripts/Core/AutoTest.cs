@@ -1232,8 +1232,8 @@ namespace DriftSkate
             Check(a.TestInteract() && a.Mode == PlayerMode.Driving, "Wieder eingestiegen (2)");
 
             // 10. Stoner-NPCs am Platz: Animationen laufen, sie lachen ueber Tricks, Jojo raucht
-            int expectedNpcs = (GameObject.Find(BusStopResidents.RootName) != null ? 8 : 6) + HotdogStand.Spawned.Count;
-            Check(StonerNpc.All.Count == expectedNpcs, $"Stoner-NPCs, Gassen-Crew, Miru, Imbiss-Verkaeufer und ggf. Haltestellen-Bewohner aufgestellt ({StonerNpc.All.Count} von {expectedNpcs})");
+            int expectedNpcs = (GameObject.Find(BusStopResidents.RootName) != null ? 8 : 6) + HotdogStand.Spawned.Count + RooftopBarCrew.Spawned.Count;
+            Check(StonerNpc.All.Count == expectedNpcs, $"Stoner-NPCs, Gassen-Crew, Miru, Imbiss-Verkaeufer, Bar-Crew und ggf. Haltestellen-Bewohner aufgestellt ({StonerNpc.All.Count} von {expectedNpcs})");
             var jojo = StonerNpc.All.Find(n => n.Id == "Jojo");
             if (jojo != null)
             {

@@ -28,7 +28,7 @@ namespace DriftSkate
         static readonly Dictionary<string, string> Specials = new Dictionary<string, string>
         {
             { "Jojo", "Smoke" }, { "Kalle", "Snack" }, { "Luna", "Vibe" }, { "Nix", "Lookout" }, { "Moe", "Count" },
-            { "Bodo", "Grill" }, { "Udo", "Grill" },
+            { "Bodo", "Grill" }, { "Udo", "Grill" }, { "Rocco", "Shake" },
         };
 
         static readonly Dictionary<string, string[]> Cheers = new Dictionary<string, string[]>
@@ -41,6 +41,7 @@ namespace DriftSkate
             { "Miru", new[] { "Hm. Gar nicht mal schlecht.", "Okay, das war cool.", "Mach weiter, ich guck zu." } },
             { "Bodo", new[] { "Hoho! Das gibt 'ne Extrawurst!", "Sauber! So wird man satt vom Zugucken.", "Junge, Junge. Nochmal!" } },
             { "Udo", new[] { "Oh. Nicht schlecht.", "Das hat Bodo noch nie hingekriegt.", "Pass auf den Senf auf, ja?" } },
+            { "Rocco", new[] { "Darauf gibt's einen aufs Haus!", "Stark. Und das ueber den Daechern.", "Nicht auf den Tresen, ja? ...Okay, doch." } },
         };
 
         static readonly Dictionary<string, string[]> Fails = new Dictionary<string, string[]>
@@ -53,6 +54,7 @@ namespace DriftSkate
             { "Miru", new[] { "Autsch. Lebst du noch?" } },
             { "Bodo", new[] { "Hoho! Erstmal 'nen Hotdog?" } },
             { "Udo", new[] { "Autsch. Hab Servietten, falls du blutest." } },
+            { "Rocco", new[] { "Uff. Ich mach dir mal ein Wasser." } },
         };
 
         Animator _anim;
@@ -302,6 +304,22 @@ namespace DriftSkate
         public int SmokeParticles => (_wisp != null ? _wisp.particleCount : 0) + (_puff != null ? _puff.particleCount : 0);
         public IEnumerable<string> ClipNames => _clips.Keys;
 
+        /// <summary>Andere Grundhaltung statt "Idle" (z. B. Miru am DJ-Pult), laeuft in Schleife.</summary>
+        public bool SetIdle(string name)
+        {
+            if (!_clips.TryGetValue(name, out var clip) || !_graph.IsValid()) return false;
+            if (_idle.IsValid())
+            {
+                _graph.Disconnect(_mixer, 0);
+                _idle.Destroy();
+            }
+            _idle = AnimationClipPlayable.Create(_graph, clip);
+            _graph.Connect(_idle, 0, _mixer, 0);
+            _idle.SetTime(Random.Range(0f, clip.length));
+            ApplyWeights();
+            return true;
+        }
+
         /// <summary>Eine Animation einblenden (danach geht es zurueck ins Idle).</summary>
         public bool Play(string name)
         {
@@ -482,6 +500,7 @@ namespace DriftSkate
                 case "Miru": return MiruTalk.NameColor;
                 case "Bodo":
                 case "Udo": return HotdogVendor.NameColor;
+                case "Rocco": return Palette.Pink;
                 default: return Palette.Pink;
             }
         }

@@ -587,7 +587,7 @@ MonoBehaviour:
   - {x: 5.990001, y: 1.27, z: 7.5000005}
   - {x: 7.385331, y: 1.27, z: 7.5}
   - {x: 8.880326, y: 1.27, z: 7.5000005}
-  label: HELIPAD RAIL
+  label: HELIPAD LEDGE
 --- !u!1 &3845661432005770341
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,4 +1420,4 @@ MonoBehaviour:
   - {x: -5.9900007, y: 1.27, z: 7.5000005}
   - {x: -4.594666, y: 1.27, z: 7.5}
   - {x: -3.0996666, y: 1.27, z: 7.5000005}
-  label: HELIPAD RAIL
+  label: HELIPAD LEDGE

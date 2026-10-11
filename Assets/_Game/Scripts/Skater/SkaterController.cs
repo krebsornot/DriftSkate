@@ -509,8 +509,11 @@ namespace DriftSkate
 
             // Lenken mit Traegheit: einlenken braucht einen Moment, man carvt statt abzuknicken
             float speed = Mathf.Abs(along);
-            float maxTurn = Mathf.Lerp(165f, 72f, Mathf.Clamp01(speed / 12f)) * (Manualing ? 0.45f : 1f) * Mathf.Lerp(0.4f, 1f, settle);
-            if (speed < 0.6f) maxTurn *= 0.7f; // im Stand umdrehen (Kickturn)
+            // Auch bei vollem Tempo noch eng genug zum Umdrehen (frueher 72 Grad/s: Wendekreis ~30 m bei Push-Tempo)
+            float maxTurn = Mathf.Lerp(165f, 115f, Mathf.Clamp01(speed / 14f)) * (Manualing ? 0.45f : 1f) * Mathf.Lerp(0.4f, 1f, settle);
+            if (speed < 0.6f && !Manualing) maxTurn = 220f * Mathf.Lerp(0.4f, 1f, settle); // im Stand umdrehen (Kickturn): flott auf der Stelle
+            // Powerslide: Board zurueckziehen (bremsen) und lenken = scharfe Kurve, dabei wird man langsamer
+            else if (_brake > 0.3f && !Manualing) maxTurn *= Mathf.Lerp(1f, 2.3f, Mathf.InverseLerp(0.3f, 1f, _brake));
             // Nach der Landung lenkt eine noch vom Spin gehaltene Taste nicht weiter (erst loslassen oder kurz warten)
             if (_steerLock && (Mathf.Abs(_move.x) < 0.2f || Time.time - _landTime > 0.35f)) _steerLock = false;
             float targetTurn = (_steerLock ? 0f : _move.x) * maxTurn;

@@ -28,10 +28,12 @@ namespace DriftSkate
     [Serializable]
     public class CarDesign
     {
-        public const int Rims = 0, Lip = 1, Skirts = 2, Fenders = 3, Wing = 4, Hood = 5, Exhaust = 6, PopUps = 7, PartCount = 8;
+        public const int Rims = 0, Lip = 1, Skirts = 2, Fenders = 3, Wing = 4, Hood = 5, Exhaust = 6, PopUps = 7, Turbo = 8, PartCount = 9;
+        /// <summary>So viele Teile stehen vorn in Encode(); spaetere (Turbo) kommen ganz hinten dran, damit alte Daten lesbar bleiben.</summary>
+        const int LegacyParts = 8;
         public const int MaxLayers = 24;
 
-        public static readonly string[] PartNames = { "FELGEN", "FRONTLIPPE", "SCHWELLER", "VERBREITERUNG", "HECKFLUEGEL", "MOTORHAUBE", "AUSPUFF", "POP-UPS" };
+        public static readonly string[] PartNames = { "FELGEN", "FRONTLIPPE", "SCHWELLER", "VERBREITERUNG", "HECKFLUEGEL", "MOTORHAUBE", "AUSPUFF", "POP-UPS", "TURBO" };
         public static readonly string[][] PartOptions =
         {
             new[] { "SECHS-SPEICHE", "MESH", "DEEP DISH", "FUENF-SPEICHE", "STAHLFELGE" },
@@ -42,7 +44,16 @@ namespace DriftSkate
             new[] { "LACK", "CARBON", "CARBON + LUFT" },
             new[] { "SERIE", "DOSE", "DOPPELROHR" },
             new[] { "ZU", "AUF" },
+            new[] { "NEIN", "AUFBAU" },
         };
+
+        /// <summary>
+        /// Aufbau-Turbo auf der Haube: schaltet schneller und zieht vor allem untenrum staerker (VehicleSetup.From).
+        /// Erst mal fuer alle frei; spaeter hinter einer Quest oder als verstecktes Easter Egg freischalten.
+        /// </summary>
+        public static bool TurboUnlocked(PlayerProfile p) => true;
+
+        public bool HasTurbo => parts != null && parts.Length > Turbo && parts[Turbo] == 1;
 
         public List<WrapLayer> wrap = new List<WrapLayer>();
         public int[] parts = new int[PartCount];
@@ -102,7 +113,7 @@ namespace DriftSkate
         public string Encode()
         {
             var bytes = new List<byte> { 1 };
-            for (int i = 0; i < PartCount; i++) bytes.Add((byte)parts[i]);
+            for (int i = 0; i < LegacyParts; i++) bytes.Add((byte)parts[i]);
             bytes.Add(B(rimColor.r)); bytes.Add(B(rimColor.g)); bytes.Add(B(rimColor.b));
             bytes.Add(B(Mathf.InverseLerp(0f, 12f, camber)));
             int n = Mathf.Min(wrap.Count, MaxLayers);
@@ -121,6 +132,8 @@ namespace DriftSkate
             // Neon hinten angehaengt (aeltere Stande ohne diese Bytes bleiben lesbar)
             bytes.Add((byte)neon);
             bytes.Add(B(neonColor.r)); bytes.Add(B(neonColor.g)); bytes.Add(B(neonColor.b));
+            // Teile ab LegacyParts (Turbo) ganz hinten
+            for (int i = LegacyParts; i < PartCount; i++) bytes.Add((byte)parts[i]);
             return Convert.ToBase64String(bytes.ToArray());
         }
 
@@ -133,7 +146,7 @@ namespace DriftSkate
                 int k = 0;
                 if (b[k++] != 1) return Default(carId, crew);
                 var d = new CarDesign { initialized = true };
-                for (int i = 0; i < PartCount; i++) d.parts[i] = b[k++];
+                for (int i = 0; i < LegacyParts; i++) d.parts[i] = b[k++];
                 d.rimColor = new Color(b[k] / 255f, b[k + 1] / 255f, b[k + 2] / 255f);
                 k += 3;
                 d.camber = b[k++] / 255f * 12f;
@@ -161,6 +174,7 @@ namespace DriftSkate
                     d.neonColor = new Color(b[k] / 255f, b[k + 1] / 255f, b[k + 2] / 255f);
                     k += 3;
                 }
+                for (int i = LegacyParts; i < PartCount && k < b.Length; i++) d.parts[i] = b[k++];
                 d.Sanitize();
                 return d;
             }

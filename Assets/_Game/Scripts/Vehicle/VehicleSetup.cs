@@ -22,6 +22,8 @@ namespace DriftSkate
         public float antiRollFront = 16000f, antiRollRear = 9000f;
 
         public float maxSteer = 48f, steerSpeed = 340f;
+        /// <summary>Schaltzeit-Faktor und Zusatz-Drehmoment (Aufbau-Turbo): untenrum viel, zur Abregeldrehzahl hin weniger.</summary>
+        public float shiftTime = 1f, lowEndBoost = 0f, topEndBoost = 0f;
 
         public float peakTorque = 360f, idleRpm = 900f, maxRpm = 7500f;
         public float[] gears = { 3.3f, 2.1f, 1.5f, 1.15f, 0.92f, 0.78f };
@@ -48,7 +50,7 @@ namespace DriftSkate
             }
         }
 
-        public static VehicleSetup From(CarDef def, float[] t, int assistLevel, bool autoGearbox)
+        public static VehicleSetup From(CarDef def, float[] t, int assistLevel, bool autoGearbox, CarDesign design = null)
         {
             if (t == null || t.Length != Tuning.Count) t = Tuning.Defaults();
             var s = new VehicleSetup
@@ -85,6 +87,13 @@ namespace DriftSkate
             s.diffLock = t[Tuning.Differential];
             s.brakeBias = Mathf.Lerp(0.45f, 0.8f, t[Tuning.BrakeBias]);
             s.brakeForce = def.mass * 9.81f * 1.05f;
+            // Aufbau-Turbo (nur an gebauten Autos, die Garagen-Modelle haben keine Anbauteile)
+            if (design != null && design.HasTurbo && !def.IsModel)
+            {
+                s.shiftTime = 0.45f;
+                s.lowEndBoost = 0.3f;
+                s.topEndBoost = 0.1f;
+            }
             return s;
         }
     }

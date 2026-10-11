@@ -43,6 +43,8 @@ namespace DriftSkate
             ParkMiru.Spawn();
             // Bodo und Udo hinter den Imbisswagen in den Parks, dazu die Hotdog-Power beim Essen
             HotdogStand.Spawn();
+            // Rocco hinter dem Tresen und Miru am DJ-Pult der Rooftop-Bar (Nordwesten)
+            RooftopBarCrew.Spawn();
             Chill.Ensure();
             HotdogPower.Ensure();
 

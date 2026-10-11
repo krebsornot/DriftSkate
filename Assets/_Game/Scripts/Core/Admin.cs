@@ -80,6 +80,45 @@ namespace DriftSkate
             ("Engelsfluegel", AngelWingsPickup.Instance != null ? AngelWingsPickup.Instance.transform.position + Vector3.back * 3f : new Vector3(0f, 0.5f, -26f)),
             ("Park (Miru)", ParkMiru.TeleportPoint),
             ("Imbiss (Bodo)", HotdogStand.TeleportPoint),
+            ("Herz-Denkmal", Near("HeartMonument", new Vector3(0f, 0.5f, -18f), new Vector3(0f, 0.5f, -26f))),
+            ("Parkhaus (Einfahrt)", Near(ParkhausSite.PrefabName, new Vector3(18f, 0.5f, 38f), new Vector3(94f, 0.5f, -150f))),
+            ("Baustelle (Kran)", Near("Baustelle", new Vector3(-22f, 0.5f, 14f), new Vector3(150f, 0.5f, -174f))),
+            ("Helipad (Dach)", Near(RoofSets.Helipad.name, new Vector3(0f, 0.5f, 22f), new Vector3(0f, 15f, -72f))),
+            ("Rooftop-Bar (Dach)", Near(RoofSets.Bar.name, new Vector3(0f, 0.5f, 20f), new Vector3(-188f, 25f, 168f))),
+            ("Bushaltestelle", BusStopSpot),
+            ("Bootsrampe (Wasser)", HarborSlipway.Built ? HarborSlipway.Top + Vector3.up * 0.5f : new Vector3(-CityBuilder.Half + 14f, 0.5f, 0f)),
+            ("Haengebruecke", RoadGates.BridgeGate != Vector3.zero ? RoadGates.BridgeGate + Vector3.up * 0.5f : new Vector3(CityBuilder.Half - 14f, 0.5f, 10f)),
+            ("UFO (nur nachts)", UfoSpot),
         };
+
+        /// <summary>Punkt relativ zu einem Objekt der Stadt (lokal, mit dessen Drehung), sonst ein fester Ersatzpunkt.</summary>
+        static Vector3 Near(string objectName, Vector3 local, Vector3 fallback)
+        {
+            var go = GameObject.Find(objectName);
+            return go != null ? go.transform.TransformPoint(local) : fallback;
+        }
+
+        /// <summary>Vor den Leuten an der Baustellen-Haltestelle.</summary>
+        static Vector3 BusStopSpot
+        {
+            get
+            {
+                var root = GameObject.Find(BusStopResidents.RootName);
+                var npc = root != null ? root.GetComponentInChildren<StonerNpc>() : null;
+                return npc != null ? npc.transform.position + npc.transform.forward * 3f + Vector3.up * 0.5f : new Vector3(150f, 0.5f, -140f);
+            }
+        }
+
+        /// <summary>Unter dem UFO (dort, wo es gerade ist oder hinfliegt): bei Nacht direkt in den Traktorstrahl.</summary>
+        static Vector3 UfoSpot
+        {
+            get
+            {
+                var ufo = Object.FindAnyObjectByType<Ufo>();
+                if (ufo == null) return new Vector3(0f, 0.5f, -26f);
+                Vector3 p = ufo.PositionAt(SharedClock.Time, out _);
+                return new Vector3(p.x, 0.5f, p.z);
+            }
+        }
     }
 }

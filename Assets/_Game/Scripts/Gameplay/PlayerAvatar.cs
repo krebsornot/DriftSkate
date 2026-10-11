@@ -178,7 +178,7 @@ namespace DriftSkate
             var p = SaveSystem.Profile;
             var def = Catalog.Car(p.selectedCar);
             var save = p.GetCarSave(def.id);
-            car.ApplySetup(VehicleSetup.From(def, save.tuning, p.assistLevel, p.autoGearbox));
+            car.ApplySetup(VehicleSetup.From(def, save.tuning, p.assistLevel, p.autoGearbox, save.design));
             _carParts = CarBuilder.Build(car.transform, def, save.paint, p.crewColor, SaveSystem.Graffiti, car, save.design);
             carEffects.Build(p.crewColor);
             RebuildSkaterLocal();

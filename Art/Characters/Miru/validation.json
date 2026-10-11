@@ -8,7 +8,8 @@
   "unweighted_vertices": 0,
   "animations": [
     "Idle",
-    "Sitting"
+    "Sitting",
+    "DJ"
   ],
   "seat_height_m": 0.45,
   "source": "C:\\Users\\Fynn\\Desktop\\Driftskate\\Art\\Characters\\Miru\\Miru.blend",
