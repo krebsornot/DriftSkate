@@ -369,12 +369,15 @@ body.name = "Body"
 garments = []
 OUTFIT_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Art", "Outfits"))
 OUTFIT_MODELS = [("Jacket", "jacket_white"), ("Jacket", "jacket_orange"), ("Pants", "pants_purple"), ("Shoes", "shoes_white"),
-                 ("Head", "head_phones"), ("Head", "head_bucket")]
+                 ("Head", "head_phones"), ("Head", "head_bucket"), ("Back", "back_rolltop"), ("Back", "back_dome")]
+# Rucksaecke sitzen starr an der Brust; damit sie nicht in dicken Jacken (Hoodie, Bomber) stecken, werden sie um die
+# Koerpermitte etwas geweitet (Traeger vorn weiter weg, Tasche hinten weiter weg)
+BACK_WIDEN = Vector((1.12, 1.3, 1.0))
 # Kopf-Teile koennen um den Hals-Ansatz (0, 0, 1,56) gebaut sein (siehe Prompts), alles andere in Weltkoordinaten
 SLOT_OFFSET = {"Head": Vector((0, 0, 1.56))}
 # Material-Namen aus den Modellen, die im Spiel etwas anderes bedeuten sollen (Schuhe: dunkle Sohle/Schnuersenkel
 # nicht in Jackenfarbe, sondern Tinte)
-MATERIAL_REMAP = {"Shoes": {"JacketTrim": "Ink"}}
+MATERIAL_REMAP = {"Shoes": {"JacketTrim": "Ink"}, "Back": {"JacketTrim": "Ink"}}
 
 
 def garment(name, parts):
@@ -407,8 +410,8 @@ def weights_rigid_feet(o):
     return 0
 
 
-def weights_rigid_head(o):
-    g = o.vertex_groups.new(name="Head")
+def weights_rigid_head(o, bone="Head"):
+    g = o.vertex_groups.new(name=bone)
     g.add(list(range(len(o.data.vertices))), 1.0, 'REPLACE')
     return 0
 
@@ -469,10 +472,13 @@ for slot_name, jid in OUTFIT_MODELS:
     if slot_name in SLOT_OFFSET and max(v.co.z for v in g.data.vertices) < 1.0:
         for v in g.data.vertices:
             v.co = v.co + SLOT_OFFSET[slot_name]
+    if slot_name == "Back":
+        for v in g.data.vertices:
+            v.co = Vector((v.co.x * BACK_WIDEN.x, v.co.y * BACK_WIDEN.y, v.co.z))
     lo = [min(v.co[i] for v in g.data.vertices) for i in range(3)]
     hi = [max(v.co[i] for v in g.data.vertices) for i in range(3)]
     loose = (weights_rigid_feet(g) if slot_name == "Shoes" else weights_rigid_head(g) if slot_name == "Head"
-             else weights_from_body(g))
+             else weights_rigid_head(g, "Chest") if slot_name == "Back" else weights_from_body(g))
     garment(slot_name + "_" + jid, [g])
     print("DRIFTSKATE garment", jid, "verts", len(g.data.vertices), "bounds", [round(x, 3) for x in lo], [round(x, 3) for x in hi], "unweighted", loose)
 

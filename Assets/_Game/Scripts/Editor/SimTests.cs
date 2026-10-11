@@ -219,10 +219,10 @@ namespace DriftSkate.EditorTools
             };
             var outfits = new[]
             {
-                new[] { "head_cap_y", "jacket_orange", "pants_denim", "shoes_white" },
+                new[] { "head_cap_y", "jacket_orange", "pants_denim", "shoes_white", "back_rolltop" },
                 new[] { "head_hair", "jacket_blue", "pants_cargo", "shoes_red" },
                 new[] { "head_phones", "jacket_lime", "pants_purple", "shoes_yellow" },
-                new[] { "head_beanie_p", "jacket_white", "pants_denim", "shoes_red" },
+                new[] { "head_beanie_p", "jacket_white", "pants_denim", "shoes_red", "back_dome" },
                 new[] { "head_bucket", "jacket_blue", "pants_purple", "shoes_white" },
             };
             for (int i = 0; i < poses.Length; i++)

@@ -918,7 +918,7 @@ namespace DriftSkate
         void BuildOutfits()
         {
             var list = List();
-            string[] slotNames = { "KOPF", "JACKE", "HOSE", "SCHUHE" };
+            string[] slotNames = { "KOPF", "JACKE", "HOSE", "SCHUHE", "RUCKSACK" };
             foreach (OutfitSlot slot in Enum.GetValues(typeof(OutfitSlot)))
             {
                 Header(list, slotNames[(int)slot]);

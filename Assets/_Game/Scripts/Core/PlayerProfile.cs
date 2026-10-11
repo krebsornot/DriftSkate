@@ -74,7 +74,7 @@ namespace DriftSkate
         public bool adminFree, adminNoBail, adminNoComboFail, adminMoon, adminTurbo, adminSlowMo, adminDebug, adminHideHud;
 
         public List<string> ownedOutfits = new List<string>();
-        public string[] equipped = { "head_hair", "jacket_blue", "pants_denim", "shoes_white" };
+        public string[] equipped = { "head_hair", "jacket_blue", "pants_denim", "shoes_white", "back_none" };
 
         public List<string> ownedGarages = new List<string>();
         public string selectedGarage = "backyard";
@@ -137,8 +137,10 @@ namespace DriftSkate
             Own(ownedBoards, "standard");
             Own(ownedGarages, "backyard");
             foreach (var o in Catalog.Outfits) if (o.price == 0) Own(ownedOutfits, o.id);
-            if (equipped == null || equipped.Length != 4)
-                equipped = new[] { "head_hair", "jacket_blue", "pants_denim", "shoes_white" };
+            // aeltere Spielstaende hatten nur 4 Slots (ohne Rucksack): ergaenzen statt zuruecksetzen
+            if (equipped != null && equipped.Length == 4) equipped = new[] { equipped[0], equipped[1], equipped[2], equipped[3], "back_none" };
+            if (equipped == null || equipped.Length != 5)
+                equipped = new[] { "head_hair", "jacket_blue", "pants_denim", "shoes_white", "back_none" };
             if (!ownedCars.Contains(selectedCar)) selectedCar = "roku86";
             if (!ownedBoards.Contains(selectedBoard) && !ModLibrary.IsMod(selectedBoard)) selectedBoard = "standard";
             if (selectedCharacter == null) selectedCharacter = "";

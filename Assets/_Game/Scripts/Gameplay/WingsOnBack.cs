@@ -12,6 +12,24 @@ namespace DriftSkate
     {
         /// <summary>Spannweite am Ruecken (m) und Abstand vom Brustknochen nach hinten.</summary>
         const float Span = 1.45f, BackOffset = 0.14f;
+        /// <summary>Mit Rucksack sitzen die Fluegel so viel weiter hinten (Tasche ragt ca. 25 cm vom Ruecken ab).</summary>
+        const float BackpackDepth = 0.24f;
+        SkinnedMeshRenderer _backpack;
+        float _backpackCheck = -1f;
+
+        /// <summary>Traegt die Figur einen Rucksack (sichtbares Mesh "Back_..." am Modell)? Wird alle 0,5 s neu gesucht.</summary>
+        bool WearsBackpack()
+        {
+            if (Time.time >= _backpackCheck)
+            {
+                _backpackCheck = Time.time + 0.5f;
+                _backpack = null;
+                var root = _skater.rig != null ? _skater.rig.transform : _skater.transform;
+                foreach (var r in root.GetComponentsInChildren<SkinnedMeshRenderer>())
+                    if (r.name.StartsWith("Back_")) { _backpack = r; break; }
+            }
+            return _backpack != null && _backpack.gameObject.activeInHierarchy;
+        }
         /// <summary>Hoehe am Ruecken: 0 = Brustknochen, 1 = Halsansatz (Schulterblaetter liegen knapp darunter).</summary>
         const float ShoulderHeight = 0.95f;
 
@@ -149,7 +167,7 @@ namespace DriftSkate
             Vector3 fwd = Vector3.ProjectOnPlane(face, up);
             if (fwd.sqrMagnitude < 1e-4f) fwd = Vector3.ProjectOnPlane(_skater.transform.forward, up);
             fwd.Normalize();
-            transform.SetPositionAndRotation(pos - fwd * BackOffset, Quaternion.LookRotation(fwd, up));
+            transform.SetPositionAndRotation(pos - fwd * (BackOffset + (WearsBackpack() ? BackpackDepth : 0f)), Quaternion.LookRotation(fwd, up));
 
             if (_flap != null)
             {

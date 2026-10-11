@@ -35,7 +35,7 @@ namespace DriftSkate
         public bool isMod; // eigenes Board aus dem Mods-Ordner
     }
 
-    public enum OutfitSlot { Head, Jacket, Pants, Shoes }
+    public enum OutfitSlot { Head, Jacket, Pants, Shoes, Back }
 
     public class OutfitDef
     {
@@ -175,6 +175,9 @@ namespace DriftSkate
 
             // Neue Teile nur hinten anhaengen: online wird der Listen-Index uebertragen (PlayerAvatar.PackOutfit)
             new OutfitDef { id = "head_bucket", name = "Bucket Hat", slot = OutfitSlot.Head, price = 20000, color = Palette.Hex("F2A13B"), variant = 1 },
+            new OutfitDef { id = "back_none", name = "Ohne Rucksack", slot = OutfitSlot.Back, price = 0, color = Palette.Hex("3A3646") },
+            new OutfitDef { id = "back_rolltop", name = "Rolltop Lila", slot = OutfitSlot.Back, price = 14000, color = Palette.Hex("7B4AD6") },
+            new OutfitDef { id = "back_dome", name = "Dome Weiss", slot = OutfitSlot.Back, price = 16000, color = Palette.Hex("F2EFEA") },
         };
 
         public static readonly List<GarageDef> Garages = new List<GarageDef>

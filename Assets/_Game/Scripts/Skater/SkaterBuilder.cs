@@ -13,7 +13,8 @@ namespace DriftSkate
             public Color head, jacket, pants, shoes, crew;
             public int headVariant;
             /// <summary>Katalog-Ids: hat die Figur ein eigenes Mesh "Jacket_&lt;id&gt;" (bzw. Pants_, Shoes_), wird das gezeigt, sonst "&lt;Slot&gt;_Default".</summary>
-            public string headId, jacketId, pantsId, shoesId;
+            public string headId, jacketId, pantsId, shoesId, backId;
+            public Color back;
 
             public static Outfit FromProfile(PlayerProfile p)
             {
@@ -36,6 +37,7 @@ namespace DriftSkate
                         case OutfitSlot.Jacket: o.jacket = def.color; o.jacketId = def.id; break;
                         case OutfitSlot.Pants: o.pants = def.color; o.pantsId = def.id; break;
                         case OutfitSlot.Shoes: o.shoes = def.color; o.shoesId = def.id; break;
+                        case OutfitSlot.Back: o.back = def.color; o.backId = def.id; break;
                     }
                 }
                 return o;
@@ -132,8 +134,9 @@ namespace DriftSkate
 
             string[] variants = { "Head_Hair", "Head_Cap", "Head_Beanie", "Head_Phones" };
             var smrs = model.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            string[] slots = { "Jacket_", "Pants_", "Shoes_" };
-            string[] shown = { "Jacket_" + o.jacketId, "Pants_" + o.pantsId, "Shoes_" + o.shoesId };
+            // Rucksack: ohne passendes Mesh (z. B. "Ohne Rucksack") ist keiner zu sehen, es gibt kein Back_Default
+            string[] slots = { "Jacket_", "Pants_", "Shoes_", "Back_" };
+            string[] shown = { "Jacket_" + o.jacketId, "Pants_" + o.pantsId, "Shoes_" + o.shoesId, "Back_" + o.backId };
             for (int i = 0; i < slots.Length; i++)
                 if (System.Array.FindIndex(smrs, r => r.name == shown[i]) < 0) shown[i] = slots[i] + "Default";
             // Kopf: eigenes Modell "Head_<id>" statt der alten Varianten, falls vorhanden
@@ -214,6 +217,7 @@ namespace DriftSkate
             if (name.StartsWith("EyeWhite")) return ToonMaterials.Get(Palette.White, 0f, false, 0.5f);
             if (name.StartsWith("Eyes")) return ToonMaterials.Get(Palette.Ink, 0f, false);
             if (name.StartsWith("Ink")) return ToonMaterials.Get(Palette.Ink, line, false);
+            if (name.StartsWith("Bag")) return ToonMaterials.Get(o.back, line, false);
             return ToonMaterials.Get(Palette.Concrete, line, false);
         }
 

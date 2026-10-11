@@ -36,7 +36,7 @@ namespace DriftSkate
         float _toastTime;
         bool _helpVisible = true;
 
-        RectTransform _pause, _pauseMain, _weatherPanel, _weatherRows;
+        RectTransform _pause, _pauseMain, _weatherPanel, _weatherRows, _optionsPanel, _optionsRows;
         RectTransform _mainRoot, _admin;
         Text _debug;
         readonly System.Collections.Generic.List<(Button button, int index)> _adminToggles = new System.Collections.Generic.List<(Button, int)>();
@@ -179,6 +179,7 @@ namespace DriftSkate
             {
                 if (!Paused) return false;
                 if (_weatherPanel != null && _weatherPanel.gameObject.activeSelf) ShowWeather(false);
+                else if (_optionsPanel != null && _optionsPanel.gameObject.activeSelf) ShowOptions(false);
                 else SetPaused(false);
                 return true;
             });
@@ -313,7 +314,7 @@ namespace DriftSkate
             v.childControlHeight = false;
             v.childControlWidth = false;
             UIFactory.Button(list, "WEITER", Palette.Lime, () => SetPaused(false), new Vector2(420, 80), 36);
-            UIFactory.Button(list, "HILFE AN/AUS", Palette.Cyan, () => _helpVisible = !_helpVisible, new Vector2(420, 80), 36);
+            UIFactory.Button(list, "OPTIONEN", Palette.Cyan, () => ShowOptions(true), new Vector2(420, 80), 36);
             UIFactory.Button(list, "WETTER & HIMMEL", Palette.Hex("B58CFF"), () =>
             {
                 if (!WeatherSystem.CanControl) { Toast("Online bestimmt der Host Wetter und Himmel"); return; }
@@ -328,6 +329,7 @@ namespace DriftSkate
                 RefreshAdmin();
             }, new Vector2(420, 70), 30);
             BuildWeatherPanel();
+            BuildOptionsPanel();
             _pause.gameObject.SetActive(false);
         }
 
@@ -399,9 +401,102 @@ namespace DriftSkate
                 .gameObject.AddComponent<LayoutElement>().preferredHeight = 40;
         }
 
+        // ------------------------------------------------------------------ Optionen im Pausemenue
+
+        /// <summary>Unterseite im Pausemenue: Lautstaerke, Fahrhilfen, Kamera, Spiegelungen, Hilfe (wirkt sofort, wird gespeichert).</summary>
+        void BuildOptionsPanel()
+        {
+            var panel = UIFactory.Panel(_pause, "OptionsPanel", Palette.Hex("2E8FA8"), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1060, 940), -2f);
+            _optionsPanel = panel.rectTransform;
+            UIFactory.LabelAt(panel.transform, "OPTIONEN", 64, Palette.Yellow, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -20), new Vector2(1000, 90), TextAnchor.MiddleCenter);
+            _optionsRows = UIFactory.Rect(panel.transform, "Rows", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, 0), new Vector2(1000, 680));
+            var v = _optionsRows.gameObject.AddComponent<VerticalLayoutGroup>();
+            v.spacing = 6;
+            v.childAlignment = TextAnchor.UpperCenter;
+            v.childControlHeight = true;
+            v.childControlWidth = true;
+            v.childForceExpandHeight = false;
+            var back = UIFactory.Button(panel.transform, "ZURUECK", Palette.Lime, () => ShowOptions(false), new Vector2(360, 70), 32);
+            var brt = (RectTransform)back.transform;
+            brt.anchorMin = brt.anchorMax = brt.pivot = new Vector2(0.5f, 0f);
+            brt.anchoredPosition = new Vector2(0, 26);
+            _optionsPanel.gameObject.SetActive(false);
+        }
+
+        void ShowOptions(bool show)
+        {
+            _pauseMain.gameObject.SetActive(!show);
+            _optionsPanel.gameObject.SetActive(show);
+            if (show) RefreshOptions();
+        }
+
+        void RefreshOptions()
+        {
+            for (int i = _optionsRows.childCount - 1; i >= 0; i--)
+            {
+                var old = _optionsRows.GetChild(i).gameObject;
+                old.SetActive(false);
+                Destroy(old);
+            }
+            var p = SaveSystem.Profile;
+
+            void Title(string text)
+            {
+                var le = UIFactory.Label(_optionsRows, text, 30, Palette.Yellow, TextAnchor.MiddleCenter, true).gameObject.AddComponent<LayoutElement>();
+                le.preferredHeight = le.minHeight = 42;
+            }
+            Transform Line(string label)
+            {
+                var row = UIFactory.Row(_optionsRows, 58);
+                var le = row.gameObject.GetComponent<LayoutElement>() ?? row.gameObject.AddComponent<LayoutElement>();
+                le.preferredHeight = le.minHeight = 58;
+                var h = row.GetComponent<HorizontalLayoutGroup>();
+                h.childAlignment = TextAnchor.MiddleLeft;
+                h.padding.left = 30;
+                var lab = UIFactory.Label(row, label, 26, Palette.White, TextAnchor.MiddleLeft, false).gameObject.AddComponent<LayoutElement>();
+                lab.preferredWidth = lab.minWidth = 200;
+                return row;
+            }
+            void Choice(Transform row, string text, bool active, System.Action pick, float width = 180f) =>
+                UIFactory.Button(row, text, active ? Palette.Yellow : Palette.White, () => { pick(); SaveSystem.Save(); RefreshOptions(); }, new Vector2(width, 52), 24);
+
+            Title("LAUTSTAERKE");
+            UIFactory.Slider(Line("Musik"), p.musicVolume, x => { p.musicVolume = x; SaveSystem.Save(); }, new Vector2(560, 40), Palette.Cyan);
+            UIFactory.Slider(Line("Effekte"), p.sfxVolume, x => { p.sfxVolume = x; SaveSystem.Save(); }, new Vector2(560, 40), Palette.Cyan);
+            UIFactory.Slider(Line("Menue"), p.uiVolume, x => { p.uiVolume = x; SaveSystem.Save(); }, new Vector2(560, 40), Palette.Cyan);
+
+            Title("FAHREN");
+            var assist = Line("Gegenlenken");
+            string[] levels = { "AUS", "SCHWACH", "MITTEL", "STARK" };
+            for (int i = 0; i < levels.Length; i++)
+            {
+                int lvl = i;
+                Choice(assist, levels[i], p.assistLevel == i, () => { p.assistLevel = lvl; PlayerAvatar.Local?.ReapplyCarSetup(); }, 170f);
+            }
+            var gear = Line("Getriebe");
+            Choice(gear, "AUTOMATIK", p.autoGearbox, () => { p.autoGearbox = true; PlayerAvatar.Local?.ReapplyCarSetup(); }, 240f);
+            Choice(gear, "MANUELL", !p.autoGearbox, () => { p.autoGearbox = false; PlayerAvatar.Local?.ReapplyCarSetup(); }, 240f);
+
+            Title("ANZEIGE");
+            var cam = Line("Kamera");
+            var rig = CameraRig.Instance;
+            for (int i = 0; i < CameraRig.Views.Length; i++)
+            {
+                int view = i;
+                Choice(cam, CameraRig.Views[i], rig != null && rig.View == i, () =>
+                {
+                    for (int n = 0; rig != null && rig.View != view && n < CameraRig.Views.Length; n++) rig.NextView();
+                }, 200f);
+            }
+            var misc = Line("Sonstiges");
+            Choice(misc, p.reflections ? "SPIEGELUNG: AN" : "SPIEGELUNG: AUS", p.reflections, () => p.reflections = !p.reflections, 300f);
+            Choice(misc, _helpVisible ? "HILFE: AN" : "HILFE: AUS", _helpVisible, () => _helpVisible = !_helpVisible, 300f);
+        }
+
         void SetPaused(bool paused)
         {
             if (_weatherPanel != null) ShowWeather(false);
+            if (_optionsPanel != null) ShowOptions(false);
             _pause.gameObject.SetActive(paused);
             GameInput.Blocked = paused;
         }

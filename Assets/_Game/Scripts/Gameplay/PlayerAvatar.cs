@@ -38,7 +38,7 @@ namespace DriftSkate
         readonly NetworkVariable<Color> _crew = new NetworkVariable<Color>(Color.magenta, R, W);
         readonly NetworkVariable<FixedString64Bytes> _boardId = new NetworkVariable<FixedString64Bytes>(default, R, W);
         readonly NetworkVariable<FixedString64Bytes> _characterId = new NetworkVariable<FixedString64Bytes>(default, R, W);
-        readonly NetworkVariable<int> _outfit = new NetworkVariable<int>(0, R, W);
+        readonly NetworkVariable<long> _outfit = new NetworkVariable<long>(0, R, W); // je Slot ein Byte (Katalog-Index + 1)
         readonly NetworkVariable<FixedString32Bytes> _name = new NetworkVariable<FixedString32Bytes>(default, R, W);
         readonly NetworkVariable<FixedString512Bytes> _design = new NetworkVariable<FixedString512Bytes>(default, R, W); // Folie, Teile, Felgen (CarDesign.Encode)
         readonly NetworkVariable<float> _steer = new NetworkVariable<float>(0f, R, W);
@@ -152,26 +152,38 @@ namespace DriftSkate
 
         static string Trim(string s, int max) => string.IsNullOrEmpty(s) ? "Player" : (s.Length > max ? s.Substring(0, max) : s);
 
-        static int PackOutfit(string[] ids)
+        const int OutfitSlots = 5;
+
+        static long PackOutfit(string[] ids)
         {
-            int packed = 0;
-            for (int i = 0; i < 4; i++)
+            long packed = 0;
+            for (int i = 0; i < OutfitSlots; i++)
             {
                 int idx = ids != null && i < ids.Length ? Catalog.OutfitIndex(ids[i]) : -1;
-                packed |= ((idx + 1) & 0xFF) << (i * 8);
+                packed |= (long)((idx + 1) & 0xFF) << (i * 8);
             }
             return packed;
         }
 
-        static string[] UnpackOutfit(int packed)
+        static string[] UnpackOutfit(long packed)
         {
-            var ids = new string[4];
-            for (int i = 0; i < 4; i++)
+            var ids = new string[OutfitSlots];
+            for (int i = 0; i < OutfitSlots; i++)
             {
-                int idx = ((packed >> (i * 8)) & 0xFF) - 1;
+                int idx = (int)((packed >> (i * 8)) & 0xFF) - 1;
                 ids[i] = idx >= 0 && idx < Catalog.Outfits.Count ? Catalog.Outfits[idx].id : null;
             }
             return ids;
+        }
+
+        /// <summary>Gegenlenk-Hilfe oder Getriebe im Pausemenue umgestellt: Fahrwerte sofort neu setzen (Tuning und Teile bleiben).</summary>
+        public void ReapplyCarSetup()
+        {
+            if (this != Local) return;
+            var p = SaveSystem.Profile;
+            var def = Catalog.Car(p.selectedCar);
+            var save = p.GetCarSave(def.id);
+            car.ApplySetup(VehicleSetup.From(def, save.tuning, p.assistLevel, p.autoGearbox, save.design));
         }
 
         void BuildLocal()

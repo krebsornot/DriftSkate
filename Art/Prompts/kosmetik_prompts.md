@@ -332,7 +332,7 @@ Material slots: "Shoes" (upper, game color yellow), "Sole" (sole and toe bumper,
 **Alle Slots (fertig eingerichtet):**
 1. GLB als `Art/Outfits/<katalog-id>.glb` ablegen (z. B. `jacket_lime.glb`, `pants_cargo.glb`).
 2. Slot und Id in `OUTFIT_MODELS` in `Tools/Blender/build_skater.py` eintragen, z. B. `("Pants", "pants_cargo")`
-   (Slots: `Head`, `Jacket`, `Pants`, `Shoes`). Ganz neue Teile hinten in `Catalog.Outfits` anhaengen.
+   (Slots: `Head`, `Jacket`, `Pants`, `Shoes`, `Back` fuer Rucksaecke: starr an der Brust, etwas geweitet; Taschenfarbe ueber Material `Bag`). Ganz neue Teile hinten in `Catalog.Outfits` anhaengen.
 3. Figur neu exportieren:
    `blender --background --factory-startup --python Tools/Blender/build_skater.py -- Assets/_Game/Resources/Characters/Skater.fbx Logs/skater_preview.png`
    (legt pro Teil auch Vorschaubilder von vorn und hinten an).
