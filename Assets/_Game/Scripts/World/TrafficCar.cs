@@ -7,6 +7,8 @@ namespace DriftSkate
     /// Kraft folgt: rammt man ihn, wird er weggeschoben und dreht sich (statt wie eine Wand zu stehen), rutscht aus und
     /// faehrt danach in seine Spur zurueck. Hoehe und Kippen sind gesperrt, damit nichts umfaellt oder durch den Boden
     /// rutscht. Bremst vor Autos und Skatern; steht es zu lange, faehrt es kurz "durch" (ohne Collider).
+    /// Wo es sein soll, sagt sein Fahrplan (Traffic.Schedule): der haelt an roten Ampeln und Haltestellen; das Auto faehrt
+    /// der Soll-Position hinterher und holt nach lokalem Bremsen wieder auf.
     /// Raeder drehen und lenken, Bremslichter, Blinker vor dem Abbiegen. Man kann sich dranhaengen (Hitchable).
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
@@ -46,6 +48,10 @@ namespace DriftSkate
         public Mode State => _mode;
         /// <summary>Haelt gerade an einem Haltepunkt seiner Runde (Schulbus an der Haltestelle).</summary>
         public bool AtStop => _init && _mode == Mode.Drive && _speed < 0.6f && _route.NearStop(_s, 4f);
+        /// <summary>Fahrplan (Soll-Position nach der gemeinsamen Uhr, mit Ampeln und Haltestellen).</summary>
+        public Traffic.Schedule Sched { get; private set; }
+        /// <summary>Wartet laut Fahrplan an einer roten Ampel.</summary>
+        public bool AtRedLight => Sched != null && Sched.AtRedLight;
 
         public void Init(Traffic traffic, Traffic.Route route, float phase, int id)
         {
@@ -74,8 +80,12 @@ namespace DriftSkate
             hitch.kind = Hitchable.KindNpc;
             hitch.id = id;
 
-            _s = _route.DistanceAtTime(Traffic.Clock + _phase);
-            _route.Sample(_s, out Vector3 p, out Vector3 d, out _speed);
+            // Fahrplan ab Uhrzeit 0 (Startpunkt wie frueher ueber die Phase verteilt), bis jetzt nachgerechnet
+            Sched = traffic.AddSchedule(route, route.DistanceAtTime(phase));
+            traffic.AdvanceSchedules(Traffic.Clock);
+            _s = Traffic.ScheduledS(Sched, Traffic.Clock);
+            _route.Sample(_s, out Vector3 p, out Vector3 d, out _);
+            _speed = Sched.V;
             transform.SetPositionAndRotation(p, Quaternion.LookRotation(d));
             _rb.position = p;
             _rb.rotation = transform.rotation;
@@ -96,17 +106,21 @@ namespace DriftSkate
 
             if (_mode == Mode.Knocked) { StepKnocked(dt); return; }
 
-            // Wo das Auto laut Uhr sein sollte: aufholen bzw. zurueckfallen lassen, bei grossem Abstand springen
-            float target = _route.DistanceAtTime(Traffic.Clock + _phase);
+            // Wo das Auto laut Fahrplan sein sollte: aufholen bzw. zurueckfallen lassen, bei grossem Abstand springen
+            _traffic.AdvanceSchedules(Traffic.Clock);
+            float target = Traffic.ScheduledS(Sched, Traffic.Clock);
             float diff = _route.Delta(_s, target);
-            _route.Sample(_s, out _, out _, out float routeSpeed);
             if (Mathf.Abs(diff) > 90f && !NearCamera(60f))
             {
                 _s = target;
                 diff = 0f;
                 Snap();
             }
-            float desired = routeSpeed * Mathf.Clamp(1f + diff / 25f, 0.4f, 1.5f);
+            // Fahrplan-Tempo (0 an roter Ampel); liegt das Auto zurueck, faehrt es bis zur Soll-Position auf, aber nie
+            // schneller, als das Profil (Kurven, Haltestellen) an dieser Stelle erlaubt
+            float factor = Mathf.Clamp(1f + diff / 25f, 0.4f, 1.5f);
+            float catchUp = Mathf.Sqrt(2f * _traffic.decel * Mathf.Max(0f, diff - 0.3f));
+            float desired = Mathf.Min(_route.SpeedAt(_s) * factor, Mathf.Max(Sched.V * factor, catchUp));
             if (_mode == Mode.Recover) desired = Mathf.Min(desired, 6f + _modeTime * 2f); // sachte wieder anfahren
 
             // Hindernis auf der Spur (Autos, Skater): rechtzeitig anhalten
@@ -247,7 +261,8 @@ namespace DriftSkate
         /// <summary>Unbeobachtet direkt auf die Spur setzen.</summary>
         void Snap()
         {
-            _route.Sample(_s, out Vector3 p, out Vector3 d, out float v);
+            _route.Sample(_s, out Vector3 p, out Vector3 d, out _);
+            float v = Sched != null ? Sched.V : _route.SpeedAt(_s);
             _rb.position = p;
             _rb.rotation = Quaternion.LookRotation(d);
             transform.SetPositionAndRotation(p, _rb.rotation);

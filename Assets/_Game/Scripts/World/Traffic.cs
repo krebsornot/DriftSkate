@@ -7,6 +7,9 @@ namespace DriftSkate
     /// NPC-Verkehr: Autos fahren feste Runden ueber das Strassenraster, immer auf der rechten Spur, bremsen vor
     /// Kurven und vor Hindernissen. Wo ein Auto gerade ist, folgt aus der Uhrzeit (online: Server-Zeit), so sehen
     /// alle Spieler den Verkehr gleich, ohne dass etwas uebertragen wird. Lokales Bremsen holt das Auto danach auf.
+    /// Der Fahrplan jedes Autos (Schedule) ist eine deterministische Simulation mit festem Schritt ab Uhrzeit 0: er haelt
+    /// an roten Ampeln (TrafficSignals, Haltelinie 18 m vor der Kreuzungsmitte), an Bushaltestellen und hinter dem
+    /// Vordermann derselben Runde. Jeder Rechner rechnet denselben Fahrplan nach, nichts wird uebertragen.
     /// Prefabs kommen aus dem Editor: DriftSkate → Verkehr. Dazu faehrt ein Schulbus (Resources/Vehicles/SchoolBus,
     /// DriftSkate → Verkehr → Schulbus bauen) eine eigene Runde ueber alle sechs Bushaltestellen und haelt dort kurz.
     /// </summary>
@@ -63,10 +66,15 @@ namespace DriftSkate
 
         public readonly List<Route> routes = new List<Route>();
         public readonly List<TrafficCar> cars = new List<TrafficCar>();
+        readonly List<Schedule> _schedules = new List<Schedule>();
+
+        /// <summary>Gibt es Ampeln in der Stadt? Dann halten die Fahrplaene an Rot.</summary>
+        public static bool LightsActive { get; private set; }
 
         void Awake()
         {
             Instance = this;
+            LightsActive = FindAnyObjectByType<TrafficSignals>() != null;
             BuildRoutes();
         }
 
@@ -82,6 +90,7 @@ namespace DriftSkate
             for (int r = 0; r < routes.Count; r++)
             {
                 int n = CarsPerRoute[r];
+                var ring = new List<Schedule>();
                 for (int k = 0; k < n; k++)
                 {
                     var prefab = carPrefabs[(id * 7) % carPrefabs.Length]; // jedes Modell einmal, gut gemischt
@@ -92,10 +101,149 @@ namespace DriftSkate
                     float phase = routes[r].duration * ((k + 0.37f * r) / n);
                     car.Init(this, routes[r], phase, id);
                     cars.Add(car);
+                    ring.Add(car.Sched);
                     id++;
                 }
+                // Autos derselben Runde fahren hintereinander: jeder haelt Abstand zum naechsten vor ihm (Ring)
+                for (int k = 0; k < ring.Count; k++) ring[k].leader = ring[(k + 1) % ring.Count];
             }
             SpawnBus(id);
+        }
+
+        // ------------------------------------------------------------------ Fahrplan
+
+        /// <summary>Fahrplan fuer ein Fahrzeug anlegen (Start bei Strecke startS zur Uhrzeit 0).</summary>
+        public Schedule AddSchedule(Route route, float startS)
+        {
+            var s = new Schedule(route, startS, accel, decel);
+            _schedules.Add(s);
+            return s;
+        }
+
+        /// <summary>
+        /// Alle Fahrplaene bis zur Uhrzeit nachrechnen (feste Schritte, in Reihenfolge der Autos: deterministisch). Ein neu
+        /// angelegter Fahrplan holt beim ersten Mal von Uhrzeit 0 auf (bei spaetem Beitritt ein paar hunderttausend Schritte).
+        /// </summary>
+        public void AdvanceSchedules(double clock)
+        {
+            long k = (long)System.Math.Floor(clock / Schedule.Step);
+            foreach (var s in _schedules)
+            {
+                int guard = 0;
+                while (s.tick < k && guard++ < 400000)
+                {
+                    s.Simulate(s.tick * Schedule.Step);
+                    s.tick++;
+                }
+                if (s.tick < k) s.tick = k; // Uhr unglaubwuerdig weit vorn: nicht ewig rechnen
+            }
+        }
+
+        /// <summary>Soll-Position eines Fahrplans zur Uhrzeit (zwischen zwei Schritten linear).</summary>
+        public static float ScheduledS(Schedule s, double clock)
+        {
+            float rest = Mathf.Clamp((float)(clock - s.tick * Schedule.Step), 0f, Schedule.Step);
+            return Mathf.Repeat(s.S + s.V * rest, s.route.length);
+        }
+
+        /// <summary>
+        /// Fahrplan eines Fahrzeugs: Strecke S und Tempo V auf seiner Runde, in Schritten von 0,1 s ab Uhrzeit 0 nachgerechnet.
+        /// Haelt an roten Ampeln (bei Gelb nur, wenn es bequem reicht), wartet an Haltestellen (Bus) und faehrt nicht in den
+        /// Vordermann derselben Runde. Dieselbe Rechnung auf jedem Rechner ergibt denselben Fahrplan.
+        /// </summary>
+        public class Schedule
+        {
+            public const float Step = 0.1f;
+            /// <summary>So weit vor der Haltelinie bleibt das Auto stehen (m).</summary>
+            const float LineGap = 0.7f;
+
+            public readonly Route route;
+            public Schedule leader;
+            public float S, V;
+            /// <summary>Bis zu diesem Schritt (0,1 s ab Uhrzeit 0) ist der Fahrplan gerechnet.</summary>
+            public long tick;
+            /// <summary>Wartet gerade an einer roten Ampel bzw. haelt an einer Haltestelle.</summary>
+            public bool AtRedLight { get; private set; }
+            public bool Dwelling => _dwell > 0f;
+
+            readonly float _accel, _decel;
+            float _dwell, _leaveS = -1f;
+            int _line;
+
+            public Schedule(Route r, float startS, float accel, float decel)
+            {
+                route = r;
+                S = Mathf.Repeat(startS, r.length);
+                V = r.SpeedAt(S);
+                _accel = accel;
+                _decel = decel;
+                _line = 0;
+                while (_line < r.lineS.Length && r.lineS[_line] < S) _line++;
+                if (_line >= r.lineS.Length) _line = 0;
+            }
+
+            public void Simulate(double time)
+            {
+                float desired = route.SpeedAt(S);
+                AtRedLight = false;
+
+                // Haltestelle: ankommen, Tuer offen (dwell), dann anfahren, auch wenn das Tempoprofil dort noch 0 sagt
+                if (_dwell > 0f)
+                {
+                    _dwell -= Step;
+                    desired = 0f;
+                    if (_dwell <= 0f) _leaveS = S;
+                }
+                else if (_leaveS >= 0f)
+                {
+                    if (Mathf.Repeat(S - _leaveS, route.length) < 3f) desired = Mathf.Max(desired, 2.5f);
+                    else _leaveS = -1f;
+                }
+                else if (route.stopS.Length > 0)
+                {
+                    // Naechster Haltepunkt voraus: genau dort zum Stehen kommen, dann warten
+                    float dist = route.length;
+                    foreach (float st in route.stopS) dist = Mathf.Min(dist, Mathf.Repeat(st - S, route.length));
+                    desired = Mathf.Min(desired, Mathf.Sqrt(2f * _decel * Mathf.Max(0f, dist - 0.05f)));
+                    if (dist < 0.35f && V < 0.25f) { _dwell = route.dwell; desired = 0f; }
+                }
+
+                // Ampel: naechste Haltelinie voraus (Linien sind entlang der Runde sortiert)
+                if (LightsActive && route.lineS.Length > 0)
+                {
+                    float dist = Mathf.Repeat(route.lineS[_line] - S, route.length);
+                    int guard = 0;
+                    while (dist > route.length - 3f && guard++ < route.lineS.Length)
+                    {
+                        _line = (_line + 1) % route.lineS.Length;
+                        dist = Mathf.Repeat(route.lineS[_line] - S, route.length);
+                    }
+                    int state = TrafficSignals.State(time, route.lineZ[_line], out _);
+                    if (state != 0)
+                    {
+                        float brake = V * V / (2f * _decel);
+                        // Rot: halten, ausser es geht gar nicht mehr. Gelb: durchfahren nur, wenn man die Linie noch vor
+                        // Rot erreicht, sonst halten (wenn es noch geht)
+                        bool canStop = dist > brake * 0.6f - 0.5f;
+                        bool stop = state == 2 ? canStop : canStop && dist > Mathf.Max(0.5f, V) * TrafficSignals.UntilRed(time, route.lineZ[_line]);
+                        if (stop)
+                        {
+                            desired = Mathf.Min(desired, Mathf.Sqrt(2f * _decel * Mathf.Max(0f, dist - LineGap)));
+                            AtRedLight = dist < LineGap + 1.5f;
+                        }
+                    }
+                }
+
+                // Vordermann derselben Runde: nicht auffahren, hinter ihm anhalten
+                if (leader != null && leader != this)
+                {
+                    float gap = Mathf.Repeat(leader.S - S, route.length);
+                    if (gap < 14f) desired = Mathf.Min(desired, leader.V + Mathf.Max(0f, gap - 6.5f) * 0.7f);
+                }
+
+                V = Mathf.MoveTowards(V, desired, (desired < V ? _decel * 1.3f : _accel) * Step);
+                S = Mathf.Repeat(S + V * Step, route.length);
+            }
         }
 
         void SpawnBus(int id)
@@ -136,8 +284,14 @@ namespace DriftSkate
             public Vector3[] dir;
             public float[] s, speed, time;
             public float length, duration;
-            /// <summary>Haltepunkte (Strecke in m), leer bei normalen Runden.</summary>
+            /// <summary>Haltepunkte (Strecke in m), leer bei normalen Runden, und wie lange dort gewartet wird (s).</summary>
             public float[] stopS = new float[0];
+            public float dwell;
+            /// <summary>Haltelinien vor Ampel-Kreuzungen: Strecke (m) aufsteigend, und ob die Zufahrt entlang Z laeuft (Ampelgruppe Z).</summary>
+            public float[] lineS = new float[0];
+            public bool[] lineZ = new bool[0];
+            /// <summary>Haltelinie: so weit vor der Kreuzungsmitte (Bordstein bei 12 m, davor der Zebrastreifen).</summary>
+            public const float StopLine = 18f;
 
             public Route(Traffic t, Vector2Int[] corners) : this(t, corners, t.cruise, null, 0f, 0f) { }
 
@@ -270,6 +424,50 @@ namespace DriftSkate
                                   + (stopIdx.Contains(i) ? dwell : 0f);
                 duration = time[m];
                 stopS = stopIdx.ConvertAll(i => s[i]).ToArray();
+                this.dwell = dwell;
+                FindStopLines();
+            }
+
+            /// <summary>
+            /// Haltelinien: wo die Spur die Linie 18 m vor der Mitte einer Ampel-Kreuzung (innere 4x4) in Fahrtrichtung
+            /// ueberquert. Nur Zufahrten auf derselben Strasse (Querabstand unter 11 m), damit Nachbarstrassen nicht zaehlen.
+            /// </summary>
+            void FindStopLines()
+            {
+                var lines = new List<(float s, bool z)>();
+                int m = pos.Length;
+                for (int i = 1; i < CityBuilder.Grid; i++)
+                    for (int j = 1; j < CityBuilder.Grid; j++)
+                    {
+                        Vector3 c = new Vector3(CityBuilder.RoadCenter(j), 0f, CityBuilder.RoadCenter(i));
+                        for (int k = 0; k < m; k++)
+                        {
+                            Vector3 p0 = pos[k], p1 = pos[(k + 1) % m];
+                            Vector3 d = p1 - p0;
+                            d.y = 0f;
+                            if (d.sqrMagnitude < 1e-6f) continue;
+                            bool z = Mathf.Abs(d.z) > Mathf.Abs(d.x);
+                            Vector3 axis = z ? new Vector3(0f, 0f, Mathf.Sign(d.z)) : new Vector3(Mathf.Sign(d.x), 0f, 0f);
+                            float u0 = Vector3.Dot(p0 - c, axis), u1 = Vector3.Dot(p1 - c, axis);
+                            if (!(u0 < -StopLine && u1 >= -StopLine)) continue;
+                            Vector3 lat = (p0 - c) - axis * u0;
+                            if (Mathf.Abs(z ? lat.x : lat.z) > 11f) continue;
+                            float f = (-StopLine - u0) / (u1 - u0);
+                            lines.Add((s[k] + f * Seg(k), z));
+                        }
+                    }
+                lines.Sort((a, b) => a.s.CompareTo(b.s));
+                lineS = lines.ConvertAll(l => l.s).ToArray();
+                lineZ = lines.ConvertAll(l => l.z).ToArray();
+            }
+
+            /// <summary>Tempo laut Profil (Kurven, Haltestellen) an der Strecke dist.</summary>
+            public float SpeedAt(float dist)
+            {
+                dist = Mathf.Repeat(dist, length);
+                int i = Index(s, dist);
+                float f = Mathf.InverseLerp(s[i], s[i + 1], dist);
+                return Mathf.Lerp(speed[i], speed[(i + 1) % pos.Length], f);
             }
 
             static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0f, v.z).normalized;
