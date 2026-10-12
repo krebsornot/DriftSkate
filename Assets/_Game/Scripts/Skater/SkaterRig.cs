@@ -15,6 +15,12 @@ namespace DriftSkate
     {
         /// <summary>Hoehe der Deck-Oberseite ueber dem BoardPivot (setzt SkaterBuilder je nach Board).</summary>
         public float deckTop = 0.035f;
+        /// <summary>
+        /// So tief stecken die Sohlen im Deck bzw. im Boden. Der Toon-Umriss (Inverted Hull) waechst mit der Entfernung und
+        /// legt sich als dunkle Linie zwischen Sohle und Deck: genau auf der Oberflaeche sieht die Figur aus, als schwebe
+        /// sie. Ein paar Millimeter im Deck verschwinden unsichtbar darin, die Fuesse stehen sichtbar drauf.
+        /// </summary>
+        const float DeckSink = 0.016f, GroundSink = 0.01f;
 
         // Pro Modell gemessen (siehe Init): Knoechelhoehe ueber der Sohle und Hueftpositionen ueber dem Deck
         float AnkleHeight = 0.115f, StandHip = 0.87f, CrouchHip = 0.5f, TuckHip = 0.42f;
@@ -303,9 +309,10 @@ namespace DriftSkate
             Vector3 bodyFwdT = twistRot * bodyFwd, bodyRightT = twistRot * bodyRight;
 
             // ---------------------------------------------------- Fusspunkte
-            Vector3 deckFront = Vector3.Lerp(board.TransformPoint(new Vector3(0f, deckTop, 0.19f)),
+            float sink = DeckSink * (1f - _feetFree);
+            Vector3 deckFront = Vector3.Lerp(board.TransformPoint(new Vector3(0f, deckTop - sink, 0.19f)),
                 stance.TransformPoint(new Vector3(0f, 0.1f + deckTop + 0.24f, 0.19f)), _feetFree) - bodyFwd * 0.03f;
-            Vector3 deckBack = Vector3.Lerp(board.TransformPoint(new Vector3(0f, deckTop, -0.21f)),
+            Vector3 deckBack = Vector3.Lerp(board.TransformPoint(new Vector3(0f, deckTop - sink, -0.21f)),
                 stance.TransformPoint(new Vector3(0f, 0.1f + deckTop + 0.24f, -0.21f)), _feetFree) - bodyFwd * 0.03f;
             Vector3 pushDeck = fakieRide ? deckFront : deckBack;
             // Zehenseite genau quer zur Fahrtrichtung (die Figur steht 80 statt 90 Grad gedreht; sonst laege der
@@ -323,7 +330,7 @@ namespace DriftSkate
             {
                 // Der in Fahrtrichtung hintere Fuss stoesst sich auf der Zehenseite vom Boden ab: weit vorn aufsetzen,
                 // langer Zug nach hinten, ueber die Zehen abrollen, mit haengender Fussspitze zurueck aufs Board
-                Vector3 ground = root.position;
+                Vector3 ground = root.position - groundUp * GroundSink;
                 Vector3 a = ground + toeSide * 0.26f + travelDir * 0.28f;
                 Vector3 b = a - travelDir * 0.78f;
                 float p = pushPhase;
@@ -359,7 +366,7 @@ namespace DriftSkate
             if (brake > 0.01f)
             {
                 // Fussbremse: der hintere Fuss (in Fahrtrichtung) schleift hinter dem Board
-                Vector3 drag = root.position + toeSide * 0.22f - travelDir * 0.38f;
+                Vector3 drag = root.position - groundUp * GroundSink + toeSide * 0.22f - travelDir * 0.38f;
                 pushTarget = Vector3.Lerp(pushTarget, drag, brake);
                 pushToe = Vector3.Slerp(pushToe, travelDir, brake * 0.7f);
                 pushSoleUp = Vector3.Slerp(pushSoleUp, (groundUp - travelDir * 0.5f).normalized, brake * 0.6f).normalized;
@@ -398,9 +405,10 @@ namespace DriftSkate
                 if (toHold.sqrMagnitude > 1e-4f) hipsPos += toHold.normalized * 0.1f * hold;
             }
             _hips.position = hipsPos;
-            // Kurvenlage um die Fahrtrichtung; beim Pushen oeffnet sich die Huefte zur Fahrtrichtung, beim Boardslide
-            // dreht sie fast ganz dorthin; zu Fuss pendelt sie mit dem Schritt
-            float hipYaw = toTravel * (bodyTwist + 0.3f * _pushWeight * (1f - bodyTwist)) * (1f - walk);
+            // Kurvenlage um die Fahrtrichtung; beim Boardslide dreht die Huefte mit den Fuessen zur Rail; zu Fuss pendelt
+            // sie mit dem Schritt. (Beim Pushen bleibt sie: die Beine stehen fest, eine gedrehte Huefte verdreht nur Hose
+            // und Jackensaum gegen sie. Die Oeffnung zur Fahrtrichtung macht allein der Oberkoerper.)
+            float hipYaw = toTravel * bodyTwist * (1f - walk);
             _hips.rotation = Quaternion.AngleAxis(hipYaw, up)
                              * Quaternion.AngleAxis(leanDeg * (1f - walk) + Mathf.Sin(gait) * 6f * moving * walk, walk > 0.5f ? up : travelDir)
                              * _hips.rotation;
@@ -414,7 +422,7 @@ namespace DriftSkate
             float balPitch = _balance * 12f * manual, balRoll = -_balance * 12f * grind;
             _spine.rotation = Quaternion.AngleAxis(bend * 0.45f + balPitch * 0.4f, bodyRightT) * _spine.rotation;
             _chest.rotation = Quaternion.AngleAxis(bend * 0.55f + balPitch * 0.6f, bodyRightT) * _chest.rotation;
-            float twist = -(18f + _pushWeight * 14f) * stanceSign * rideSign * (1f - bodyTwist); // Oberkoerper oeffnet sich zur Fahrtrichtung
+            float twist = -(18f + _pushWeight * 30f) * stanceSign * rideSign * (1f - bodyTwist); // Oberkoerper oeffnet sich zur Fahrtrichtung
             twist = Mathf.Lerp(twist, -Mathf.Sin(gait) * 9f * moving, walk); // Schultern gegen die Huefte
             twist += _spin * 16f; // in der Luft fuehrt der Oberkoerper die Drehung an
             _spine.rotation = Quaternion.AngleAxis(twist * 0.4f, up) * _spine.rotation;
@@ -443,7 +451,7 @@ namespace DriftSkate
                             x = Mathf.Lerp(-A, A, Smooth(t));
                             lift = Mathf.Sin(t * Mathf.PI) * Mathf.Lerp(0.07f, 0.16f, run) * moving;
                         }
-                        Vector3 walkSole = root.position + travelDir * x + bodyRight * (i == 0 ? -0.1f : 0.1f) + up * lift;
+                        Vector3 walkSole = root.position + travelDir * x + bodyRight * (i == 0 ? -0.1f : 0.1f) + up * (lift - GroundSink);
                         sole = Vector3.Lerp(sole, walkSole, walk);
                         soleUp = Vector3.Slerp(soleUp, up, walk).normalized;
                         // Heel strike / toe-off, fading out when stopped or airborne.

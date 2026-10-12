@@ -122,8 +122,6 @@ namespace DriftSkate.EditorTools
                 {
                     var root = Make(poses[i], basePos + travel * (i - (poses.Length - 1) * 0.5f) * 2.1f, i);
                     roots.Add(root);
-                    var rig = root.GetComponentInChildren<SkaterRig>();
-                    if (rig != null) log.AppendLine($"{poses[i].name}: " + Describe(root.transform, rig));
                 }
                 Vector3 center = basePos + Vector3.up * 0.9f;
                 Shoot(basePos + toeSide * 9.5f + Vector3.up * 1.5f, center, 52f, $"poses_{sheet + 1}_seite");
@@ -131,13 +129,15 @@ namespace DriftSkate.EditorTools
                 Shoot(basePos - toeSide * 9f + travel * 4f + Vector3.up * 1.7f, center, 52f, $"poses_{sheet + 1}_ruecken");
                 foreach (var r in roots) UnityEngine.Object.DestroyImmediate(r);
 
-                // Nahaufnahmen jeder Pose: Zehenseite und schraeg von vorn
+                // Nahaufnahmen jeder Pose: Zehenseite und schraeg von vorn (danach sind die Renderer-Bounds aktuell: Kennzahlen)
                 for (int i = 0; i < poses.Length; i++, n++)
                 {
                     var root = Make(poses[i], basePos, i);
                     Vector3 c = basePos + Vector3.up * 0.85f;
                     Shoot(c + toeSide * 3.4f + Vector3.up * 0.25f, c, 40f, $"close_{n:00}_{Safe(poses[i].name)}_seite");
                     Shoot(c + toeSide * 2.4f + travel * 2.4f + Vector3.up * 0.6f, c, 40f, $"close_{n:00}_{Safe(poses[i].name)}_schraeg");
+                    var rig = root.GetComponentInChildren<SkaterRig>();
+                    if (rig != null) log.AppendLine($"{poses[i].name}: " + Describe(root.transform, rig));
                     UnityEngine.Object.DestroyImmediate(root);
                 }
             }
@@ -166,7 +166,29 @@ namespace DriftSkate.EditorTools
             Vector3 hl = root.InverseTransformPoint(map.hand[0].position), hr = root.InverseTransformPoint(map.hand[1].position);
             Vector3 fl = root.InverseTransformPoint(map.foot[0].position), fr = root.InverseTransformPoint(map.foot[1].position);
             bool nan = float.IsNaN(hip.x) || float.IsNaN(hl.x) || float.IsNaN(fl.x);
-            return $"Huefte {hip.y:0.00} m, Knie L {Knee(0):0}/R {Knee(1):0} Grad, Fuss L ({fl.x:+0.00;-0.00},{fl.y:0.00},{fl.z:+0.00;-0.00}) R ({fr.x:+0.00;-0.00},{fr.y:0.00},{fr.z:+0.00;-0.00}), Hand L {hl.y:0.00} R {hr.y:0.00}{(nan ? "  NaN!" : "")}";
+            return $"Huefte {hip.y:0.00} m, Knie L {Knee(0):0}/R {Knee(1):0} Grad, Fuss L ({fl.x:+0.00;-0.00},{fl.y:0.00},{fl.z:+0.00;-0.00}) R ({fr.x:+0.00;-0.00},{fr.y:0.00},{fr.z:+0.00;-0.00}), Hand L {hl.y:0.00} R {hr.y:0.00}, {ShoeGap(rig)}{(nan ? "  NaN!" : "")}";
+        }
+
+        /// <summary>
+        /// Spalt zwischen Schuhsohle und Deck: Unterkante der gerenderten Schuh-Bounds (beide Schuhe, nach dem letzten
+        /// Rendern aktuell) ueber der Deck-Oberkante unter dem tieferen Fuss. Negativ = steckt im Deck.
+        /// Nur sinnvoll, wenn beide Fuesse auf dem Deck stehen.
+        /// </summary>
+        public static string ShoeGap(SkaterRig rig)
+        {
+            var map = SkeletonMap.Resolve(rig.transform, null, out _);
+            if (map == null || rig.board == null) return "Spalt ?";
+            float low = float.MaxValue;
+            foreach (var smr in rig.GetComponentsInChildren<SkinnedMeshRenderer>())
+                if (smr.enabled && smr.gameObject.activeInHierarchy && smr.name.StartsWith("Shoes")) low = Mathf.Min(low, smr.bounds.min.y);
+            if (low == float.MaxValue) return "Spalt ?";
+            float deckY = float.MaxValue;
+            for (int f = 0; f < 2; f++)
+            {
+                Vector3 local = rig.board.InverseTransformPoint(map.foot[f].position);
+                deckY = Mathf.Min(deckY, rig.board.TransformPoint(new Vector3(local.x, rig.deckTop, local.z)).y);
+            }
+            return $"Spalt Schuh-Deck {(low - deckY) * 100f:+0.0;-0.0} cm";
         }
 
         // ------------------------------------------------------------------ Bewegung im Play-Modus
@@ -174,7 +196,7 @@ namespace DriftSkate.EditorTools
         static double _started;
         static int _stage, _failures, _pushShots;
         static float _t0, _lastPush, _minY, _maxY;
-        static bool _oldEnabled, _pushSeen, _airSeen, _manualSeen, _charged, _popShot, _airShot;
+        static bool _oldEnabled, _pushSeen, _airSeen, _manualSeen, _charged, _popShot, _airShot, _feetShot, _feetPushShot;
         static EnterPlayModeOptions _oldOptions;
         static StreamWriter _log;
 
@@ -187,7 +209,7 @@ namespace DriftSkate.EditorTools
             EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload;
             _started = EditorApplication.timeSinceStartup;
             _stage = 0; _failures = 0; _pushShots = 0; _lastPush = -1f;
-            _pushSeen = _airSeen = _manualSeen = _charged = _popShot = _airShot = false;
+            _pushSeen = _airSeen = _manualSeen = _charged = _popShot = _airShot = _feetShot = _feetPushShot = false;
             Directory.CreateDirectory("Logs/skater");
             _log = new StreamWriter("Logs/skater/result.txt", false);
             var p = SaveSystem.Profile;
@@ -231,7 +253,7 @@ namespace DriftSkate.EditorTools
         {
             try
             {
-                if (EditorApplication.timeSinceStartup - _started > 180) throw new Exception("Zeitlimit");
+                if (EditorApplication.timeSinceStartup - _started > 400) throw new Exception($"Zeitlimit (Play {EditorApplication.isPlaying}, Spieler {(PlayerAvatar.Local != null)}, Spielzeit {Time.time:0.0})");
                 if (!EditorApplication.isPlaying) return;
                 var a = PlayerAvatar.Local;
                 if (a == null || Time.time < 2.5f) return;
@@ -254,6 +276,19 @@ namespace DriftSkate.EditorTools
                         sc.InjectInput(new Vector2(0f, 1f), false);
                         float ph = sc.PushPhase;
                         if (ph >= 0f) _pushSeen = true;
+                        // Fuesse auf dem Deck: Nahaufnahme von unten seitlich, dazu der gemessene Spalt
+                        if (!_feetShot && sc.Speed > 4f && ph < 0f)
+                        {
+                            _feetShot = true;
+                            Shot(sc, "move_feet", 1.7f, 0.35f, 0.3f);
+                            Log("Rollen: " + ShoeGap(sc.rig));
+                        }
+                        if (_feetShot && !_feetPushShot && ph > 0.3f && ph < 0.5f)
+                        {
+                            _feetPushShot = true;
+                            Shot(sc, "move_feet_push", 1.9f, 0.4f, 0.3f);
+                            Log("Push: " + ShoeGap(sc.rig));
+                        }
                         if (sc.Speed > 2.5f && ph >= 0f)
                         {
                             float[] marks = { 0.1f, 0.3f, 0.5f, 0.8f };
@@ -302,6 +337,7 @@ namespace DriftSkate.EditorTools
                         else if (_airSeen && sc.State == SkaterState.Riding)
                         {
                             Shot(sc, "move_land");
+                            Log("Landung: " + ShoeGap(sc.rig));
                             Check(sc.rig.land > 0.3f, $"Landung: land {sc.rig.land:0.00}, crouch {sc.rig.crouch:0.00}");
                             Check(_maxY - _minY > 0.5f, $"Ollie-Hoehe {_maxY - _minY:0.00} m");
                             _stage = 4; _t0 = t;
