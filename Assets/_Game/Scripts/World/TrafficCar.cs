@@ -44,6 +44,8 @@ namespace DriftSkate
         public float RoutePosition => _s;
         public bool Braking => _braking;
         public Mode State => _mode;
+        /// <summary>Haelt gerade an einem Haltepunkt seiner Runde (Schulbus an der Haltestelle).</summary>
+        public bool AtStop => _init && _mode == Mode.Drive && _speed < 0.6f && _route.NearStop(_s, 4f);
 
         public void Init(Traffic traffic, Traffic.Route route, float phase, int id)
         {

@@ -119,6 +119,8 @@ namespace DriftSkate
             ParkhausSite.Apply(root);
             // Baustelle mit drehendem Kran statt des orangen Hauses gegenueber (Block_04)
             BaustelleSite.Apply(root);
+            // Skate-Tankstelle statt des grossen Hauses in Block_43 im Norden (1,4-fach, Front zur Strasse im Westen)
+            GasStationSite.Apply(root);
             // Dach-Sets: Hubschrauber-Landeplatz (Block_12, suedlich vom Herz-Denkmal) und Rooftop-Bar (Block_40, Nordwesten)
             RoofSets.ApplyAll(root);
 
