@@ -33,7 +33,7 @@ namespace DriftSkate
         public SkaterRig rig;
 
         [Header("Fahrgefuehl")]
-        public float pushDuration = 0.62f;      // Dauer eines Abstossens (s)
+        public float pushDuration = 0.7f;       // Dauer eines Abstossens (s)
         public float pushAccel = 15f;           // Beschleunigung waehrend der Fuss am Boden ist (m/s^2)
         public float maxPushSpeed = 19f;        // so schnell wird man durch Pushen allein (m/s)
         public float rollingFriction = 0.12f;   // Ausrollen (m/s^2)
@@ -1817,6 +1817,13 @@ namespace DriftSkate
                 bool walkAir = s == SkaterState.Walking && (isLocal ? _walkAirTime > 0.03f : !ProbeGround(out _, 0.25f));
                 rig.walkJump = Mathf.MoveTowards(rig.walkJump, walkAir ? 1f : 0f, dt * (walkAir ? 9f : 7f));
                 rig.grab = isLocal && _grabbing ? _grabName : null;
+                rig.speed = Speed;
+                rig.charge = isLocal ? OllieCharge : 0f;
+                rig.pop = _popTimer > 0f ? _popTimer / 0.22f : 0f;
+                rig.land = _landAbsorb;
+                rig.spin = isLocal && air ? Mathf.Clamp(_spinVel / 380f, -1f, 1f) : 0f;
+                rig.balance = isLocal && (Manualing || s == SkaterState.Grinding) ? Balance : 0f;
+                rig.grindName = s == SkaterState.Grinding ? _grindName : null;
                 // Leiter: Haende und Fuesse auf die Sprossen (entfernte Spieler: Leiter in der Naehe suchen)
                 Ladder ladder = null;
                 float ls = 0f;

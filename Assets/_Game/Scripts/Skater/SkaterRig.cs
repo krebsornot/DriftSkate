@@ -4,9 +4,12 @@ namespace DriftSkate
 {
     /// <summary>
     /// Prozedurale Animation der Spielfigur auf dem Board:
-    /// Fuesse per IK fest auf dem Deck (oder beim Pushen auf dem Boden), Huefte und Knie federn,
-    /// Oberkoerper lehnt in Kurven, Arme balancieren, Haende greifen bei Grabs ans Board, Kopf schaut nach vorn.
-    /// Eingaben (crouch, lean, pushPhase ...) setzt der SkaterController jeden Frame.
+    /// Fuesse per IK fest auf dem Deck (oder beim Pushen auf dem Boden), Huefte und Knie federn, die Haltung wird mit
+    /// dem Tempo tiefer. Anschieben als Zyklus mit Gewicht ueber dem Standbein, Huefte oeffnet sich, Absenken beim
+    /// Aufsetzen und Abrollen ueber die Zehen. Arme mit gebeugten Ellbogen, darueber Posen je Situation (Ausholen,
+    /// Absprung, Luft mit Spin, Rail und Manual mit Balance-Rudern, Landung, Grab, Bremsen). Oberkoerper lehnt in Kurven,
+    /// Kopf schaut in die Kurve bzw. zur Landung. Boardslide dreht den Koerper entlang der Rail. Atmen und leichtes
+    /// Pendeln sind immer an (proceduralLife). Eingaben (crouch, lean, pushPhase ...) setzt der SkaterController jeden Frame.
     /// </summary>
     public class SkaterRig : MonoBehaviour
     {
@@ -49,8 +52,24 @@ namespace DriftSkate
         public float climbRungs, climbSpacing = 0.3f;
         public Vector3 climbPlane, climbSide = Vector3.back;
 
-        [Header("Animation Lab (0 = bisherige Animation)")]
-        [Range(0, 1)] public float proceduralLife;
+        [Header("Mehr Pose (vom Controller gesetzt)")]
+        /// <summary>Fahrtempo (m/s): schnell = tiefer in den Knien, Arme weiter raus, mehr nach vorn geneigt.</summary>
+        public float speed;
+        /// <summary>Ollie aufladen (0..1): Arme nach hinten unten (ausholen), Blick leicht hoch.</summary>
+        [Range(0, 1)] public float charge;
+        /// <summary>Absprung (1 beim Pop, klingt ab): Arme reissen hoch, Beine strecken sich.</summary>
+        [Range(0, 1)] public float pop;
+        /// <summary>Landung (1 beim Aufsetzen, klingt ab): abfedern, Arme nach vorn unten.</summary>
+        [Range(0, 1)] public float land;
+        /// <summary>Drehung in der Luft (-1..1, Anteil der vollen Spin-Rate): Arme und Oberkoerper fuehren die Drehung an.</summary>
+        [Range(-1, 1)] public float spin;
+        /// <summary>Balance bei Manual und Grind (-1..1): Oberkoerper kippt, die Arme rudern gegen.</summary>
+        [Range(-1, 1)] public float balance;
+        /// <summary>Grind-Art ("50-50", "BOARDSLIDE", "NOSEGRIND", "5-0") fuer die Haltung auf der Rail.</summary>
+        public string grindName;
+
+        [Header("Leben (0 = starr, Vergleich im Animation Lab)")]
+        [Range(0, 1)] public float proceduralLife = 1f;
         float _lifeTime, _acceleration, _turnRate, _previousSpeed, _previousYaw;
         bool _motionReady;
 
@@ -66,7 +85,7 @@ namespace DriftSkate
         readonly Vector3[] _toeLocal = new Vector3[2], _soleUpLocal = new Vector3[2];
         Vector3 _headFaceLocal;
         float _thigh, _shin, _upper, _fore, _scale = 1f;
-        float _pushWeight, _grabWeight, _armSwing, _feetFree;
+        float _pushWeight, _grabWeight, _armSwing, _feetFree, _slideWeight, _noseWeight, _tailWeight, _balance, _spin;
         // Gehen: Tempo und Schrittphase aus der tatsaechlichen Bewegung (so stimmt es auch bei anderen Spielern online)
         Vector3 _lastRoot;
         bool _hasLastRoot;
@@ -237,7 +256,9 @@ namespace DriftSkate
             float stride = Mathf.Lerp(0.3f, 0.48f, run); // halbe Schrittlaenge
             if (walk > 0.001f) _walkPhase = Mathf.Repeat(_walkPhase + _walkSpeed * dt / (4f * stride), 1f);
             float gait = _walkPhase * Mathf.PI * 2f;
-            // Filter actual motion, so collisions and stopping affect the pose as well as input.
+
+            // Leben: Atmen, leichtes Pendeln, Reaktion auf Beschleunigen und Drehen (aus der echten Bewegung, damit es
+            // auch bei anderen Spielern online stimmt)
             float life = proceduralLife * (1f - bail);
             float safeDt = Mathf.Clamp(dt, 0f, 0.05f);
             _lifeTime += safeDt;
@@ -259,8 +280,27 @@ namespace DriftSkate
             float rideSign = fakieRide ? -1f : 1f;
             int pushFoot = fakieRide ? front : back;
 
+            // Geglaettete Gewichte
+            float smooth8 = 1f - Mathf.Exp(-8f * dt);
             _pushWeight = Mathf.MoveTowards(_pushWeight, pushPhase >= 0f ? 1f : 0f, dt * 6f);
             _grabWeight = Mathf.MoveTowards(_grabWeight, string.IsNullOrEmpty(grab) ? 0f : 1f, dt * 9f);
+            _slideWeight = Mathf.MoveTowards(_slideWeight, grind > 0.5f && grindName == "BOARDSLIDE" ? 1f : 0f, dt * 6f);
+            _noseWeight = Mathf.MoveTowards(_noseWeight, grind > 0.5f && grindName == "NOSEGRIND" ? 1f : 0f, dt * 5f);
+            _tailWeight = Mathf.MoveTowards(_tailWeight, grind > 0.5f && grindName == "5-0" ? 1f : 0f, dt * 5f);
+            _balance = Mathf.Lerp(_balance, Mathf.Clamp(balance, -1f, 1f), smooth8);
+            _spin = Mathf.Lerp(_spin, Mathf.Clamp(spin, -1f, 1f) * airborne, smooth8);
+            // Haltung nach Tempo: schnell = tiefer in den Knien und mehr nach vorn (gilt auch fuer andere Spieler, aus
+            // der gemessenen Bewegung)
+            float rideSpeed = Mathf.Max(speed, Mathf.Abs(_walkSpeed));
+            float fast = Mathf.Clamp01((rideSpeed - 3f) / 12f) * (1f - walk) * (1f - airborne) * (1f - grind) * (1f - bail);
+            float kneeBend = Mathf.Max(crouch, (0.17f + 0.14f * fast) * (1f - walk) * (1f - bail));
+
+            // Koerper zur Fahrtrichtung drehen: beim Boardslide fast ganz (Deck quer auf der Rail, Blick entlang der
+            // Rail), beim Pushen oeffnet sich die Huefte ein Stueck
+            float toTravel = Vector3.SignedAngle(bodyFwd, travelDir, up);
+            float bodyTwist = _slideWeight * 0.85f;
+            Quaternion twistRot = Quaternion.AngleAxis(toTravel * bodyTwist, up);
+            Vector3 bodyFwdT = twistRot * bodyFwd, bodyRightT = twistRot * bodyRight;
 
             // ---------------------------------------------------- Fusspunkte
             Vector3 deckFront = Vector3.Lerp(board.TransformPoint(new Vector3(0f, deckTop, 0.19f)),
@@ -272,33 +312,49 @@ namespace DriftSkate
             // Anschub-Punkt bei Fakie weiter hinten als normal und der Fuss kaeme nicht auf den Boden)
             Vector3 toeSide = Vector3.ProjectOnPlane(bodyFwd, travelDir).normalized;
             Vector3 pushTarget = pushDeck;
-            Vector3 backToe = Vector3.ProjectOnPlane(Quaternion.AngleAxis(-8f * stanceSign, up) * bodyFwd, up).normalized;
-            Vector3 frontToe = Vector3.ProjectOnPlane(Quaternion.AngleAxis(18f * stanceSign, up) * bodyFwd, up).normalized;
+            Vector3 backToe = Vector3.ProjectOnPlane(Quaternion.AngleAxis(-8f * stanceSign, up) * bodyFwdT, up).normalized;
+            Vector3 frontToe = Vector3.ProjectOnPlane(Quaternion.AngleAxis(18f * stanceSign, up) * bodyFwdT, up).normalized;
             Vector3 pushToe = fakieRide ? frontToe : backToe, standToe = fakieRide ? backToe : frontToe;
             Vector3 groundUp = Vector3.up;
+            Vector3 pushSoleUp = up;
+            float dip = 0f; // Huefte senkt sich beim Aufsetzen des Fusses und hebt sich beim Abstossen wieder
 
             if (pushPhase >= 0f)
             {
-                // Der in Fahrtrichtung hintere Fuss stoesst sich auf der Zehenseite vom Boden ab
+                // Der in Fahrtrichtung hintere Fuss stoesst sich auf der Zehenseite vom Boden ab: weit vorn aufsetzen,
+                // langer Zug nach hinten, ueber die Zehen abrollen, mit haengender Fussspitze zurueck aufs Board
                 Vector3 ground = root.position;
-                Vector3 a = ground + toeSide * 0.26f + travelDir * 0.08f;
-                Vector3 b = a - travelDir * 0.6f;
+                Vector3 a = ground + toeSide * 0.26f + travelDir * 0.28f;
+                Vector3 b = a - travelDir * 0.78f;
                 float p = pushPhase;
-                Vector3 target;
+                Vector3 target, tilt;
                 if (p < 0.2f)
                 {
                     float t = Smooth(p / 0.2f);
-                    target = Vector3.Lerp(pushDeck, a, t) + groundUp * Mathf.Sin(t * Mathf.PI) * 0.12f;
+                    target = Vector3.Lerp(pushDeck, a, t) + groundUp * Mathf.Sin(t * Mathf.PI) * 0.14f;
+                    tilt = (groundUp + travelDir * 0.3f * (1f - t)).normalized;
+                    dip = t;
                 }
-                else if (p < 0.65f) target = Vector3.Lerp(a, b, Smooth((p - 0.2f) / 0.45f));
+                else if (p < 0.65f)
+                {
+                    float t = Smooth((p - 0.2f) / 0.45f);
+                    target = Vector3.Lerp(a, b, t);
+                    float heel = Smooth((p - 0.5f) / 0.15f);
+                    tilt = (groundUp - travelDir * 0.9f * heel).normalized;
+                    dip = 1f - 0.7f * t;
+                }
                 else
                 {
                     float t = Smooth((p - 0.65f) / 0.35f);
-                    target = Vector3.Lerp(b, pushDeck, t) + groundUp * Mathf.Sin(t * Mathf.PI) * 0.2f;
+                    target = Vector3.Lerp(b, pushDeck, t) + groundUp * Mathf.Sin(t * Mathf.PI) * 0.22f;
+                    tilt = (groundUp + travelDir * 0.45f * Mathf.Sin(t * Mathf.PI)).normalized;
+                    dip = 0.3f * (1f - t);
                 }
                 pushTarget = Vector3.Lerp(pushDeck, target, _pushWeight);
-                pushToe = Vector3.Slerp(pushToe, travelDir, _pushWeight * 0.8f);
-                standToe = Vector3.Slerp(standToe, travelDir, _pushWeight * 0.6f);
+                pushSoleUp = Vector3.Slerp(up, tilt, _pushWeight).normalized;
+                pushToe = Vector3.Slerp(pushToe, travelDir, _pushWeight * 0.85f);
+                standToe = Vector3.Slerp(standToe, travelDir, _pushWeight * 0.55f);
+                dip *= _pushWeight;
             }
             if (brake > 0.01f)
             {
@@ -306,19 +362,22 @@ namespace DriftSkate
                 Vector3 drag = root.position + toeSide * 0.22f - travelDir * 0.38f;
                 pushTarget = Vector3.Lerp(pushTarget, drag, brake);
                 pushToe = Vector3.Slerp(pushToe, travelDir, brake * 0.7f);
+                pushSoleUp = Vector3.Slerp(pushSoleUp, (groundUp - travelDir * 0.5f).normalized, brake * 0.6f).normalized;
             }
 
             // ---------------------------------------------------- Huefte
-            float hipH = Mathf.Lerp(StandHip, CrouchHip, crouch);
+            float hipH = Mathf.Lerp(StandHip, CrouchHip, kneeBend);
             hipH = Mathf.Lerp(hipH, TuckHip, Mathf.Max(_grabWeight, airborne * 0.35f));
-            hipH -= _pushWeight * 0.1f;
+            hipH -= _pushWeight * 0.03f + 0.09f * dip;
+            hipH += pop * 0.06f; // Absprung: Beine strecken sich
             hipH += rideLife * (breath * 0.006f - Mathf.Abs(balanceWave) * 0.012f);
             hipH = Mathf.Lerp(hipH, 0.24f, bail); // liegt flach: Becken knapp ueber dem Boden
             float leanDeg = -lean * 16f;
             Vector3 mid = (deckFront + deckBack) * 0.5f;
             Vector3 travelRight = Vector3.Cross(up, travelDir);
             Vector3 hipsPos = mid + up * hipH - bodyFwd * 0.02f
-                              + noseDir * (-manual * 0.14f + _pushWeight * 0.12f * stanceSign * rideSign)
+                              + noseDir * (-manual * 0.14f - _tailWeight * 0.12f + _noseWeight * 0.12f)
+                              + travelDir * (_pushWeight * 0.1f - brake * 0.06f) // Gewicht ueber dem Standbein, beim Bremsen zurueck
                               + travelRight * lean * 0.1f;
             hipsPos += rideLife * (travelRight * (balanceWave * 0.012f + _turnRate * 0.0002f)
                 - travelDir * _acceleration * 0.003f);
@@ -339,19 +398,29 @@ namespace DriftSkate
                 if (toHold.sqrMagnitude > 1e-4f) hipsPos += toHold.normalized * 0.1f * hold;
             }
             _hips.position = hipsPos;
-            _hips.rotation = Quaternion.AngleAxis(leanDeg * (1f - walk) + Mathf.Sin(gait) * 6f * moving * walk, walk > 0.5f ? up : travelDir) * _hips.rotation;
+            // Kurvenlage um die Fahrtrichtung; beim Pushen oeffnet sich die Huefte zur Fahrtrichtung, beim Boardslide
+            // dreht sie fast ganz dorthin; zu Fuss pendelt sie mit dem Schritt
+            float hipYaw = toTravel * (bodyTwist + 0.3f * _pushWeight * (1f - bodyTwist)) * (1f - walk);
+            _hips.rotation = Quaternion.AngleAxis(hipYaw, up)
+                             * Quaternion.AngleAxis(leanDeg * (1f - walk) + Mathf.Sin(gait) * 6f * moving * walk, walk > 0.5f ? up : travelDir)
+                             * _hips.rotation;
 
             // ---------------------------------------------------- Oberkoerper
-            float bend = Mathf.Lerp(6f, 30f, crouch) + _pushWeight * 14f + _grabWeight * 34f + grind * 8f;
+            float bend = Mathf.Lerp(8f, 32f, kneeBend) + _pushWeight * 10f + _grabWeight * 34f + grind * 8f + fast * 8f
+                         + charge * 8f + land * 10f - pop * 10f + _noseWeight * 8f + brake * 6f;
             bend = Mathf.Lerp(bend, 4f + 14f * run * moving + 12f * walkJump, walk);
             bend += life * (breath * 0.9f + _acceleration * 0.65f);
-            _spine.rotation = Quaternion.AngleAxis(bend * 0.45f, bodyRight) * _spine.rotation;
-            _chest.rotation = Quaternion.AngleAxis(bend * 0.55f, bodyRight) * _chest.rotation;
-            float twist = -(18f + _pushWeight * 30f) * stanceSign * rideSign; // Oberkoerper oeffnet sich zur Fahrtrichtung
+            // Balance: Manual kippt vor und zurueck, Grind seitlich (die Arme rudern gegen, siehe unten)
+            float balPitch = _balance * 12f * manual, balRoll = -_balance * 12f * grind;
+            _spine.rotation = Quaternion.AngleAxis(bend * 0.45f + balPitch * 0.4f, bodyRightT) * _spine.rotation;
+            _chest.rotation = Quaternion.AngleAxis(bend * 0.55f + balPitch * 0.6f, bodyRightT) * _chest.rotation;
+            float twist = -(18f + _pushWeight * 14f) * stanceSign * rideSign * (1f - bodyTwist); // Oberkoerper oeffnet sich zur Fahrtrichtung
             twist = Mathf.Lerp(twist, -Mathf.Sin(gait) * 9f * moving, walk); // Schultern gegen die Huefte
+            twist += _spin * 16f; // in der Luft fuehrt der Oberkoerper die Drehung an
             _spine.rotation = Quaternion.AngleAxis(twist * 0.4f, up) * _spine.rotation;
             _chest.rotation = Quaternion.AngleAxis(twist * 0.6f, up) * _chest.rotation;
-            _chest.rotation = Quaternion.AngleAxis(-_turnRate * 0.035f * life, bodyFwd) * _chest.rotation;
+            _chest.rotation = Quaternion.AngleAxis(-_turnRate * 0.035f * life, bodyFwdT) * _chest.rotation;
+            _chest.rotation = Quaternion.AngleAxis(-lean * 6f * (1f - walk) + balRoll, travelDir) * _chest.rotation; // in die Kurve legen
 
             // ---------------------------------------------------- Beine
             if (bail < 0.5f)
@@ -360,8 +429,8 @@ namespace DriftSkate
                 {
                     bool isFront = i == front, pushes = i == pushFoot;
                     Vector3 sole = pushes ? pushTarget : (isFront ? deckFront : deckBack);
-                    Vector3 soleUp = !pushes || _pushWeight < 0.5f ? up : Vector3.Slerp(up, groundUp, _pushWeight);
-                    Vector3 kneeHint = _upperLeg[i].position + bodyFwd * 0.7f + noseDir * (isFront ? 0.2f : -0.2f) * stanceSign;
+                    Vector3 soleUp = pushes ? pushSoleUp : up;
+                    Vector3 kneeHint = _upperLeg[i].position + bodyFwdT * 0.7f + noseDir * (isFront ? 0.2f : -0.2f) * stanceSign;
                     Vector3 toe = pushes ? pushToe : standToe;
                     if (walk > 0.001f)
                     {
@@ -403,34 +472,63 @@ namespace DriftSkate
             }
 
             // ---------------------------------------------------- Arme
+            // Jeder Arm bekommt eine Richtung fuer Oberarm und Unterarm; Grundhaltung locker mit gebeugten Ellbogen,
+            // darueber werden die Posen der Situation eingeblendet (Push, Ausholen, Absprung, Luft, Rail, Landung ...)
             _armSwing = Mathf.Lerp(_armSwing, pushPhase >= 0f ? Mathf.Sin(pushPhase * Mathf.PI * 2f) : 0f, 1f - Mathf.Exp(-10f * dt));
-            float raise = Mathf.Lerp(24f, 58f, Mathf.Max(airborne * 0.7f, grind, manual * 0.8f, bail));
+            float airW = Mathf.Clamp01(airborne) * (1f - _grabWeight);
+            int grabHand = -1;
+            if (_grabWeight > 0.01f && !string.IsNullOrEmpty(grab)) GrabTarget(grab, front, back, out grabHand, out _);
             for (int i = 0; i < 2; i++)
             {
-                Vector3 side = i == 0 ? -bodyRight : bodyRight;
-                float leanRaise = (i == 0 ? 1f : -1f) * lean * 18f * stanceSign;
-                leanRaise += rideLife * (Mathf.Sin(_lifeTime * 3.1f + i * 1.7f) * 5f + _turnRate * (i == 0 ? 0.045f : -0.045f));
-                float a = (raise + leanRaise) * Mathf.Deg2Rad;
-                float swing = (i == front ? 1f : -1f) * _armSwing * 0.6f * _pushWeight;
-                Vector3 upperDir = (-up * Mathf.Cos(a) + side * Mathf.Sin(a) + bodyFwd * 0.15f + noseDir * swing * stanceSign).normalized;
-                Aim(_upperArm[i], _lowerArm[i].position, upperDir);
-                Vector3 foreDir = Vector3.Slerp(upperDir, (bodyFwd + up * 0.3f).normalized, 0.3f + bail * 0.4f).normalized;
+                bool isFront = i == front;
+                Vector3 side = i == 0 ? -bodyRightT : bodyRightT;
+                float lifeArm = rideLife * (Mathf.Sin(_lifeTime * 3.1f + i * 1.7f) * 0.06f + _turnRate * (i == 0 ? 0.0008f : -0.0008f));
+                // Grundhaltung: Arme haengen locker leicht abgespreizt, Ellbogen gebeugt, Haende vor der Huefte;
+                // der vordere Arm etwas vor, der hintere zurueck. Schnell: Arme weiter raus (Gleichgewicht)
+                Vector3 upper = (-up * 0.85f + side * (0.32f + fast * 0.22f + lifeArm) + bodyFwdT * 0.12f + travelDir * (isFront ? 0.14f : -0.1f)).normalized;
+                Vector3 fore = (upper * 0.5f + bodyFwdT * 0.55f + up * 0.2f + travelDir * (isFront ? 0.1f : -0.05f)).normalized;
+                // Kurve: innerer Arm sinkt, aeusserer geht hoch
+                float leanRaise = (i == 0 ? 1f : -1f) * lean * stanceSign * 0.35f * (1f - walk);
+                upper = (upper + side * leanRaise + up * Mathf.Max(0f, leanRaise) * 0.4f).normalized;
+                // Push: Arme schwingen gegengleich zum Bein, der Oberkoerper pendelt mit
+                float swing = (isFront ? 1f : -1f) * _armSwing * 0.8f * _pushWeight;
+                upper = (upper + travelDir * swing + up * Mathf.Abs(swing) * 0.25f).normalized;
+                fore = (fore + travelDir * swing * 0.8f).normalized;
+                // Ollie aufladen: Arme nach hinten unten (ausholen)
+                Blend(ref upper, ref fore, (-up * 0.7f - bodyFwdT * 0.6f + side * 0.3f).normalized, (-up * 0.6f - bodyFwdT * 0.75f + side * 0.2f).normalized, charge * 0.9f);
+                // Absprung: Arme reissen hoch und nach aussen
+                Blend(ref upper, ref fore, (up * 0.4f + side * 0.8f + bodyFwdT * 0.2f).normalized, (up * 0.7f + side * 0.35f + bodyFwdT * 0.2f).normalized, pop);
+                // Luft: Arme ausgebreitet, Unterarme leicht hoch; Spin: beide Arme in Drehrichtung
+                Blend(ref upper, ref fore, (side * 0.85f + up * 0.2f + bodyFwdT * 0.1f + bodyRightT * _spin * 0.5f).normalized,
+                      (side * 0.5f + up * 0.55f + bodyFwdT * 0.15f + bodyRightT * _spin * 0.3f).normalized, airW * 0.85f);
+                // Rail und Manual: Arme waagerecht ausgebreitet; bei Balance rudern sie gegen (Grind seitlich, Manual vor/zurueck)
+                float balArm = _balance * (grind >= manual ? (i == 0 ? 1f : -1f) : (isFront ? -1f : 1f)) * 0.8f;
+                Blend(ref upper, ref fore, (side * 0.95f + up * (0.1f + balArm) + bodyFwdT * 0.12f).normalized,
+                      (side * 0.35f + bodyFwdT * 0.5f + up * (0.55f + balArm * 0.5f)).normalized, Mathf.Max(grind, manual * 0.9f));
+                // Landung und Bremsen: Arme nach vorn unten, Haende suchen Halt
+                Blend(ref upper, ref fore, (-up * 0.45f + bodyFwdT * 0.6f + side * 0.3f).normalized, (bodyFwdT * 0.8f + up * 0.25f + side * 0.1f).normalized, Mathf.Max(land * 0.8f, brake * 0.5f));
+                // Grab: der freie Arm geht hoch
+                if (grabHand >= 0 && i != grabHand)
+                    Blend(ref upper, ref fore, (up * 0.6f + side * 0.7f).normalized, (up * 0.9f + side * 0.2f).normalized, _grabWeight * 0.8f);
+                // Sturz: Arme nach vorn
+                Blend(ref upper, ref fore, (bodyFwd + up * 0.2f).normalized, (bodyFwd + up * 0.4f).normalized, bail * 0.7f);
                 if (walk > 0.001f)
                 {
                     // Arme schwingen gegengleich zu den Beinen (linker Arm vor, wenn das rechte Bein vorn ist)
                     float legX = Mathf.Cos(gait + (i == 0 ? 0f : Mathf.PI));
                     float armSwing = -legX * Mathf.Lerp(0.35f, 0.85f, run) * moving;
                     Vector3 wUpper = (-up + travelDir * armSwing + side * 0.12f).normalized;
-                    Vector3 wFore = (wUpper + travelDir * (0.25f + 0.6f * run) + up * 0.1f * run).normalized;
+                    Vector3 wFore = (wUpper + travelDir * (0.3f + 0.6f * run) + up * 0.15f * run).normalized;
                     // Sprung: Arme schwingen nach oben und zur Seite
                     Vector3 jUpper = (up * 0.25f + travelDir * 0.55f + side * 0.6f).normalized;
                     Vector3 jFore = (up * 0.7f + travelDir * 0.4f).normalized;
                     wUpper = Vector3.Slerp(wUpper, jUpper, walkJump).normalized;
                     wFore = Vector3.Slerp(wFore, jFore, walkJump).normalized;
-                    Aim(_upperArm[i], _lowerArm[i].position, Vector3.Slerp(upperDir, wUpper, walk));
-                    foreDir = Vector3.Slerp(foreDir, wFore, walk).normalized;
+                    upper = Vector3.Slerp(upper, wUpper, walk).normalized;
+                    fore = Vector3.Slerp(fore, wFore, walk).normalized;
                 }
-                Aim(_lowerArm[i], _hand[i].position, foreDir);
+                Aim(_upperArm[i], _lowerArm[i].position, upper);
+                Aim(_lowerArm[i], _hand[i].position, fore);
             }
 
             // Zu Fuss: die rechte Hand haelt das Board an der oberen Kante
@@ -443,7 +541,7 @@ namespace DriftSkate
             }
 
             // Grab: eine Hand greift an die Board-Kante
-            if (_grabWeight > 0.01f && !string.IsNullOrEmpty(grab))
+            if (grabHand >= 0)
             {
                 GrabTarget(grab, front, back, out int hand, out Vector3 local);
                 Vector3 target = board.TransformPoint(local + Vector3.up * (deckTop - 0.035f)); // Griffpunkte relativ zur Deckhoehe
@@ -465,9 +563,15 @@ namespace DriftSkate
             }
 
             // ---------------------------------------------------- Kopf
+            // Blick in Fahrtrichtung, in der Kurve schon in die Kurve, in der Luft zur Landung, beim Aufladen leicht hoch;
+            // dazu ein langsames Umherschauen
             Vector3 face = _head.TransformDirection(_headFaceLocal);
-            Vector3 look = Vector3.Slerp(Vector3.ProjectOnPlane(face, up), travelDir, 0.8f);
-            Quaternion turn = Quaternion.FromToRotation(Vector3.ProjectOnPlane(face, up), look);
+            Vector3 lookDir = Quaternion.AngleAxis(lean * 22f * (1f - walk) + life * Mathf.Sin(_lifeTime * 0.6f) * 4f, up) * travelDir;
+            lookDir = Vector3.Slerp(lookDir, (travelDir - up * 0.35f).normalized, airborne * 0.6f);
+            lookDir = Vector3.Slerp(lookDir, (travelDir + up * 0.25f).normalized, charge * 0.5f);
+            lookDir = Vector3.Slerp(lookDir, (travelDir + up * 0.15f).normalized, grind * 0.3f);
+            Vector3 look = Vector3.Slerp(face, lookDir, 0.85f);
+            Quaternion turn = Quaternion.FromToRotation(face, look);
             _neck.rotation = Quaternion.Slerp(Quaternion.identity, turn, 0.35f) * _neck.rotation;
             _head.rotation = Quaternion.Slerp(Quaternion.identity, turn, 0.65f) * _head.rotation;
 
@@ -485,6 +589,15 @@ namespace DriftSkate
             }
 
             if (climb > 0.001f) PoseClimb(up, bodyRight);
+        }
+
+        /// <summary>Arm-Pose (Oberarm- und Unterarm-Richtung) mit Gewicht w ueberblenden.</summary>
+        static void Blend(ref Vector3 upper, ref Vector3 fore, Vector3 toUpper, Vector3 toFore, float w)
+        {
+            if (w <= 0.001f) return;
+            w = Mathf.Clamp01(w);
+            upper = Vector3.Slerp(upper, toUpper, w).normalized;
+            fore = Vector3.Slerp(fore, toFore, w).normalized;
         }
 
         /// <summary>
