@@ -173,16 +173,54 @@ namespace DriftSkate
             _scale = Mathf.Clamp(legLength / 0.78f, 0.5f, 2f);
             _faceDepth = MeasureFace(modelRoot, facing, modelUp);
 
-            // Knoechelhoehe = Fussknochen ueber dem tiefsten Punkt des Modells (Sohle)
-            float sole = float.MaxValue;
-            foreach (var r in modelRoot.GetComponentsInChildren<Renderer>())
-                if (r.enabled && r.gameObject.activeInHierarchy) sole = Mathf.Min(sole, r.bounds.min.y);
+            // Knoechelhoehe = Fussknochen ueber dem tiefsten Punkt des Modells (Sohle). Aus den Mesh-Bounds in der Bindpose
+            // (Punkte liegen im Raum des Renderers), nicht aus Renderer.bounds: die sind direkt nach dem Aufbau (z. B. in
+            // der Garage im ersten Frame) noch nicht berechnet, dann stand die Figur sichtbar ueber dem Deck.
+            float sole = SoleHeight(modelRoot);
             float footY = (_foot[0].position.y + _foot[1].position.y) * 0.5f;
+            DebugSoleNew = sole;
+            DebugFootY = footY;
+            DebugSoleOld = float.MaxValue;
+            foreach (var r in modelRoot.GetComponentsInChildren<Renderer>())
+                if (r.enabled && r.gameObject.activeInHierarchy) DebugSoleOld = Mathf.Min(DebugSoleOld, r.bounds.min.y);
             AnkleHeight = sole < float.MaxValue ? Mathf.Clamp(footY - sole, 0.03f, 0.25f) : 0.1f;
             float hipDrop = Mathf.Max(0f, _hips.position.y - (_upperLeg[0].position.y + _upperLeg[1].position.y) * 0.5f);
             StandHip = AnkleHeight + hipDrop + legLength * 0.94f;
             CrouchHip = AnkleHeight + hipDrop + legLength * 0.5f;
             TuckHip = AnkleHeight + hipDrop + legLength * 0.4f;
+        }
+
+        /// <summary>Gemessene Knoechelhoehe ueber der Sohle (fuer Tests).</summary>
+        public float AnkleHeightMeasured => AnkleHeight;
+        /// <summary>Fuer Tests: Sohle beim Aufbau (neu: Mesh-Bounds in Bindpose, alt: Renderer-Bounds) und Fusshoehe.</summary>
+        public float DebugSoleNew { get; private set; }
+        public float DebugSoleOld { get; private set; }
+        public float DebugFootY { get; private set; }
+
+        /// <summary>
+        /// Tiefster Punkt des Modells in der Bindpose (Welt-y): Ecken der Mesh-Bounds jedes aktiven Skinned-Mesh-Renderers,
+        /// mit dessen Transform in die Welt gebracht. Schuh-Meshes zaehlen bevorzugt (ein Rucksack oder Rock darf nicht
+        /// tiefer haengen); feste Meshes ueber ihre Renderer-Bounds.
+        /// </summary>
+        public static float SoleHeight(Transform modelRoot)
+        {
+            float sole = float.MaxValue, shoes = float.MaxValue;
+            foreach (var smr in modelRoot.GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                if (!smr.enabled || !smr.gameObject.activeInHierarchy || smr.sharedMesh == null) continue;
+                Bounds b = smr.sharedMesh.bounds;
+                float low = float.MaxValue;
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector3 c = new Vector3((i & 1) == 0 ? b.min.x : b.max.x, (i & 2) == 0 ? b.min.y : b.max.y, (i & 4) == 0 ? b.min.z : b.max.z);
+                    low = Mathf.Min(low, smr.transform.TransformPoint(c).y);
+                }
+                sole = Mathf.Min(sole, low);
+                if (smr.name.StartsWith("Shoes") || smr.name.StartsWith("Shoe")) shoes = Mathf.Min(shoes, low);
+            }
+            foreach (var mr in modelRoot.GetComponentsInChildren<MeshRenderer>())
+                if (mr.enabled && mr.gameObject.activeInHierarchy) sole = Mathf.Min(sole, mr.bounds.min.y);
+            return shoes < float.MaxValue ? shoes : sole;
         }
 
         /// <summary>

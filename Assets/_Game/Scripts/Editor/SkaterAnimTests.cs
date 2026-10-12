@@ -166,29 +166,73 @@ namespace DriftSkate.EditorTools
             Vector3 hl = root.InverseTransformPoint(map.hand[0].position), hr = root.InverseTransformPoint(map.hand[1].position);
             Vector3 fl = root.InverseTransformPoint(map.foot[0].position), fr = root.InverseTransformPoint(map.foot[1].position);
             bool nan = float.IsNaN(hip.x) || float.IsNaN(hl.x) || float.IsNaN(fl.x);
-            return $"Huefte {hip.y:0.00} m, Knie L {Knee(0):0}/R {Knee(1):0} Grad, Fuss L ({fl.x:+0.00;-0.00},{fl.y:0.00},{fl.z:+0.00;-0.00}) R ({fr.x:+0.00;-0.00},{fr.y:0.00},{fr.z:+0.00;-0.00}), Hand L {hl.y:0.00} R {hr.y:0.00}, {ShoeGap(rig)}{(nan ? "  NaN!" : "")}";
+            return $"Knoechel {rig.AnkleHeightMeasured * 100f:0.0} cm (Fuss {rig.DebugFootY:0.000}, Sohle neu {rig.DebugSoleNew:0.000} alt {rig.DebugSoleOld:0.000}, Wurzel {root.position.y:0.000}), Huefte {hip.y:0.00} m, Knie L {Knee(0):0}/R {Knee(1):0} Grad, Fuss L ({fl.x:+0.00;-0.00},{fl.y:0.00},{fl.z:+0.00;-0.00}) R ({fr.x:+0.00;-0.00},{fr.y:0.00},{fr.z:+0.00;-0.00}), Hand L {hl.y:0.00} R {hr.y:0.00}, {ShoeGap(rig)}{(nan ? "  NaN!" : "")}";
         }
 
         /// <summary>
-        /// Spalt zwischen Schuhsohle und Deck: Unterkante der gerenderten Schuh-Bounds (beide Schuhe, nach dem letzten
-        /// Rendern aktuell) ueber der Deck-Oberkante unter dem tieferen Fuss. Negativ = steckt im Deck.
-        /// Nur sinnvoll, wenn beide Fuesse auf dem Deck stehen.
+        /// Spalt zwischen Schuhsohle und Deck: Fussknochen minus gemessene Knoechelhoehe gegen die Deck-Oberkante unter dem
+        /// Fuss (der tiefere von beiden). Negativ = steckt im Deck (Soll: -1,6 cm, DeckSink). Deutlich positiv heisst: die IK
+        /// erreicht das Deck nicht. Renderer-Bounds taugen nicht: sie liegen bei der Standardfigur 11 cm zu tief.
         /// </summary>
         public static string ShoeGap(SkaterRig rig)
         {
             var map = SkeletonMap.Resolve(rig.transform, null, out _);
             if (map == null || rig.board == null) return "Spalt ?";
-            float low = float.MaxValue;
-            foreach (var smr in rig.GetComponentsInChildren<SkinnedMeshRenderer>())
-                if (smr.enabled && smr.gameObject.activeInHierarchy && smr.name.StartsWith("Shoes")) low = Mathf.Min(low, smr.bounds.min.y);
-            if (low == float.MaxValue) return "Spalt ?";
-            float deckY = float.MaxValue;
+            float gap = float.MaxValue;
             for (int f = 0; f < 2; f++)
             {
                 Vector3 local = rig.board.InverseTransformPoint(map.foot[f].position);
-                deckY = Mathf.Min(deckY, rig.board.TransformPoint(new Vector3(local.x, rig.deckTop, local.z)).y);
+                float deckY = rig.board.TransformPoint(new Vector3(local.x, rig.deckTop, local.z)).y;
+                gap = Mathf.Min(gap, map.foot[f].position.y - rig.AnkleHeightMeasured - deckY);
             }
-            return $"Spalt Schuh-Deck {(low - deckY) * 100f:+0.0;-0.0} cm";
+            return $"Spalt Schuh-Deck {gap * 100f:+0.0;-0.0} cm";
+        }
+
+        // ------------------------------------------------------------------ Garage
+
+        /// <summary>
+        /// Garage im Play-Modus (Figur ohne Controller, wie im Spiel beim Start): nach zwei Sekunden Spalt Schuh-Deck und
+        /// gemessene Knoechelhoehe loggen, Nahaufnahme der Fuesse nach Logs/skater/garage_feet.png. Ohne -quit.
+        /// </summary>
+        public static void RunGarage()
+        {
+            EditorSceneManager.OpenScene(ProjectBuilder.GaragePath);
+            _oldEnabled = EditorSettings.enterPlayModeOptionsEnabled;
+            _oldOptions = EditorSettings.enterPlayModeOptions;
+            EditorSettings.enterPlayModeOptionsEnabled = true;
+            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload;
+            _started = EditorApplication.timeSinceStartup;
+            _failures = 0;
+            Directory.CreateDirectory("Logs/skater");
+            _log = new StreamWriter("Logs/skater/garage.txt", false);
+            EditorApplication.update += GarageTick;
+            EditorApplication.EnterPlaymode();
+        }
+
+        static void GarageTick()
+        {
+            try
+            {
+                if (EditorApplication.timeSinceStartup - _started > 300) throw new Exception("Zeitlimit");
+                if (!EditorApplication.isPlaying || Time.time < 2.5f) return;
+                var rig = UnityEngine.Object.FindAnyObjectByType<SkaterRig>();
+                if (rig == null) throw new Exception("Keine Figur in der Garage");
+                var cam = Camera.main;
+                Vector3 c = rig.board.position + Vector3.up * 0.15f;
+                Vector3 side = rig.frame.forward;
+                cam.transform.position = c + side * 1.6f + Vector3.up * 0.35f;
+                cam.transform.LookAt(c);
+                cam.fieldOfView = 40f;
+                SimTests.Capture(cam, "Logs/skater/garage_feet.png");
+                // Die Bounds-Spaltmessung hinkt in der Garage einen Zustand hinterher; entscheidend ist die beim Aufbau
+                // gemessene Knoechelhoehe (Standardfigur ca. 11,5 cm; mit den alten Renderer-Bounds kamen 22,6 cm heraus)
+                float ankle = rig.AnkleHeightMeasured * 100f;
+                Log($"Garage: Knoechelhoehe {ankle:0.0} cm (Fuss {rig.DebugFootY:0.000}, Sohle neu {rig.DebugSoleNew:0.000} alt {rig.DebugSoleOld:0.000}, Wurzel {rig.travel.position.y:0.000}), {ShoeGap(rig)}, Board {rig.board.name} deckTop {rig.deckTop:0.000}");
+                Check(ankle > 6f && ankle < 16f, $"Knoechelhoehe plausibel ({ankle:0.0} cm), Fuesse auf dem Deck: Logs/skater/garage_feet.png");
+                EditorApplication.update -= GarageTick;
+                Quit(0);
+            }
+            catch (Exception e) { Debug.LogException(e); Log("FEHLER: " + e.Message); EditorApplication.update -= GarageTick; Quit(1); }
         }
 
         // ------------------------------------------------------------------ Bewegung im Play-Modus
